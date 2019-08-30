@@ -68,7 +68,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self addRightBarItem];
-    self.title = _conversation.FName;
+    self.title = _conversation.FName?_conversation.FName:_conversation.chatWith;
     [self.view setBackgroundColor:[UIColor colorWithHex:0XF3F3F3]];
     [self.tableView setBackgroundColor:[UIColor colorWithHex:0XF3F3F3]];
     

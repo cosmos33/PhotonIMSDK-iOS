@@ -626,9 +626,9 @@
 		32258AD522CD9D61002D56E5 /* UploadFileManager */ = {
 			isa = PBXGroup;
 			children = (
+				32258AD822CD9D61002D56E5 /* PhotonFileUploadOperation.h */,
 				32258AD622CD9D61002D56E5 /* PhotonFileUploadOperation.m */,
 				32258AD722CD9D61002D56E5 /* PhotonFileUploadManager.h */,
-				32258AD822CD9D61002D56E5 /* PhotonFileUploadOperation.h */,
 				32258AD922CD9D61002D56E5 /* PhotonFileUploadManager.m */,
 			);
 			path = UploadFileManager;
@@ -1424,7 +1424,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-PhotonIM/Pods-PhotonIM-resources.sh",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
-				"${PODS_ROOT}/PhotonIMSDK/Products/PhotonImResource.bundle",
+				"${PODS_ROOT}/../../Products/PhotonImResource.bundle",
 				"${PODS_ROOT}/PhotonPushSDK/Frameworks/pushBudle.bundle",
 				"${PODS_ROOT}/SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle",
 			);

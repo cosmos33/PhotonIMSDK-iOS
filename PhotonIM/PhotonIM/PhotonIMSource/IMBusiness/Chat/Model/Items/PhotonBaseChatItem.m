@@ -7,7 +7,7 @@
 //
 
 #import "PhotonBaseChatItem.h"
-
+#import "PhotonMessageCenter.h"
 @implementation PhotonBaseChatItem
 - (instancetype)init
 {
@@ -33,6 +33,11 @@
 }
 
 - (BOOL)canWithDrawMsg{
+    if ([self.userInfo isKindOfClass:[PhotonIMMessage class]]) {
+        if([self.userInfo messageStatus] == PhotonIMMessageStatusFailed){
+            return NO;
+        };
+    }
     NSTimeInterval currentTimeStamp = [[NSDate date]timeIntervalSince1970];
     NSTimeInterval msgTimeStamp = (_timeStamp/1000.0);
     return ((currentTimeStamp - msgTimeStamp) < 2 * 60);

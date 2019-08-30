@@ -15,6 +15,6 @@ target :PhotonIM do
     pod 'MMKV','1.0.22'
     pod 'MDLog','1.0.0'
     pod 'PhotonPushSDK','0.0.9'
-    pod 'PhotonIMSDK','1.0.6'
-#    pod 'PhotonIMSDK',:path=>'..'
+#    pod 'PhotonIMSDK','1.0.6'
+    pod 'PhotonIMSDK',:path=>'..'
 end
