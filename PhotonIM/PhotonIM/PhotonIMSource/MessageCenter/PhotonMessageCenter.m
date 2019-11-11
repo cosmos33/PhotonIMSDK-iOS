@@ -47,15 +47,15 @@ static PhotonMessageCenter *center = nil;
 - (void)initPhtonIMSDK{
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppWillEnterForegroundNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
    
-//#ifdef DEBUG
+#ifdef DEBUG
     // 是否在写log时开启控制台日志输出，debug模式下建议开启
     [[PhotonIMClient sharedClient] openPhotonIMLog:YES];
     // 是否开启断言，debug模式下推荐开启
     [[PhotonIMClient sharedClient] setAssertEnable:YES];
-//#else
-//    [[PhotonIMClient sharedClient] openPhotonIMLog:NO];
-//    [[PhotonIMClient sharedClient] setAssertEnable:NO];
-//#endif
+#else
+    [[PhotonIMClient sharedClient] openPhotonIMLog:NO];
+    [[PhotonIMClient sharedClient] setAssertEnable:NO];
+#endif
     
     // 通过注册appid 完成sdk的初始化
     [[PhotonIMClient sharedClient] registerIMClientWithAppid:APP_ID];

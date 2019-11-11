@@ -40,12 +40,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- 消息发送如果有at的内容设置at的内容（at部分人还是全部群组成员）
+ 消息发送如果有at的内容请设置设（at部分人还是全部群组成员）
  */
 @property(nonatomic, readonly) PhotonIMAtType msgAtType;
 
 /**
- at用户的idlist
+ at用户的id列表
  */
 @property(nonatomic, readonly, copy) NSArray<NSString*> *msgAtList;
 
@@ -90,7 +90,12 @@ NS_ASSUME_NONNULL_BEGIN
                          messageType:(PhotonIMMessageType)messageType
                             chatType:(PhotonIMChatType)chatType;
 
-- (void)setAtInfoWithAtType:(PhotonIMAtType)sendAtType atList:(nullable NSArray<NSString *> *)atList;
+/// 2.0及以上版本支持此功能
+/// 设置at信息
+/// @param sendAtType at类型
+/// @param atList 存储at对象的id
+- (void)setAtInfoWithAtType:(PhotonIMAtType)sendAtType
+                     atList:(nullable NSArray<NSString *> *)atList;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -416,13 +416,13 @@ NS_ASSUME_NONNULL_BEGIN
                           atType:(PhotonIMConversationAtType)atType;
 
 /**
- 下拉获取加载更多的会话消息
+ 下拉获取加载更多的会话消息（仅同步本地数据库）
 
  @param chatType 会话类型
  @param chatWith 会话中对方的id
  @param anchor 开始一次查询的锚点
  @param size 每次查询的条数
- @param result 回调的数据结构是查询到数据以及下次查询数据的锚点
+ @param result 回调的数据结构是查询到数据对象
  */
 - (void)loadHistoryMessages:(PhotonIMChatType)chatType
                    chatWith:(NSString *)chatWith
@@ -438,8 +438,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param chatType 会话类型
  @param chatWith 会话中对方的id
  @param size 每次查询的条数
- @param beginTimeStamp <#beginTimeStamp description#>
- @param result <#result description#>
+ @param beginTimeStamp 开始查找的时间时间戳，毫秒级（比如查询9点-11点之间的数据，beginTimeStamp指的是9点的那个时间点）
+ @param result 回调的数据结构是查询到数据对象
  */
 - (void)syncHistoryMessagesFromServer:(PhotonIMChatType)chatType
                              chatWith:(NSString *)chatWith
@@ -450,7 +450,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- <#Description#>
+ 同步服务端上的历史数据
 
  @param chatType 会话类型
  @param chatWith 会话中对方的id
@@ -458,7 +458,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param size 每次查询的条数
  @param beginTimeStamp 开始查找的时间时间戳，毫秒级（比如查询9点-11点之间的数据，beginTimeStamp指的是9点的那个时间点）
  @param endTimeStamp 结束查找的时间时间戳，毫秒级（比如查询9点-11点之间的数据，beginTimeStamp指的是11点的那个时间点）
- @param result <#result description#>
+ @param result
  */
 - (void)syncHistoryMessagesFromServer:(PhotonIMChatType)chatType
                              chatWith:(NSString *)chatWith
