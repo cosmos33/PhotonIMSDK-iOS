@@ -111,6 +111,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, assign) BOOL sticky;
 
+
+
+/**
+ 2.0及以上版本支持此功能
+PhotonIMConversationAtTypeNoAt,//会话不包含at
+PhotonIMConversationAtTypeAtMe,//会话处于at中，非全部，包含我
+PhotonIMConversationTypeAtAl,//会话处于at所有群成员
+ */
+@property(nonatomic, assign)PhotonIMConversationAtType atType;
+
 /**
  初始化方法
 

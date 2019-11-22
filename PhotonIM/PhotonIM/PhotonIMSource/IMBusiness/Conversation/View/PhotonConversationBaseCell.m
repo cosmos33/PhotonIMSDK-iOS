@@ -10,6 +10,7 @@
 #import "PhotonMessageCenter.h"
 #import "PhotonConversationItem.h"
 #import "PhoneBadgeView.h"
+#import "NSString+PhotonExtensions.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 @interface PhotonConversationBaseCell()
 @property (nonatomic, strong, nullable) UIImageView *iconView;
@@ -59,8 +60,33 @@
     }else{
         nickName = conversation.chatWith;
     }
-    self.nickLabel.text = nickName;
-     self.contextLabel.text = conversation.lastMsgContent;
+     self.nickLabel.text = nickName;
+    
+    
+    NSMutableAttributedString *content = [[NSMutableAttributedString alloc] init];
+    NSMutableAttributedString *atTypeString = [[NSMutableAttributedString alloc] init];
+    if (conversation.atType == PhotonIMConversationAtTypeAtMe) {
+        atTypeString = [[NSMutableAttributedString alloc] initWithString:@"有人@了我" attributes:@{NSForegroundColorAttributeName:(id)[UIColor redColor]}];
+    }else if (conversation.atType == PhotonIMConversationTypeAtAll){
+         atTypeString = [[NSMutableAttributedString alloc] initWithString:@"@所有人" attributes:@{NSForegroundColorAttributeName:(id)[UIColor redColor]}];
+    }
+    if (atTypeString) {
+        [content appendAttributedString:atTypeString];
+    }
+    NSMutableAttributedString *chatContent;
+    if(conversation.chatType == PhotonIMChatTypeGroup && conversation.lastMsgContent && conversation.lastMsgContent.length > 0){
+         PhotonUser *user =  [PhotonContent findUserWithGroupId:conversation.lastMsgTo uid:conversation.lastMsgFr];
+         chatContent = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@:%@",user.nickName,[conversation.lastMsgContent trim]] attributes:@{NSForegroundColorAttributeName:[UIColor colorWithHex:0x9B9B9B]}];
+    }else{
+        if(conversation.lastMsgContent){
+             chatContent = [[NSMutableAttributedString alloc] initWithString:[conversation.lastMsgContent trim] attributes:@{NSForegroundColorAttributeName:[UIColor colorWithHex:0x9B9B9B]}];
+        }
+       
+    }
+    if (chatContent) {
+        [content appendAttributedString:chatContent];
+    }
+    self.contextLabel.attributedText = content;
     if([conversation.lastMsgContent isNotEmpty]){
         NSTimeInterval tempTimeStamp = (conversation.lastTimeStamp/1000.0);
         NSDate *localeDate = [NSDate dateWithTimeIntervalSince1970:tempTimeStamp];
@@ -79,7 +105,7 @@
         [self.badgeView setBadgeValue:valueStr];
         }
     }
-    BOOL isSending = [conversation.lastMsgContent isNotEmpty] && (conversation.lastMsgStatus == PhotonIMMessageStatusSending || conversation.lastMsgStatus == PhotonIMMessageStatusDefault);
+    BOOL isSending = [conversation.lastMsgContent isNotEmpty] && (conversation.lastMsgStatus == PhotonIMMessageStatusSending);
     BOOL isSentFailed = [conversation.lastMsgContent isNotEmpty] && (conversation.lastMsgStatus == PhotonIMMessageStatusFailed);
     if (!conversation.lastMsgIsReceived) {
         isSending = NO;
@@ -97,11 +123,12 @@
     }else{
         [self.indicatorView stopAnimating];
     }
-    [self p_layoutViews];
+    
 }
 
 - (void)layoutSubviews{
     [super layoutSubviews];
+    [self p_layoutViews];
 }
 
 - (void)p_layoutViews{

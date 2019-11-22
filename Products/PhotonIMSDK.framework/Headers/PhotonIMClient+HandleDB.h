@@ -33,7 +33,20 @@ NS_ASSUME_NONNULL_BEGIN
  @param update 是否同时更新会话中的最后一条消息
  @param message <#message description#>
  */
-- (void)insertOrUpdateMessage:(PhotonIMMessage *)message updateConversion:(BOOL)update;
+- (void)insertOrUpdateMessage:(PhotonIMMessage *)message
+             updateConversion:(BOOL)update;
+
+
+/**
+ 批量保存消息到数据库
+
+ @param chatType 查找的会话类型
+ @param chatWith 会话中对方的id
+ @param messageList 保存的消息列表，如果其中的消息已在表中，则不保存
+ */
+- (void)saveMessageBatch:(PhotonIMChatType)chatType
+                chatWith:(NSString *)chatWith
+             messageList:(NSArray<PhotonIMMessage *>*)messageList;
 
 /**
  更新消息状态
@@ -114,7 +127,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param chatWith 会话中对方的id
  注:chatType 和 chatWith 二者确定会话的唯一性
  */
-- (void)clearMessagesWithChatType:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
+- (void)clearMessagesWithChatType:(PhotonIMChatType)chatType
+                         chatWith:(NSString *)chatWith;
 
 /**
  查找消息
@@ -125,7 +139,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param size 以锚点为中心，要查找的消息的个数
  @return <#return value description#>
  */
-- (NSArray<PhotonIMMessage *> *)findMessageListByIdRange:(PhotonIMMessage *)message beforeAuthor:(BOOL)beforeAuthor asc:(BOOL)asc size:(int)size;
+- (NSArray<PhotonIMMessage *> *)findMessageListByIdRange:(PhotonIMMessage *)message
+                                            beforeAuthor:(BOOL)beforeAuthor
+                                                     asc:(BOOL)asc size:(int)size;
 
 /**
 查找消息
@@ -149,7 +165,11 @@ NS_ASSUME_NONNULL_BEGIN
  @param size 以锚点为中心，要查找的消息的个数
  @return <#return value description#>
  */
-- (NSArray<PhotonIMMessage *> *)findMessageListByIdRange:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith anchorMsgId:(nullable NSString *)anchorMsgId beforeAuthor:(BOOL)beforeAnchor asc:(BOOL)asc size:(int)size;
+- (NSArray<PhotonIMMessage *> *)findMessageListByIdRange:(PhotonIMChatType)chatType
+                                                chatWith:(NSString *)chatWith
+                                             anchorMsgId:(nullable NSString *)anchorMsgId
+                                            beforeAuthor:(BOOL)beforeAnchor
+                                                     asc:(BOOL)asc size:(int)size;
 
 /**
  按消息的状态查找数据
@@ -188,12 +208,36 @@ NS_ASSUME_NONNULL_BEGIN
  @param conversation <#conversation description#>
  */
 - (void)updateConversationIgnoreAlert:(PhotonIMConversation *)conversation;
+
 /**
- 更新会话的指定设置
+ 更新会话的免打扰设置
+ 
+ @param chatType 会话类型
+ @param chatWith 会话中对方的id
+ @param ignoreAlert YES 设置打扰 NO 取消免打扰设置
+ */
+- (void)updateConversationIgnoreAlert:(PhotonIMChatType)chatType
+                             chatWith:(NSString *)chatWith
+                          ignoreAlert:(BOOL)ignoreAlert;
+
+
+/**
+  更新会话的置顶的设置
  
  @param conversation <#conversation description#>
  */
 - (void)updateConversationSticky:(PhotonIMConversation *)conversation;
+
+/**
+ 更新会话的置顶的设置
+ 
+ @param chatType 会话类型
+ @param chatWith 会话中对方的id
+ @param sticky YES 设置置顶 NO 取消置顶
+ */
+- (void)updateConversationSticky:(PhotonIMChatType)chatType
+                        chatWith:(NSString *)chatWith
+                          sticky:(BOOL)sticky;
 
 /**
  会话草稿
@@ -216,7 +260,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param chatWith 会话中对方的id
  @param extra 额外信息
  */
-- (void)updateConversationExtra:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith extra:(NSDictionary *)extra;
+- (void)updateConversationExtra:(PhotonIMChatType)chatType
+                       chatWith:(NSString *)chatWith
+                          extra:(NSDictionary *)extra;
 
 /**
  更新会话的未读数
@@ -233,7 +279,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param chatWith 会话中对方的id
  @param count 未读数
  */
-- (void)updateConversationUnReadCount:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith count:(NSInteger)count;
+- (void)updateConversationUnReadCount:(PhotonIMChatType)chatType
+                             chatWith:(NSString *)chatWith
+                                count:(NSInteger)count;
 
 /**
  清空一个会话的未读数
@@ -241,7 +289,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param chatType 会话类型
  @param chatWith 会话中对方的id
  */
-- (void)clearConversationUnReadCount:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
+- (void)clearConversationUnReadCount:(PhotonIMChatType)chatType
+                            chatWith:(NSString *)chatWith;
 
 /**
  删除会话
@@ -249,7 +298,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param conversation 会话对象
  @param clearChatMessage 是否同时清空会话中的消息
  */
-- (void)deleteConversation:(PhotonIMConversation *)conversation clearChatMessage:(BOOL)clearChatMessage;
+- (void)deleteConversation:(PhotonIMConversation *)conversation
+          clearChatMessage:(BOOL)clearChatMessage;
 
 /**
  删除会话
@@ -258,7 +308,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param chatWith 会话中对方的id
  @param clearChatMessage 是否同时清空会话中的消息
  */
-- (void)deleteConversation:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith clearChatMessage:(BOOL)clearChatMessage;
+- (void)deleteConversation:(PhotonIMChatType)chatType
+                  chatWith:(NSString *)chatWith
+          clearChatMessage:(BOOL)clearChatMessage;
 
 /**
  判断会话是否存在
@@ -286,14 +338,135 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSArray<PhotonIMConversation *> *)findConversationList:(int)start size:(int)size asc:(BOOL)asc;
 
-// 
-- (void)updateConversationWithLastMsgArg1:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith arg:(int)arg;
-- (void)updateConversationWithLastMsgArg2:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith arg:(int)arg;
-// 自定义字段的操作
-- (void)updateConversationWithCustomArg1:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith arg:(int)arg;
-- (void)updateConversationWithCustomArg2:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith arg:(int)arg;
-- (NSArray<PhotonIMConversation *> *)findConversationListWithCustomArg1:(int)arg asc:(BOOL)asc;
-- (NSArray<PhotonIMConversation *> *)findConversationListWithCustomArg2:(int)arg asc:(BOOL)asc;
+
+
+/**
+ 判断会话是否存在
+ 
+ @param chatType 会话类型
+ @param chatWith 会话中对方的id
+ @param arg 自定义消息中arg1参数
+ */
+- (void)updateConversationWithLastMsgArg1:(PhotonIMChatType)chatType
+                                 chatWith:(NSString *)chatWith
+                                      arg:(int)arg;
+
+/**
+ 判断会话是否存在
+ 
+ @param chatType 会话类型
+ @param chatWith 会话中对方的id
+ @param arg 自定义消息中arg2参数
+ */
+- (void)updateConversationWithLastMsgArg2:(PhotonIMChatType)chatType
+                                 chatWith:(NSString *)chatWith
+                                      arg:(int)arg;
+
+/**
+ 判断会话是否存在
+ 
+ @param chatType 会话类型
+ @param chatWith 会话中对方的id
+ @param arg 会话打标记使用的扩展字段
+ */
+- (void)updateConversationWithCustomArg1:(PhotonIMChatType)chatType
+                                chatWith:(NSString *)chatWith
+                                     arg:(int)arg;
+
+/**
+ 判断会话是否存在
+ 
+ @param chatType 会话类型
+ @param chatWith 会话中对方的id
+ @param arg 会话打标记使用的扩展字段
+ */
+- (void)updateConversationWithCustomArg2:(PhotonIMChatType)chatType
+                                chatWith:(NSString *)chatWith
+                                     arg:(int)arg;
+
+/**
+ 判断会话是否存在
+ 
+ @param arg 根据会话打的标记查询会话
+ @param asc 查询出的会话是否按时间降序排序
+ */
+- (NSArray<PhotonIMConversation *> *)findConversationListWithCustomArg1:(int)arg
+                                                                    asc:(BOOL)asc;
+
+
+/**
+ 判断会话是否存在
+ 
+ @param arg 根据会话打的标记查询会话
+ @param asc 查询出的会话是否按时间降序排序
+ */
+- (NSArray<PhotonIMConversation *> *)findConversationListWithCustomArg2:(int)arg
+                                                                    asc:(BOOL)asc;
+
+
+/**
+ 判断会话是否存在
+ 
+ @param chatType 会话类型
+ @param chatWith 会话中对方的id
+ @param atType 会话处于at的类型
+ */
+- (void)updateConversationAtType:(PhotonIMChatType)chatType
+                        chatWith:(NSString *)chatWith
+                          atType:(PhotonIMConversationAtType)atType;
+
+/**
+ 下拉获取加载更多的会话消息（仅同步本地数据库）
+
+ @param chatType 会话类型
+ @param chatWith 会话中对方的id
+ @param anchor 开始一次查询的锚点
+ @param size 每次查询的条数
+ @param result 回调的数据结构是查询到数据对象
+ */
+- (void)loadHistoryMessages:(PhotonIMChatType)chatType
+                   chatWith:(NSString *)chatWith
+                     anchor:(nullable NSString *)anchor
+                       size:(int)size
+                reaultBlock:(void(^)(NSArray<PhotonIMMessage *> * _Nullable,NSString * _Nullable,BOOL))result;
+
+
+
+/**
+ 同步服务端上的历史数据
+
+ @param chatType 会话类型
+ @param chatWith 会话中对方的id
+ @param size 每次查询的条数
+ @param beginTimeStamp 开始查找的时间时间戳，毫秒级（比如查询9点-11点之间的数据，beginTimeStamp指的是9点的那个时间点）
+ @param result 回调的数据结构是查询到数据对象
+ */
+- (void)syncHistoryMessagesFromServer:(PhotonIMChatType)chatType
+                             chatWith:(NSString *)chatWith
+                                 size:(int)size
+                       beginTimeStamp:(int64_t)beginTimeStamp
+                          reaultBlock:(void (^)(NSArray<PhotonIMMessage *> * _Nullable messageList,NSString * _Nullable anchor, NSError * _Nullable error))result;
+
+
+
+/**
+ 同步服务端上的历史数据
+
+ @param chatType 会话类型
+ @param chatWith 会话中对方的id
+ @param anchor 开始一次查询的锚点，在固定的时间段内查找数据，是有锚点进行查找类似下一页的操作，锚点在回调中返回，请求下一页是直接使用
+ @param size 每次查询的条数
+ @param beginTimeStamp 开始查找的时间时间戳，毫秒级（比如查询9点-11点之间的数据，beginTimeStamp指的是9点的那个时间点）
+ @param endTimeStamp 结束查找的时间时间戳，毫秒级（比如查询9点-11点之间的数据，beginTimeStamp指的是11点的那个时间点）
+ @param result
+ */
+- (void)syncHistoryMessagesFromServer:(PhotonIMChatType)chatType
+                             chatWith:(NSString *)chatWith
+                               anchor:(nullable NSString *)anchor
+                                 size:(int)size beginTimeStamp:(int64_t)beginTimeStamp
+                         endTimeStamp:(int64_t)endTimeStamp
+                          reaultBlock:(void (^)(NSArray<PhotonIMMessage *> * _Nullable messageList,NSString * _Nullable anchor, NSError * _Nullable error))result;
+
 @end
 
 NS_ASSUME_NONNULL_END

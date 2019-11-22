@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString *)urlDecoded;
 - (NSString *)encoded;
 - (NSString *)trim;
+- (NSString *)removeSpaceAndNewline;
 
 
 /**

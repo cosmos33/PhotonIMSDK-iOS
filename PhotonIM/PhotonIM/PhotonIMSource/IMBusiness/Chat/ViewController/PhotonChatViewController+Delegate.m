@@ -170,7 +170,11 @@
     if (chatItem.fromType == PhotonChatMessageFromSelf) {
         user = [PhotonContent userDetailInfo];
     }else{
-        user = [PhotonContent friendDetailInfo:message.chatWith];
+        if(message.chatType == PhotonIMChatTypeSingle){
+            user = [PhotonContent friendDetailInfo:message.chatWith];
+        }else if (message.chatType == PhotonIMChatTypeGroup){
+             user = [PhotonContent friendDetailInfo:message.fr];
+        }
     }
     PhotonFriendDetailViewController * detailCTL = [[PhotonFriendDetailViewController alloc] initWithFriend:user];
     [self.navigationController pushViewController:detailCTL animated:YES];
@@ -242,6 +246,7 @@
 }
 
 - (void)addItems:(id)message{
+    
     id item =  [self.model wrapperMessage:message];
     [self.model.items addObject:item];
     [self reloadData];

@@ -10,6 +10,7 @@
 #define PhotonIMClientProtocol_h
 #import "PhotonIMEnum.h"
 #import "PhotonIMError.h"
+NS_ASSUME_NONNULL_BEGIN
 @class PhotonIMMessage;
 @protocol PhotonIMClientProtocol <NSObject>
 
@@ -111,7 +112,7 @@
 #pragma mark ======== 其他 ===========
 /**
 会话信息有变化时回调
- 
+ dev_2.0.1
 @param envent 会话的操作类型（创建，删除，更新）
 @param chatType 会话类型
 @param chatWith 会话id
@@ -125,7 +126,7 @@
 - (void)networkChange:(PhotonIMNetworkStatus)networkStatus;
 
 /**
- 收到消息已读的消息
+ 重发程序kill时的消息，消息发出后监听此回执
  
  @param client client
  @param msgID 消息的id
@@ -140,3 +141,4 @@
         error:( PhotonIMError* _Nullable)error;
 @end
 #endif /* PhotonIMClientProtocol_h */
+NS_ASSUME_NONNULL_END

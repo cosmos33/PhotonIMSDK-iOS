@@ -9,11 +9,11 @@
 #ifndef PhotonMacros_h
 #define PhotonMacros_h
 #import "PhotonCommonHeader.h"
-#ifdef DEBUG
+//#ifdef DEBUG
 #define PhotonLog(...) NSLog(__VA_ARGS__)
-#else
-#define PhotonLog(...)
-#endif
+//#else
+//#define PhotonLog(...)
+//#endif
 
 #define     IS_IPHONEX              ([UIScreen mainScreen].bounds.size.width == 375.0f && [UIScreen mainScreen].bounds.size.height == 812.0f)
 
@@ -86,6 +86,12 @@ typedef NS_ENUM(NSInteger, PhotonChatBarStatus) {
     PhotonChatBarStatusEmoji,
     PhotonChatBarStatusMore,
     PhotonChatBarStatusKeyboard,
+};
+
+typedef NS_ENUM(NSInteger, AtType) {
+    AtTypeNoAt = 0,
+    AtTypeAtMember,
+    AtTypeAtAll
 };
 
 #define DEFAULT_TABLE_CELL_HRIGHT 64.0;

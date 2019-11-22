@@ -10,9 +10,11 @@
 #import "PhotonNetworkProtocol.h"
 #import "PhotonNetworkRequest.h"
 #import "PhotonErrorDescription.h"
+#import "PhotonSafeMutableArray.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PhotonNetworkWrapper : NSObject<PhotonNetworkRequestDelegate>
+@property(nonatomic, strong,readonly) PhotonSafeMutableArray *requestArray;
 /**
  *  一般的请求
  *

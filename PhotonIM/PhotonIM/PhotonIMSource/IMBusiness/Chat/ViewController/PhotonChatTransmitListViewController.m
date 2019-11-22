@@ -10,8 +10,8 @@
 #import "PhotonMessageCenter.h"
 #import "PhotonChatTransmitModel.h"
 #import "PhotonEmptyTableItem.h"
-#import "PhotonContactItem.h"
-#import "PhotonContactCell.h"
+#import "PhotonBaseContactItem.h"
+#import "PhotonBaseContactCell.h"
 #import "PhotonChatTransmitCell.h"
 #import "PhotonChatTransmitItem.h"
 @interface PhotonChatTransmitListDataSource ()
@@ -139,9 +139,11 @@
 - (void)okAction:(UIButton *)sender{
     for (PhotonIMConversation *conversation in self.selectedChats) {
         if([self.message.chatWith isEqualToString:conversation.chatWith]){// 当前会话的消息转发到了当前的会话
+            PhotonIMMessage *message = [[PhotonMessageCenter sharedCenter] transmitMessage:self.message conversation:conversation completion:nil];
             if (self.chatBlock) {
-                self.chatBlock(self.message);
+                self.chatBlock(message);
             }
+            continue;
         }
         [[PhotonMessageCenter sharedCenter] transmitMessage:self.message conversation:conversation completion:nil];
     }

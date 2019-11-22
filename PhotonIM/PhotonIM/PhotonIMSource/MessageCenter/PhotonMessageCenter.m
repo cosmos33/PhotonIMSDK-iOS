@@ -12,6 +12,7 @@
 #import "PhotonDownLoadFileManager.h"
 #import "PhotonDBManager.h"
 #import "PhotonNetworkService.h"
+#import "PhotonCharBar.h"
 static PhotonMessageCenter *center = nil;
 @interface PhotonMessageCenter()<PhotonIMClientProtocol>
 @property (nonatomic, strong, nullable)PhotonNetworkService *netService;
@@ -36,9 +37,11 @@ static PhotonMessageCenter *center = nil;
     dispatch_once(&onceToken, ^{
         center = [[self alloc] init];
         [[PhotonIMClient sharedClient] addObservers:center];
-        
+       
     });
     return center;
+}
+- (void)handleAppWillEnterForegroundNotification:(id)enter{
 }
 
 - (void)initPhtonIMSDK{
@@ -64,13 +67,13 @@ static PhotonMessageCenter *center = nil;
 - (void)login{
     // 客户端登录后
     [[PhotonIMClient sharedClient] bindCurrentUserId:[PhotonContent currentUser].userID];
-    _messages = [[[PhotonIMClient sharedClient] getAllSendingMessages] mutableCopy];
+//    _messages = [[[PhotonIMClient sharedClient] getAllSendingMessages] mutableCopy];
     // 获取token
     [self getToken];
 }
 
 - (void)logout{
-    [PhotonDBManager closeDB];
+    
     [[PhotonIMClient sharedClient] logout];
     [[MMKV defaultMMKV] removeValueForKey:TOKENKEY];
     [PhotonContent logout];
@@ -123,20 +126,26 @@ static PhotonMessageCenter *center = nil;
 - (void)sendTextMessage:(PhotonTextMessageChatItem *)item conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion{
     
     // 文本消息，直接构建文本消息对象发送
-    PhotonIMMessage *message = [PhotonIMMessage commonMessageWithFrid:[PhotonContent currentUser].userID toid:conversation.chatWith messageType:PhotonIMMessageTypeText chatType:PhotonIMChatTypeSingle];
-    
+    PhotonIMMessage *message = [PhotonIMMessage commonMessageWithFrid:[PhotonContent currentUser].userID toid:conversation.chatWith messageType:PhotonIMMessageTypeText chatType:conversation.chatType];
+    NSMutableArray *uids = [[NSMutableArray alloc] init];
+    for (PhotonChatAtInfo *atInfo in item.atInfo) {
+        if ([atInfo.userid isNotEmpty]) {
+            [uids addObject:atInfo.userid ];
+        }
+    }
+    [message setAtInfoWithAtType:(PhotonIMAtType)(item.type) atList:uids];
     PhotonIMTextBody *body = [[PhotonIMTextBody alloc] initWithText:item.messageText];
     [message setMesageBody:body];
     item.userInfo = message;
+    
+    
     [self _sendMessage:message completion:completion];
-    
-    
     
 }
 
 - (void)sendImageMessage:(PhotonImageMessageChatItem *)item conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion{
     // 文本消息，直接构建文本消息对象发送
-    PhotonIMMessage *message = [PhotonIMMessage commonMessageWithFrid:[PhotonContent currentUser].userID toid:conversation.chatWith messageType:PhotonIMMessageTypeImage chatType:PhotonIMChatTypeSingle];
+    PhotonIMMessage *message = [PhotonIMMessage commonMessageWithFrid:[PhotonContent currentUser].userID toid:conversation.chatWith messageType:PhotonIMMessageTypeImage chatType:conversation.chatType];
     
     PhotonIMImageBody *body = [[PhotonIMImageBody alloc] init];
     body.localFileName = item.fileName;
@@ -150,7 +159,7 @@ static PhotonMessageCenter *center = nil;
 
 - (void)sendVoiceMessage:(PhotonVoiceMessageChatItem *)item conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion{
     
-    PhotonIMMessage *message = [PhotonIMMessage commonMessageWithFrid:[PhotonContent currentUser].userID toid:conversation.chatWith messageType:PhotonIMMessageTypeAudio chatType:PhotonIMChatTypeSingle];
+    PhotonIMMessage *message = [PhotonIMMessage commonMessageWithFrid:[PhotonContent currentUser].userID toid:conversation.chatWith messageType:PhotonIMMessageTypeAudio chatType:conversation.chatType];
     
     PhotonIMAudioBody *body = [[PhotonIMAudioBody alloc] init];
     body.localFileName = item.fileName;
@@ -301,6 +310,9 @@ static PhotonMessageCenter *center = nil;
 
 // 发送已读消息
 - (void)sendReadMessage:(NSArray<NSString *> *)readMsgIDs conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion{
+    if (conversation.chatType != PhotonIMChatTypeSingle) {
+        return;
+    }
     [self.imClient sendReadMessage:readMsgIDs fromid:[PhotonContent currentUser].userID toid:conversation.chatWith completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
         [PhotonUtil runMainThread:^{
             if (completion) {
@@ -322,7 +334,7 @@ static PhotonMessageCenter *center = nil;
     }
 }
 
-- (void)transmitMessage:(nullable PhotonIMMessage *)message conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion{
+- (PhotonIMMessage *)transmitMessage:(nullable PhotonIMMessage *)message conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion{
     // 文件操作，转发时将文件拷贝到转发的会话下
     if (message.messageType == PhotonIMMessageTypeImage || message.messageType == PhotonIMMessageTypeAudio) {
         PhotonIMMediaBody *imgBody = (PhotonIMMediaBody *)message.messageBody;
@@ -344,23 +356,39 @@ static PhotonMessageCenter *center = nil;
     sendMessage.to = conversation.chatWith;
     sendMessage.timeStamp = [[NSDate date] timeIntervalSince1970] * 1000.0;
     sendMessage.messageType = message.messageType;
-    sendMessage.messageStatus = PhotonIMMessageStatusDefault;
-    sendMessage.chatType = message.chatType;
+    sendMessage.messageStatus = PhotonIMMessageStatusSending;
     [sendMessage setMesageBody:message.messageBody];
     [self _sendMessage:sendMessage completion:completion];
+    return sendMessage;
 }
 
 - (void)_sendMessage:(nullable PhotonIMMessage *)message completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion{
+    PhotonWeakSelf(self);
+    [[PhotonIMClient sharedClient] sendMessage:message completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+        [PhotonUtil runMainThread:^{
+            if (!succeed && error.code >= 1000) {
+                message.notic = error.em;
+            }
+            if (completion) {
+                completion(succeed,error);
+            }else{
+                NSHashTable *_observer = [weakself.observers copy];
+                for (id<PhotonMessageProtocol> observer in _observer) {
+                    if (observer && [observer respondsToSelector:@selector(sendMessageResultCallBack:)]) {
+                        [observer sendMessageResultCallBack:message];
+                    }
+                }
+            }
+        }];
+    }];
+}
+
+
+- (void)sendAddGrupNoticeMessage:(nullable PhotonIMMessage *)message completion:(nullable CompletionBlock)completion{
     [[PhotonIMClient sharedClient] sendMessage:message completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
         [PhotonUtil runMainThread:^{
             if (completion) {
                 completion(succeed,error);
-            }
-            NSHashTable *_observer = [self.observers copy];
-            for (id<PhotonMessageProtocol> observer in _observer) {
-                if (observer && [observer respondsToSelector:@selector(sendMessageResultCallBack:)]) {
-                    [observer sendMessageResultCallBack:message];
-                }
             }
         }];
     }];
@@ -385,6 +413,13 @@ static PhotonMessageCenter *center = nil;
 }
 - (void)updateConversationIgnoreAlert:(PhotonIMConversation *)conversation{
     [self.imClient updateConversationIgnoreAlert:conversation];
+}
+
+- (void)resetAtType:(PhotonIMConversation *)conversation{
+    [self.imClient updateConversationAtType:conversation.chatType chatWith:conversation.chatWith atType:PhotonIMConversationAtTypeNoAt];
+}
+- (PhotonIMConversation *)findConversation:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith{
+    return [self.imClient findConversation:chatType chatWith:chatWith];
 }
 
 
@@ -468,6 +503,7 @@ static PhotonMessageCenter *center = nil;
     switch (failedType) {
         case PhotonIMLoginFailedTypeTokenError:
         case PhotonIMLoginFailedTypeParamterError:{
+            NSLog(@"[pim]:PhotonIMLoginFailedTypeTokenError or PhotonIMLoginFailedTypeParamterError");
             [self reGetToken];
         }
             break;
@@ -480,25 +516,23 @@ static PhotonMessageCenter *center = nil;
     }
 }
 
-- (void)imClientLogin:(nonnull id)client loginStatus:(PhotonIMLoginStatus)loginstatus {
-    if (loginstatus ==  PhotonIMLoginStatusLoginSucceed) {
-//        [self reSendAllSendingMessages];
-    }
-}
-
 
 - (void)networkChange:(PhotonIMNetworkStatus)networkStatus {
 }
 
 - (BOOL)imClientSync:(nonnull id)client syncStatus:(PhotonIMSyncStatus)status {
-    NSLog(@"imClientSync:(nonnull id)client syncStatus:(PhotonIMSyncStatus)status");
     return YES;
+}
+
+- (void)imClient:(id)client sendResultWithMsgID:(NSString *)msgID chatType:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith error:(PhotonIMError *)error{
+    NSLog(@"[pim sendResultWithMsgID msgID=%@,chatType=%@,chatWith=%@,errorCode=%@",msgID,@(chatType),chatWith,@(error.code));
 }
 
 
 
 #pragma mark ---- 登录相关 ----
 - (void)reGetToken{
+     NSLog(@"[pim]:reGetToken");
     [[MMKV defaultMMKV] setString:@"" forKey:TOKENKEY];
     [self getToken];
 }
@@ -512,9 +546,9 @@ static PhotonMessageCenter *center = nil;
             NSString *token = [[dict objectForKey:@"data"] objectForKey:@"token"];
             [[MMKV defaultMMKV] setString:token forKey:TOKENKEY];
             [[PhotonIMClient sharedClient] loginWithToken:token extra:nil];
-            PhotonLog(@"dict = %@",dict);
+            PhotonLog(@"[pim] dict = %@",dict);
         } failure:^(PhotonErrorDescription * _Nonnull error) {
-            PhotonLog(@"error = %@",error.errorMessage);
+            PhotonLog(@"[pim] error = %@",error.errorMessage);
             [PhotonUtil showAlertWithTitle:@"Token获取失败" message:error.errorMessage];
             if(error.errorCode == 403){
                 [self logout];

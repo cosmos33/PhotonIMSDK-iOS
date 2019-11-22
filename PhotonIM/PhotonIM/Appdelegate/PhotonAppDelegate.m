@@ -19,7 +19,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  
+    
     [[PhotonMessageCenter sharedCenter] initPhtonIMSDK];
     
     [self registerPushSDK];

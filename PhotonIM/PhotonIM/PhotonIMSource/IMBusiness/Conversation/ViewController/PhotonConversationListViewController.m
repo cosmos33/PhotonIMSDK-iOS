@@ -29,21 +29,27 @@ static NSString *message_syncing = @"消息(收取中......)";
 @property (nonatomic, strong)PhotonIMTimer *imTimer;
 @property (nonatomic, assign)NSInteger  refreshCount;
 @property (nonatomic, assign)BOOL  isExcute;
+@property (nonatomic, assign)NSInteger lastOprationTimeStamp;
+
+@property (atomic, assign)BOOL isRefreshing;
 @end
 
 @implementation PhotonConversationListViewController
 - (void)dealloc
 {
     [[PhotonMessageCenter sharedCenter] removeObserver:self];
+    [_uiDispatchSource clearDelegateAndCancel];
+    [_dataDispatchSource clearDelegateAndCancel];
 }
 
 - (void)setNavTitle:(NSString *)text{
+    PhotonWeakSelf(self);
     [PhotonUtil runMainThread:^{
         NSInteger totalCount = [[PhotonMessageCenter sharedCenter] unreadMsgCount];
         if([text isEqualToString:message_title] && totalCount > 0){
-            self.navigationItem.title = [NSString stringWithFormat:@"消息(%@)",@(totalCount)];
+            weakself.navigationItem.title = [NSString stringWithFormat:@"消息(%@)",@(totalCount)];
         }else{
-            self.navigationItem.title = text;
+            weakself.navigationItem.title = text;
         }
         
     }];
@@ -51,6 +57,7 @@ static NSString *message_syncing = @"消息(收取中......)";
 
 
 - (void)setTabBarBadgeValue{
+     PhotonWeakSelf(self);
     [PhotonUtil runMainThread:^{
         NSInteger totalCount = [[PhotonMessageCenter sharedCenter] unreadMsgCount];
         if (totalCount > 0) {
@@ -59,13 +66,13 @@ static NSString *message_syncing = @"消息(收取中......)";
 //                totalCount = 99;
 //                valueStr = [NSString stringWithFormat:@"%@+",@(totalCount)];
 //            }
-            self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%@",valueStr];
-            self.tabBarItem.badgeColor = [UIColor redColor];
-            self.navigationItem.title = [NSString stringWithFormat:@"消息(%@)",valueStr];
+            weakself.tabBarItem.badgeValue = [NSString stringWithFormat:@"%@",valueStr];
+            weakself.tabBarItem.badgeColor = [UIColor redColor];
+            weakself.navigationItem.title = [NSString stringWithFormat:@"消息(%@)",valueStr];
         }else{
-            self.tabBarItem.badgeValue = nil;
-            if (![self.navigationItem.title containsString:@"连接"]) {
-                 self.navigationItem.title = message_title;
+            weakself.tabBarItem.badgeValue = nil;
+            if (![weakself.navigationItem.title containsString:@"连接"]) {
+                 weakself.navigationItem.title = message_title;
             }
            
         }
@@ -91,7 +98,6 @@ static NSString *message_syncing = @"消息(收取中......)";
     [super viewDidAppear:animated];
     if (self.needRefreshData) {
         [self.dataDispatchSource addSemaphore];
-        [self setTabBarBadgeValue];
         self.needRefreshData = YES;
     }
 }
@@ -133,11 +139,13 @@ static NSString *message_syncing = @"消息(收取中......)";
         [weakSlef removeNoDataView];
         [weakSlef.uiDispatchSource addSemaphore];
         [weakSlef endRefreshing];
+        weakSlef.isRefreshing = NO;
     } failure:^(PhotonErrorDescription * _Nullable error) {
         [PhotonUtil showAlertWithTitle:@"加载会话列表失败" message:error.errorMessage];
         [weakSlef.uiDispatchSource addSemaphore];
         [weakSlef loadNoDataView];
         [weakSlef endRefreshing];
+        weakSlef.isRefreshing = NO;
     }];
 }
 - (void)reloadData{
@@ -165,41 +173,30 @@ static NSString *message_syncing = @"消息(收取中......)";
         self.needRefreshData  = YES;
         return;
     }
-    [self readyRefreshConversations];
+    [self.dataDispatchSource addSemaphore];
+   
+}
+
+- (void)imClient:(id)client didReceiveMesage:(PhotonIMMessage *)message{
+    [[PhotonIMClient sharedClient] consumePacket:message.lt lv:message.lv];
 }
 
 - (void)readyRefreshConversations{
-    _refreshCount++;
-    __weak typeof(self)weakSelf = self;
-    if (!_imTimer) {
-        _imTimer = [PhotonIMTimer initWithInterval:1 delay:1 repeat:NO targetQueue:dispatch_get_main_queue() handler:^{
-            if (!weakSelf.isExcute) {
-                [weakSelf startRefreshConversations];
-            }
-        }];
+    if (_isRefreshing) {
+        return;
     }
-    if (self.refreshCount >= 1) {
-        [weakSelf startRefreshConversations];
-    }
+    _isRefreshing = YES;
+    [self startRefreshConversations];
 }
 
 - (void)startRefreshConversations{
-    [self setTabBarBadgeValue];
-    if (!self.isExcute) {
-        self.refreshCount = 0;
-        [self.imTimer cancel];
-        self.imTimer = nil;
-        self.isExcute = NO;
-        [self.dataDispatchSource addSemaphore];
-    }
+    [self loadDataItems];
 }
 
-
-
 - (void)getIgnoreAlerm:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith{
-    [[PhotonContent currentUser] getIgnoreAlert:chatWith completion:^(BOOL success, BOOL open) {
+    [[PhotonContent currentUser] getIgnoreAlert:chatType chatWith:chatWith completion:^(BOOL success, BOOL open) {
          PhotonIMConversation *conversation = [[PhotonIMConversation alloc] initWithChatType:chatType chatWith:chatWith];
-        conversation.ignoreAlert = open;
+        conversation.ignoreAlert = !open;
         [[PhotonMessageCenter sharedCenter] updateConversationIgnoreAlert:conversation];
     }];
 }
@@ -260,6 +257,6 @@ static NSString *message_syncing = @"消息(收取中......)";
 }
 
 - (void)refreshData{
-    [self loadDataItems];
+    [self readyRefreshConversations];
 }
 @end

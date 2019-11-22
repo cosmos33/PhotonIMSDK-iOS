@@ -72,7 +72,10 @@ typedef void(^CompletionBlock) (BOOL succeed, PhotonIMError * _Nullable error);
 
 
 // 转发的逻辑
-- (void)transmitMessage:(nullable PhotonIMMessage *)message conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion;
+- (PhotonIMMessage *)transmitMessage:(nullable PhotonIMMessage *)message conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion;
+
+
+- (void)sendAddGrupNoticeMessage:(nullable PhotonIMMessage *)message  completion:(nullable CompletionBlock)completion;
 
 
 #pragma mark === 资源路径的处理 ====
@@ -123,6 +126,10 @@ typedef void(^CompletionBlock) (BOOL succeed, PhotonIMError * _Nullable error);
 - (void)clearConversationUnReadCount:(PhotonIMConversation *)conversation;
 
 - (void)updateConversationIgnoreAlert:(PhotonIMConversation *)conversation;
+
+- (PhotonIMConversation *)findConversation:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
+
+- (void)resetAtType:(PhotonIMConversation *)conversation;
 @end
 
 NS_ASSUME_NONNULL_END

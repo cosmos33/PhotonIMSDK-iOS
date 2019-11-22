@@ -18,10 +18,11 @@
  @param client client im sdk client 句柄
  @param message 消息
  */
-- (void)imClient:(id)client didReceiveSingleMesage:(PhotonIMMessage *)message{
+- (void)imClient:(id)client didReceiveMesage:(PhotonIMMessage *)message{
     [[PhotonIMClient sharedClient] consumePacket:message.lt lv:message.lv];
     [self wrapperMessage:message];
 }
+
 
 
 /**
@@ -32,6 +33,10 @@
  */
 - (void)imClient:(id)client didReceiveSingleWithDrawMesage:(PhotonIMMessage *)message{
     [self wrapperWithdrawMessage:message];
+}
+
+- (void)imClient:(id)client didReceiveGroupWithDrawMesage:(PhotonIMMessage *)message{
+     [self wrapperWithdrawMessage:message];
 }
 
 
@@ -52,8 +57,13 @@
     if (!item) {
         return;
     }
-    [self.model.items addObject:item];
+    [self.model addItem:item];
     [self reloadData];
+    
+    if(message.chatType == PhotonIMChatTypeGroup && message.msgAtType != PhotonIMAtTypeNoAt){
+        [[PhotonMessageCenter sharedCenter] resetAtType:self.conversation];
+    }
+    
 }
 // 处理撤回消息
 - (void)wrapperWithdrawMessage:(PhotonIMMessage *)message{
@@ -62,6 +72,7 @@
          [self reloadData];
     }
 }
+
 
 // 消息已读的处理
 - (void)wrapperReadMessage:(PhotonIMMessage *)message{

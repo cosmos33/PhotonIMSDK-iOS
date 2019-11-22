@@ -19,9 +19,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -39,6 +39,8 @@
 	<string>如果不允许，你将无法发送系统相册里的照片给朋友，也无法将图片或视频保存到相册。</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>如果不允许，你将无法发送系统相册里的照片给朋友，也无法将图片或视频保存到相册。</string>
+	<key>UIBackgroundModes</key>
+	<array/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

@@ -44,10 +44,15 @@ NS_ASSUME_NONNULL_BEGIN
  群组中发送消息的撤回
  
  @param MsgID 撤回消息的id
+ @param originMsgTime 撤回消息的携带的时间戳
  @param fromid 撤回者的id，即消息发送者的id（即自己）
  @param toid 群组的id
  */
-- (void)sendGroupWithDrawMessage:(NSString *)MsgID fromid:(NSString *)fromid toid:(NSString *)toid completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
+- (void)sendGroupWithDrawMessage:(NSString *)MsgID
+                   originMsgTime:(int64_t)originMsgTime
+                          fromid:(NSString *)fromid
+                            toid:(NSString *)toid
+                      completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
 
 /**
  已读消息

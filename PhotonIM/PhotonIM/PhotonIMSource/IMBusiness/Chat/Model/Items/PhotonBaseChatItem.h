@@ -108,6 +108,12 @@ typedef NS_ENUM(NSInteger,PhotonChatMessageFromType){
 @property(nonatomic, assign)BOOL canWithDrawMsg;
 
 @property (nonatomic, strong, nullable)NSString *localPath;
+
+
+@property (nonatomic, assign)CGSize size;
+@property (nonatomic, assign)CGFloat tempItemHeight;
+@property (nonatomic, assign)CGFloat timeHeight;
+@property (nonatomic, assign)CGFloat contentHeight;
 @end
 
 NS_ASSUME_NONNULL_END

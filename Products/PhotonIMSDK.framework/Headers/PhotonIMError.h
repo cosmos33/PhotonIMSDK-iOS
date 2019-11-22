@@ -17,11 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
  1002    图片非法
  1003    消息发送频率过高
  1004    消息不可撤回
- -1      消息发送超时
- -2      切换账号时，等待发送的消息
+ 1005    撤回消息功能未开启
+ 1006    参数错误
  */
 @interface PhotonIMError : NSError
 @property(nonatomic,copy,readonly,nullable,)NSString *em;
+@property(nonatomic, assign)int16_t retTime;
 - (instancetype)initWithDomain:(NSErrorDomain)domain code:(NSInteger)code errorMessage:(NSString *)em userInfo:(NSDictionary<NSErrorUserInfoKey,id> *)dict;
 + (instancetype)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code errorMessage:(NSString *)em userInfo:(NSDictionary<NSErrorUserInfoKey,id> *)dict;
 @end

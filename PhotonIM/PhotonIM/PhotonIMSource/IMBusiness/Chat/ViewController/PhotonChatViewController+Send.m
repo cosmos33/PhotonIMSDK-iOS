@@ -7,21 +7,43 @@
 //
 
 #import "PhotonChatViewController+Send.h"
-
+#import "PhotonAtMemberListViewController.h"
 @implementation PhotonChatViewController (Send)
 #pragma mark ------ 发送消息相关 ----------
 // 发送文本消息
-- (void)sendTextMessage:(NSString *)text{
+- (void)sendTextMessage:(NSString *)text atItems:(nonnull NSArray<PhotonChatAtInfo *> *)atItems type:(AtType)atType{
     PhotonTextMessageChatItem *textItem = [[PhotonTextMessageChatItem alloc] init];
     textItem.fromType = PhotonChatMessageFromSelf;
     textItem.timeStamp = [[NSDate date] timeIntervalSince1970] * 1000.0;
     textItem.messageText = text;
     textItem.avatalarImgaeURL = [PhotonContent userDetailInfo].avatarURL;
-    [self.model.items addObject:textItem];
-    [self reloadData];
+    textItem.atInfo = [atItems copy];
+    textItem.type = atType;
+    [self.model addItem:textItem];
     PhotonWeakSelf(self);
+   
+    [PhotonUtil runMainThread:^{
+        NSInteger count = weakself.totleSendCount + 1;
+         weakself.totleSendCount =  count;
+        
+    }];
+   
     [[PhotonMessageCenter sharedCenter] sendTextMessage:textItem conversation:self.conversation completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
-        if (!succeed && error.code == 1001 && error.em) {
+        if (succeed) {
+             NSInteger count = weakself.sendSucceedCount + 1;
+            weakself.sendSucceedCount = count;
+           
+        }else{
+             NSInteger count = weakself.sendFailedCount + 1;
+            weakself.sendFailedCount =  count;
+         
+        }
+        if ((weakself.sendSucceedCount + weakself.sendFailedCount) == weakself.count) {
+            NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970] * 1000.0;
+            int duration = endTime - weakself.startTime;
+             weakself.totalTimeLable.text = [NSString stringWithFormat:@"总耗时(毫秒)：%@",@(duration)];
+        }
+        if (!succeed && error.code >=1000 && error.em) {
            textItem.tipText = error.em;
         }else if (!succeed){
             if (error.code != -1 && error.code != -2) {
@@ -29,8 +51,13 @@
             }
             
         }
+        if (succeed) {
+            textItem.tipText = @"";
+        }
         [weakself reloadData];
     }];
+    [weakself reloadData];
+    
 }
 
 // 发送图片消息
@@ -52,27 +79,28 @@
     imageItem.fromType = PhotonChatMessageFromSelf;
     imageItem.fileName = imageName;
     imageItem.avatalarImgaeURL = [PhotonContent userDetailInfo].avatarURL;
-    imageItem.imageSize = image.size;
     imageItem.whRatio = image.size.width/image.size.height;
     imageItem.timeStamp = [[NSDate date] timeIntervalSince1970] * 1000.0;
     if (res) {
         imageItem.orignURL = imagePath;
         imageItem.thumURL = imagePath;
     }
-    [self.model.items addObject:imageItem];
+    [self.model addItem:imageItem];
     [self reloadData];
      PhotonWeakSelf(self)
     [[PhotonMessageCenter sharedCenter] sendImageMessage:imageItem conversation:self.conversation completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
-        if (!succeed && error.code == 1001 && error.em) {
+        if (!succeed && error.code >=1000 && error.em) {
             imageItem.tipText = error.em;
         }else if (!succeed){
             if (error.code != -1 && error.code != -2) {
                 [PhotonUtil showErrorHint:error.em];
             }
         }
+        if (succeed) {
+            imageItem.tipText = @"";
+        }
          [weakself reloadData];
     }];
-    
 }
 // 发送语音消息
 - (void)sendVoiceMessage:(nonnull NSString *)fileName duraion:(CGFloat)duraion{
@@ -82,7 +110,7 @@
     audioItem.fileName = fileName;
     audioItem.duration = duraion;
     audioItem.avatalarImgaeURL = [PhotonContent userDetailInfo].avatarURL;
-    [self.model.items addObject:audioItem];
+    [self.model addItem:audioItem];
     [self reloadData];
     PhotonWeakSelf(self)
     [[PhotonMessageCenter sharedCenter] sendVoiceMessage:audioItem conversation:self.conversation completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
@@ -92,6 +120,9 @@
             if (error.code != -1 && error.code != -2) {
                 [PhotonUtil showErrorHint:error.em];
             }
+        }
+        if (succeed) {
+            audioItem.tipText = @"";
         }
         [weakself reloadData];
     }];
@@ -111,15 +142,18 @@
     [self.model.items removeObject:item];
     PhotonWeakSelf(self)
     item.timeStamp = [[NSDate date] timeIntervalSince1970] * 1000.0;
-    [self.model.items addObject:item];
+    [self.model addItem:item];
     
     [[PhotonMessageCenter sharedCenter] resendMessage:item completion:^(BOOL succeed, PhotonIMError * _Nullable error){
-        if (!succeed && error.code == 1001 && error.em) {
+        if (!succeed && error.code >=1000 && error.em) {
             item.tipText = error.em;
         }else if (!succeed){
             if (error.code != -1 && error.code != -2) {
                 [PhotonUtil showErrorHint:error.em];
             }
+        }
+        if (succeed) {
+            item.tipText = @"";
         }
         [weakself reloadData];
     }];
@@ -127,11 +161,16 @@
 
 #pragma mark ------  PhotonMessageProtocol ------
 - (void)sendMessageResultCallBack:(PhotonIMMessage *)message{
+//    if (message.chatType == PhotonIMChatTypeGroup) {
+//        return;
+//    }
     BOOL ret  = NO;
     NSArray *tempItems = [self.model.items copy];
     for (PhotonBaseChatItem *item in tempItems) {
         if ([[item.userInfo messageID] isEqualToString:[message messageID]]) {
             ((PhotonIMMessage *)item.userInfo).messageStatus = [message messageStatus];
+            ((PhotonIMMessage *)item.userInfo).notic = [message notic];
+            item.tipText = message.notic;
             ret = YES;
         }
     }
@@ -140,4 +179,22 @@
     }
 }
 
+- (void)processAtAction:(PhotonCharBar *)charBar{
+    if (self.conversation.chatType == PhotonIMChatTypeGroup) {
+        NSMutableArray *items = [NSMutableArray array];
+        PhotonAtMemberListViewController *memberListCtl = [[PhotonAtMemberListViewController alloc] initWithGid:self.conversation.chatWith result:^(AtType type, NSArray * _Nullable resultItems) {
+            charBar.atType = type;
+            [charBar deleteLastCharacter];
+            [items addObjectsFromArray:charBar.atInfos];
+            [items addObjectsFromArray:resultItems];
+            charBar.atInfos = [items copy];
+            for (PhotonChatAtInfo *item in resultItems) {
+                [charBar addAtContent:item.nickName];
+            }
+        }];
+        [self.navigationController pushViewController:memberListCtl animated:YES];
+    }
+   
+    
+}
 @end

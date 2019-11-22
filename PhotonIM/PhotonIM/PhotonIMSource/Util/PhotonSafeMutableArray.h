@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeAllObjects;
 
 - (void)removeObject:(id) object;
+
+- (NSArray *)allObjects;
 @end
 
 NS_ASSUME_NONNULL_END

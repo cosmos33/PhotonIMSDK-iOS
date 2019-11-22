@@ -10,12 +10,13 @@
 
 #import "PhotonConversationListViewController.h"
 #import "PhotonUINavigationController.h"
-#import "PhotonContactViewController.h"
+#import "PhotonSingleContactViewController.h"
 #import "PhotonPersonViewController.h"
 #import "PhotonLoginViewController.h"
 #import "PhotonContent.h"
 #import "PhotonMessageCenter.h"
 #import "PhotonDBManager.h"
+#import "PhotonContactViewController.h"
 
 static PhotonAppLaunchManager *lauchManager = nil;
 @interface PhotonAppLaunchManager()
@@ -51,9 +52,7 @@ static PhotonAppLaunchManager *lauchManager = nil;
     NSArray *data;
     if ([[PhotonContent currentUser].userID isNotEmpty]) {
         
-       
         [PhotonContent login];
-        [PhotonDBManager openDB];
         [[PhotonMessageCenter sharedCenter] login];
         PhotonConversationListViewController *conversationVC = [[PhotonConversationListViewController alloc] init];
         PhotonContactViewController *contactVC = [[PhotonContactViewController alloc] init];

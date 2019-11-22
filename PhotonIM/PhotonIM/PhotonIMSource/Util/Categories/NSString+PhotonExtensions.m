@@ -97,6 +97,16 @@
     return ret;
 }
 
+- (NSString *)removeSpaceAndNewline{
+    
+    NSString *temp = [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    
+    NSString *text = [temp stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    return text;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSString*)md5Hash {
     return [[self dataUsingEncoding:NSUTF8StringEncoding] md5Hash];
