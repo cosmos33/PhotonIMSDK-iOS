@@ -176,6 +176,10 @@ static NSString *message_syncing = @"消息(收取中......)";
    
 }
 
+- (void)imClient:(id)client didReceiveMesage:(PhotonIMMessage *)message{
+    [[PhotonIMClient sharedClient] consumePacket:message.lt lv:message.lv];
+}
+
 - (void)readyRefreshConversations{
     if (_isRefreshing) {
         return;
