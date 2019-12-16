@@ -18,29 +18,29 @@
     textItem.messageText = text;
     textItem.avatalarImgaeURL = [PhotonContent userDetailInfo].avatarURL;
     textItem.atInfo = [atItems copy];
-    textItem.type = atType;
-    [self.model addItem:textItem];
+    textItem.type = (int)atType;
     PhotonWeakSelf(self);
+    [self addItem:textItem];
    
     [PhotonUtil runMainThread:^{
         NSInteger count = weakself.totleSendCount + 1;
          weakself.totleSendCount =  count;
         
     }];
-   
     [[PhotonMessageCenter sharedCenter] sendTextMessage:textItem conversation:self.conversation completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
         if (succeed) {
              NSInteger count = weakself.sendSucceedCount + 1;
             weakself.sendSucceedCount = count;
-           
+
         }else{
              NSInteger count = weakself.sendFailedCount + 1;
             weakself.sendFailedCount =  count;
-         
+
         }
-        if ((weakself.sendSucceedCount + weakself.sendFailedCount) == weakself.count) {
+        if ( weakself.sendSucceedCount + weakself.sendFailedCount == weakself.count) {
             NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970] * 1000.0;
             int duration = endTime - weakself.startTime;
+            NSLog(@"%@",[NSString stringWithFormat:@"总耗时(毫秒)：%@",@(duration)]);
              weakself.totalTimeLable.text = [NSString stringWithFormat:@"总耗时(毫秒)：%@",@(duration)];
         }
         if (!succeed && error.code >=1000 && error.em) {
@@ -54,9 +54,8 @@
         if (succeed) {
             textItem.tipText = @"";
         }
-        [weakself reloadData];
+        [weakself updateItem:textItem];
     }];
-    [weakself reloadData];
     
 }
 
@@ -85,8 +84,7 @@
         imageItem.orignURL = imagePath;
         imageItem.thumURL = imagePath;
     }
-    [self.model addItem:imageItem];
-    [self reloadData];
+    [self addItem:imageItem];
      PhotonWeakSelf(self)
     [[PhotonMessageCenter sharedCenter] sendImageMessage:imageItem conversation:self.conversation completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
         if (!succeed && error.code >=1000 && error.em) {
@@ -99,7 +97,7 @@
         if (succeed) {
             imageItem.tipText = @"";
         }
-         [weakself reloadData];
+        [weakself updateItem:imageItem];
     }];
 }
 // 发送语音消息
@@ -110,8 +108,7 @@
     audioItem.fileName = fileName;
     audioItem.duration = duraion;
     audioItem.avatalarImgaeURL = [PhotonContent userDetailInfo].avatarURL;
-    [self.model addItem:audioItem];
-    [self reloadData];
+    [self addItem:audioItem];
     PhotonWeakSelf(self)
     [[PhotonMessageCenter sharedCenter] sendVoiceMessage:audioItem conversation:self.conversation completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
         if (!succeed && error.em) {
@@ -124,7 +121,7 @@
         if (succeed) {
             audioItem.tipText = @"";
         }
-        [weakself reloadData];
+        [weakself updateItem:audioItem];
     }];
 }
 
@@ -142,7 +139,7 @@
     [self.model.items removeObject:item];
     PhotonWeakSelf(self)
     item.timeStamp = [[NSDate date] timeIntervalSince1970] * 1000.0;
-    [self.model addItem:item];
+    [(PhotonChatModel *)self.model addItem:item];
     
     [[PhotonMessageCenter sharedCenter] resendMessage:item completion:^(BOOL succeed, PhotonIMError * _Nullable error){
         if (!succeed && error.code >=1000 && error.em) {
@@ -161,9 +158,6 @@
 
 #pragma mark ------  PhotonMessageProtocol ------
 - (void)sendMessageResultCallBack:(PhotonIMMessage *)message{
-//    if (message.chatType == PhotonIMChatTypeGroup) {
-//        return;
-//    }
     BOOL ret  = NO;
     NSArray *tempItems = [self.model.items copy];
     for (PhotonBaseChatItem *item in tempItems) {

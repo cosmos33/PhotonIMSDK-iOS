@@ -20,7 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 @class PhotonIMConversation;
 @class PhotonBaseChatItem;
 @interface PhotonChatViewController : PhotonBaseViewController<PhotonChatPanelDelegate,PhotonChatDataSourceDelegate,PhotonMessageProtocol>
-@property(nonatomic, strong, readonly, nullable)PhotonChatModel *model;
 @property(nonatomic, strong, readonly, nullable)PhotonIMConversation *conversation;
 @property(nonatomic,strong,readonly,nullable)PhotonChatPanelManager *panelManager;
 @property(nonatomic,strong,readonly,nullable)PhotonMenuView *menuView;
@@ -34,8 +33,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)NSInteger  count;
 @property(nonatomic, strong)UILabel  *totalTimeLable;
 - (instancetype)initWithConversation:(nullable PhotonIMConversation *)conversation;
-
-- (void)reloadDataScroll;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -42,3 +42,4 @@ FOUNDATION_EXPORT const unsigned char PhotonIMSDKVersionString[];
 #import <PhotonIMSDK/PhotonIMThreadSafeDictionary.h>
 #import <PhotonIMSDK/PhotonIMTimer.h>
 #import <PhotonIMSDK/PhotonIMError.h>
+#import <PhotonIMSDK/PhotonIMDispatchSource.h>

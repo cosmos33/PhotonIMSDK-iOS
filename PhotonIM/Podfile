@@ -14,8 +14,9 @@ target :PhotonIM do
     pod 'FMDB', '2.7.2'
     pod 'MMKV','1.0.22'
     pod 'MMBase-iOS'
-    pod 'PhotonPushSDK','0.1.0'
+    pod 'PhotonPushSDK','1.0.0'
+    pod 'MMFileService','1.3.0'
 #    pod 'PhotonIMSDK','2.0.0'
 #    pod 'PhotonIMSDK',:git=>'https://cosmos33@github.com/cosmos33/PhotonIMSDK-iOS.git', :commit=>'92766efc0b63454acddcda4efc464da8429301af'
-    pod 'PhotonIMSDK',:path=>'../'
+#    pod 'PhotonIMSDK',:path=>'../'
 end

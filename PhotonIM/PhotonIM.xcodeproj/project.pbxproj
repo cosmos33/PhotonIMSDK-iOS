@@ -135,6 +135,13 @@
 		3238ACE822D4AB8800EB3D0B /* PhotonBaseContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3238AC6322D4AB8800EB3D0B /* PhotonBaseContactCell.m */; };
 		3238ACEE22D4AB8800EB3D0B /* PhotonSingleContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3238AC7122D4AB8800EB3D0B /* PhotonSingleContactViewController.m */; };
 		3238ACEF22D4AB8800EB3D0B /* PhotonFriendDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3238AC7222D4AB8800EB3D0B /* PhotonFriendDetailViewController.m */; };
+		3242C1D1238E243600C221D2 /* PhotonChatTestDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3242C1D0238E243600C221D2 /* PhotonChatTestDataSource.m */; };
+		3242C1D6238E249E00C221D2 /* PhotonChatTestItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3242C1D3238E249D00C221D2 /* PhotonChatTestItem.m */; };
+		3242C1D7238E249E00C221D2 /* PhotonChatTestModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3242C1D4238E249D00C221D2 /* PhotonChatTestModel.m */; };
+		3242C1DC238E255C00C221D2 /* PhotonChatTestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3242C1D9238E255C00C221D2 /* PhotonChatTestCell.m */; };
+		3242C1DD238E255C00C221D2 /* PhotonChatTestBaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3242C1DA238E255C00C221D2 /* PhotonChatTestBaseCell.m */; };
+		3242C1E2238E267C00C221D2 /* PhotonChatTestListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3242C1DE238E267B00C221D2 /* PhotonChatTestListViewController.m */; };
+		3242C1E3238E267C00C221D2 /* PhotonChatTestListViewController+Delegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3242C1E0238E267B00C221D2 /* PhotonChatTestListViewController+Delegate.m */; };
 		324FE2AE233B83CD00F996D0 /* PhotonGroupSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 324FE2AD233B83CD00F996D0 /* PhotonGroupSettingViewController.m */; };
 		324FE2B1233B85D000F996D0 /* PhotonGroupTitleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 324FE2B0233B85D000F996D0 /* PhotonGroupTitleTableViewCell.m */; };
 		324FE2B4233B865300F996D0 /* PhotonGroupTitleTableItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 324FE2B3233B865300F996D0 /* PhotonGroupTitleTableItem.m */; };
@@ -149,6 +156,9 @@
 		3272588422F18D2D00842026 /* PhotonChatTransmitItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3272588322F18D2D00842026 /* PhotonChatTransmitItem.m */; };
 		3272588722F1981B00842026 /* PhotonChatTransmitCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3272588622F1981B00842026 /* PhotonChatTransmitCell.m */; };
 		3272588A22F1A61900842026 /* PhotonChatTransmitModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3272588922F1A61900842026 /* PhotonChatTransmitModel.m */; };
+		32845465238FA886003C0683 /* PhotonChatData.m in Sources */ = {isa = PBXBuildFile; fileRef = 32845464238FA886003C0683 /* PhotonChatData.m */; };
+		32845474238FD1D1003C0683 /* YYWeakProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 32845470238FD1D1003C0683 /* YYWeakProxy.m */; };
+		32845475238FD1D1003C0683 /* YYFPSLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 32845472238FD1D1003C0683 /* YYFPSLabel.m */; };
 		3286B10A22BB25FA0032D066 /* Chat.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3286B10922BB25FA0032D066 /* Chat.xcassets */; };
 		3286B13322BB808C0032D066 /* FaceEmoji.json in Resources */ = {isa = PBXBuildFile; fileRef = 3286B13222BB808C0032D066 /* FaceEmoji.json */; };
 		328A76532339D8EB009F0668 /* PhotonGroupMemberListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 328A76522339D8EB009F0668 /* PhotonGroupMemberListModel.m */; };
@@ -400,6 +410,20 @@
 		3238AC7422D4AB8800EB3D0B /* PhotonFriendDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotonFriendDetailViewController.h; sourceTree = "<group>"; };
 		323D507A22F9A10600182F50 /* PhotonIM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PhotonIM.entitlements; sourceTree = "<group>"; };
 		323D507B22F9A11600182F50 /* PhotonIMNotificationService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PhotonIMNotificationService.entitlements; sourceTree = "<group>"; };
+		3242C1CF238E243600C221D2 /* PhotonChatTestDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotonChatTestDataSource.h; sourceTree = "<group>"; };
+		3242C1D0238E243600C221D2 /* PhotonChatTestDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotonChatTestDataSource.m; sourceTree = "<group>"; };
+		3242C1D2238E249D00C221D2 /* PhotonChatTestItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotonChatTestItem.h; sourceTree = "<group>"; };
+		3242C1D3238E249D00C221D2 /* PhotonChatTestItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotonChatTestItem.m; sourceTree = "<group>"; };
+		3242C1D4238E249D00C221D2 /* PhotonChatTestModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotonChatTestModel.m; sourceTree = "<group>"; };
+		3242C1D5238E249E00C221D2 /* PhotonChatTestModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotonChatTestModel.h; sourceTree = "<group>"; };
+		3242C1D8238E255C00C221D2 /* PhotonChatTestBaseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotonChatTestBaseCell.h; sourceTree = "<group>"; };
+		3242C1D9238E255C00C221D2 /* PhotonChatTestCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotonChatTestCell.m; sourceTree = "<group>"; };
+		3242C1DA238E255C00C221D2 /* PhotonChatTestBaseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotonChatTestBaseCell.m; sourceTree = "<group>"; };
+		3242C1DB238E255C00C221D2 /* PhotonChatTestCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotonChatTestCell.h; sourceTree = "<group>"; };
+		3242C1DE238E267B00C221D2 /* PhotonChatTestListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotonChatTestListViewController.m; sourceTree = "<group>"; };
+		3242C1DF238E267B00C221D2 /* PhotonChatTestListViewController+Delegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PhotonChatTestListViewController+Delegate.h"; sourceTree = "<group>"; };
+		3242C1E0238E267B00C221D2 /* PhotonChatTestListViewController+Delegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PhotonChatTestListViewController+Delegate.m"; sourceTree = "<group>"; };
+		3242C1E1238E267C00C221D2 /* PhotonChatTestListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotonChatTestListViewController.h; sourceTree = "<group>"; };
 		324FE2AC233B83CD00F996D0 /* PhotonGroupSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonGroupSettingViewController.h; sourceTree = "<group>"; };
 		324FE2AD233B83CD00F996D0 /* PhotonGroupSettingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonGroupSettingViewController.m; sourceTree = "<group>"; };
 		324FE2AF233B85D000F996D0 /* PhotonGroupTitleTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonGroupTitleTableViewCell.h; sourceTree = "<group>"; };
@@ -439,6 +463,12 @@
 		327336342371586000CEF6C2 /* libProtocolBuffers.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libProtocolBuffers.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		327D8D7D23066A00006E2E90 /* PhotonCommonHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonCommonHeader.h; sourceTree = "<group>"; };
 		327D8D7E230691D6006E2E90 /* PhotonAPIMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonAPIMacros.h; sourceTree = "<group>"; };
+		32845463238FA886003C0683 /* PhotonChatData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonChatData.h; sourceTree = "<group>"; };
+		32845464238FA886003C0683 /* PhotonChatData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonChatData.m; sourceTree = "<group>"; };
+		32845470238FD1D1003C0683 /* YYWeakProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYWeakProxy.m; sourceTree = "<group>"; };
+		32845471238FD1D1003C0683 /* YYFPSLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYFPSLabel.h; sourceTree = "<group>"; };
+		32845472238FD1D1003C0683 /* YYFPSLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYFPSLabel.m; sourceTree = "<group>"; };
+		32845473238FD1D1003C0683 /* YYWeakProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYWeakProxy.h; sourceTree = "<group>"; };
 		3286B10922BB25FA0032D066 /* Chat.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Chat.xcassets; sourceTree = "<group>"; };
 		3286B10F22BB47040032D066 /* PhotonEmojiKeyboard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonEmojiKeyboard.h; sourceTree = "<group>"; };
 		3286B11022BB47040032D066 /* PhotonEmojiKeyboard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonEmojiKeyboard.m; sourceTree = "<group>"; };
@@ -893,6 +923,7 @@
 		322B428E22C234150027C1A3 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				3284546F238FD1D1003C0683 /* YYFPSLabel */,
 				32E0BE0522D3574D00DEEFA5 /* RecordIndicator */,
 				32286FFF22BA47CB009B6881 /* BadgeView */,
 				32286FEC22BA32A2009B6881 /* KeyBoards */,
@@ -1156,6 +1187,53 @@
 			path = Items;
 			sourceTree = "<group>";
 		};
+		3242C1B6238E23C100C221D2 /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				3242C1B7238E23C100C221D2 /* Model */,
+				3242C1BE238E23C100C221D2 /* View */,
+				3242C1C3238E23C100C221D2 /* ViewController */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
+		3242C1B7238E23C100C221D2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3242C1D2238E249D00C221D2 /* PhotonChatTestItem.h */,
+				3242C1D3238E249D00C221D2 /* PhotonChatTestItem.m */,
+				32845463238FA886003C0683 /* PhotonChatData.h */,
+				32845464238FA886003C0683 /* PhotonChatData.m */,
+				3242C1D5238E249E00C221D2 /* PhotonChatTestModel.h */,
+				3242C1D4238E249D00C221D2 /* PhotonChatTestModel.m */,
+				3242C1CF238E243600C221D2 /* PhotonChatTestDataSource.h */,
+				3242C1D0238E243600C221D2 /* PhotonChatTestDataSource.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		3242C1BE238E23C100C221D2 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3242C1D8238E255C00C221D2 /* PhotonChatTestBaseCell.h */,
+				3242C1DA238E255C00C221D2 /* PhotonChatTestBaseCell.m */,
+				3242C1DB238E255C00C221D2 /* PhotonChatTestCell.h */,
+				3242C1D9238E255C00C221D2 /* PhotonChatTestCell.m */,
+				3242C1DF238E267B00C221D2 /* PhotonChatTestListViewController+Delegate.h */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3242C1C3238E23C100C221D2 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				3242C1E1238E267C00C221D2 /* PhotonChatTestListViewController.h */,
+				3242C1DE238E267B00C221D2 /* PhotonChatTestListViewController.m */,
+				3242C1E0238E267B00C221D2 /* PhotonChatTestListViewController+Delegate.m */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
 		3270BBFF22C5F049004CAA00 /* FileManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -1201,6 +1279,17 @@
 				32FDC80522C46F8500EECD24 /* MessageCenter */,
 			);
 			path = PhotonIMSource;
+			sourceTree = "<group>";
+		};
+		3284546F238FD1D1003C0683 /* YYFPSLabel */ = {
+			isa = PBXGroup;
+			children = (
+				32845470238FD1D1003C0683 /* YYWeakProxy.m */,
+				32845471238FD1D1003C0683 /* YYFPSLabel.h */,
+				32845472238FD1D1003C0683 /* YYFPSLabel.m */,
+				32845473238FD1D1003C0683 /* YYWeakProxy.h */,
+			);
+			path = YYFPSLabel;
 			sourceTree = "<group>";
 		};
 		3286B10E22BB46E70032D066 /* EmojiKeyBoard */ = {
@@ -1286,10 +1375,11 @@
 		32FDC9FD22C4EB8400EECD24 /* IMBusiness */ = {
 			isa = PBXGroup;
 			children = (
+				3238AB9F22D4AB8700EB3D0B /* Conversation */,
+				3242C1B6238E23C100C221D2 /* Test */,
 				3272587122F1409800842026 /* Setting */,
 				3238ABE822D4AB8700EB3D0B /* Chat */,
 				3238AC3122D4AB8700EB3D0B /* Contact */,
-				3238AB9F22D4AB8700EB3D0B /* Conversation */,
 				3238AB5622D4AB8700EB3D0B /* Person */,
 			);
 			path = IMBusiness;
@@ -1548,6 +1638,7 @@
 				32258ADA22CD9D61002D56E5 /* PhotonFileUploadOperation.m in Sources */,
 				32E0BE0822D358DF00DEEFA5 /* PhotonRecorderIndicator.m in Sources */,
 				3221882A22CCA5B6007E9FA3 /* PhotonContent.m in Sources */,
+				3242C1DD238E255C00C221D2 /* PhotonChatTestBaseCell.m in Sources */,
 				3238ACCD22D4AB8800EB3D0B /* PhotonChatViewController.m in Sources */,
 				321FE3D722CF0F8E00020CCE /* UINavigation+FixSpace.m in Sources */,
 				3221882B22CCA5B6007E9FA3 /* PhotonUser.m in Sources */,
@@ -1565,6 +1656,7 @@
 				32258ADE22CD9F13002D56E5 /* PhotonDownLoadFileOperation.m in Sources */,
 				3238ACC322D4AB8800EB3D0B /* PhotonBaseChatCell.m in Sources */,
 				3238ACBC22D4AB8800EB3D0B /* PhotonChatDataSource.m in Sources */,
+				3242C1D6238E249E00C221D2 /* PhotonChatTestItem.m in Sources */,
 				3238ACB422D4AB8800EB3D0B /* PhotonConversationListViewController+Delegate.m in Sources */,
 				3221883422CCA5B6007E9FA3 /* PotonTableViewDataSource.m in Sources */,
 				3221883522CCA5B6007E9FA3 /* PhotonBaseTableItem.m in Sources */,
@@ -1574,6 +1666,7 @@
 				3221CD2D22D754CA0029EF0A /* PhotonChatViewController+Send.m in Sources */,
 				321FE3D422CF01EA00020CCE /* PhotonUINavigationController.m in Sources */,
 				3221883822CCA5B6007E9FA3 /* PhotonTableViewCell.m in Sources */,
+				32845474238FD1D1003C0683 /* YYWeakProxy.m in Sources */,
 				3221883922CCA5B6007E9FA3 /* PhoneBadgeView.m in Sources */,
 				3221883A22CCA5B6007E9FA3 /* PhotonEmojiKeyboardItem.m in Sources */,
 				3221883B22CCA5B6007E9FA3 /* PhotonEmojiKeyboardCell.m in Sources */,
@@ -1608,6 +1701,7 @@
 				3221884922CCA5B6007E9FA3 /* PhotonAudioRecorder.m in Sources */,
 				3221884A22CCA5B6007E9FA3 /* PhotonAudioPlayer.m in Sources */,
 				3272587422F140D000842026 /* PhotonSingleSettingViewController.m in Sources */,
+				32845465238FA886003C0683 /* PhotonChatData.m in Sources */,
 				3221884B22CCA5B6007E9FA3 /* PhotonNotifycationConstant.m in Sources */,
 				3221884C22CCA5B6007E9FA3 /* UIView+PhotonFrame.m in Sources */,
 				3221884D22CCA5B6007E9FA3 /* UIColor+PhotonExtensions.m in Sources */,
@@ -1619,6 +1713,7 @@
 				324FE2AE233B83CD00F996D0 /* PhotonGroupSettingViewController.m in Sources */,
 				324FE2BA233B959D00F996D0 /* PhotonGroupMemberTableItem.m in Sources */,
 				3221885022CCA5B6007E9FA3 /* NSString+PhotonExtensions.m in Sources */,
+				3242C1E3238E267C00C221D2 /* PhotonChatTestListViewController+Delegate.m in Sources */,
 				3221885122CCA5B6007E9FA3 /* NSData+PhotonExtensions.m in Sources */,
 				321E1C7122F2C9DE00BB9585 /* PhotonTitleTableItem.m in Sources */,
 				3221885222CCA5B6007E9FA3 /* NSDate+PhotonExtensions.m in Sources */,
@@ -1627,6 +1722,8 @@
 				3238ACCB22D4AB8800EB3D0B /* PhotonChatPanelManager.m in Sources */,
 				3221885422CCA5B6007E9FA3 /* UIWindow+PhotonExtensions.m in Sources */,
 				3221885522CCA5B6007E9FA3 /* NSObject+PhotonExtensions.m in Sources */,
+				3242C1D7238E249E00C221D2 /* PhotonChatTestModel.m in Sources */,
+				32845475238FD1D1003C0683 /* YYFPSLabel.m in Sources */,
 				3221885622CCA5B6007E9FA3 /* PhotonUtil.m in Sources */,
 				321E1C6E22F2C9BE00BB9585 /* PhotonTitleTableViewCell.m in Sources */,
 				3221885722CCA5B6007E9FA3 /* PhotonSafeMutableArray.m in Sources */,
@@ -1635,6 +1732,7 @@
 				3238ACDE22D4AB8800EB3D0B /* PhotonSingleContactModel.m in Sources */,
 				32E0BE0122D3464300DEEFA5 /* PhotonEmptyTableViewCell.m in Sources */,
 				3238ACBA22D4AB8800EB3D0B /* PhotonBaseChatItem.m in Sources */,
+				3242C1DC238E255C00C221D2 /* PhotonChatTestCell.m in Sources */,
 				321FE3E922CF3F9700020CCE /* PhotonNetTableViewCell.m in Sources */,
 				3238AC9B22D4AB8800EB3D0B /* PhotonConversationItem.m in Sources */,
 				3238AC9322D4AB8800EB3D0B /* PhotonPersonViewController.m in Sources */,
@@ -1648,10 +1746,12 @@
 				32E0BE0422D3466A00DEEFA5 /* PhotonEmptyTableItem.m in Sources */,
 				324FE2BD233C5CE900F996D0 /* PhotonAtMemberListViewController.m in Sources */,
 				324FE2C0233C5D5E00F996D0 /* PhotonGroupMemberListViewController.m in Sources */,
+				3242C1D1238E243600C221D2 /* PhotonChatTestDataSource.m in Sources */,
 				3238ACBD22D4AB8800EB3D0B /* PhotonTextMessageChatItem.m in Sources */,
 				3238AC9A22D4AB8800EB3D0B /* PhotonConversationDataSource.m in Sources */,
 				3238ACC422D4AB8800EB3D0B /* PhotonTextMessageChatCell.m in Sources */,
 				3221887922CCA5B7007E9FA3 /* ViewController.m in Sources */,
+				3242C1E2238E267C00C221D2 /* PhotonChatTestListViewController.m in Sources */,
 				3221887A22CCA5B7007E9FA3 /* main.m in Sources */,
 				3238ACB522D4AB8800EB3D0B /* PhotonConversationListViewController.m in Sources */,
 				3238ACDF22D4AB8800EB3D0B /* PhotonBaseContactItem.m in Sources */,
@@ -1871,7 +1971,7 @@
 				CODE_SIGN_ENTITLEMENTS = PhotonIM/PhotonIM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 29;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_TEAM = 4BXE593ED8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1907,7 +2007,7 @@
 					"$(PROJECT_DIR)/PhotonIM",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 2.9;
+				MARKETING_VERSION = 2.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1951,7 +2051,7 @@
 				CODE_SIGN_ENTITLEMENTS = PhotonIM/PhotonIM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 29;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_TEAM = 4BXE593ED8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1987,7 +2087,7 @@
 					"$(PROJECT_DIR)/PhotonIM",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 2.9;
+				MARKETING_VERSION = 2.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
