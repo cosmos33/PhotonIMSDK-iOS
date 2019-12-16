@@ -12,7 +12,6 @@
 #import "PhotonContacDataSource.h"
 #import "PhotonFriendDetailViewController.h"
 @interface PhotonSingleContactViewController ()
-@property (nonatomic, strong, nullable)PhotonSingleContactModel *model;
 @end
 
 @implementation PhotonSingleContactViewController
@@ -20,6 +19,7 @@
 {
     self = [super init];
     if (self) {
+        self.model = [[PhotonSingleContactModel alloc] init];
     }
     return self;
 }
@@ -51,14 +51,6 @@
     PhotonContacDataSource *dataSource = [[PhotonContacDataSource alloc] initWithItems:self.model.items];
     self.dataSource = dataSource;
 }
-
-- (PhotonSingleContactModel *)model{
-    if (!_model) {
-        _model = [[PhotonSingleContactModel alloc] init];
-    }
-    return _model;
-}
-
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{

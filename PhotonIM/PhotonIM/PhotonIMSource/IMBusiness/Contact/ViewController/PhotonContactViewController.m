@@ -26,6 +26,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"通讯录";
+    self.tabBarItem.tag = 2;
     PhotonBaseContactItem *singleItem = [[PhotonBaseContactItem alloc] init];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);

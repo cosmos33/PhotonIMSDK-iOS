@@ -19,7 +19,6 @@
 #import "PhotonCharBar.h"
 @interface PhotonAtMemberListViewController ()<PhotonChatTransmitCellDelegate>
 @property (nonatomic, copy, nullable)NSString *gid;
-@property (nonatomic, strong, nullable)PhotonGroupMemberListModel *model;
 @property (nonatomic, strong, nullable)UILabel   *tipLable;
 @property (nonatomic, strong, nullable)UIButton  *okBtn;
 @property (nonatomic, strong, nullable)NSMutableArray *selectedChats;
@@ -32,6 +31,7 @@
 - (instancetype)initWithGid:(NSString *)gid result:(PhotonAtMemberListBlock)result{
     self = [super init];
     if (self) {
+        self.model = [[PhotonGroupMemberListModel alloc] init];
         _gid = gid;
         _result = [result copy];
     }
@@ -85,7 +85,7 @@
     if (![self.gid isNotEmpty]) {
         return;
     }
-    self.model.gid = self.gid;
+    ((PhotonGroupMemberListModel *)self.model).gid = self.gid;
   
     [self.model loadItems:nil finish:^(NSDictionary * _Nullable dict) {
         [weakself loadData];
@@ -105,13 +105,6 @@
     PhotonContacDataSource *dataSource = [[PhotonContacDataSource alloc] initWithItems:self.model.items];
     self.dataSource = dataSource;
 }
-- (PhotonGroupMemberListModel *)model{
-    if (!_model) {
-        _model = [[PhotonGroupMemberListModel alloc] init];
-    }
-    return _model;
-}
-
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
     if ([cell isKindOfClass:[PhotonChatTransmitCell class]]) {
         PhotonChatTransmitCell *tempCell = (PhotonChatTransmitCell *)cell;

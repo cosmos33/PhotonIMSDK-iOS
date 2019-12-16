@@ -113,6 +113,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)deleteMessage:(PhotonIMMessage *)message;
 
 
+/// 删除消息
+/// @param chatType 消息类型
+/// @param chatWith 会话id(会话中对方id)
+/// @param msgId 消息id
+- (void)deleteMessageWithChatType:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith msgId:(NSString *)msgId;
+
 /**
  清空指定会话下的所有消息
  

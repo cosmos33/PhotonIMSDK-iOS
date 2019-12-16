@@ -45,29 +45,28 @@ static PhotonMessageCenter *center = nil;
 }
 
 - (void)initPhtonIMSDK{
-    // 通过注册appid 完成sdk的初始化
-    [[PhotonIMClient sharedClient] registerIMClientWithAppid:APP_ID];
-    // 指定使用sdk内的数据库模式，推荐使用异步模式
-    [[PhotonIMClient sharedClient] setPhotonIMDBMode:PhotonIMDBModeDBAsync];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppWillEnterForegroundNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
+   
+//#ifdef DEBUG
     // 是否在写log时开启控制台日志输出，debug模式下建议开启
     [[PhotonIMClient sharedClient] openPhotonIMLog:YES];
-    // 是否开启断言，debug模式下推荐开启
-    [[PhotonIMClient sharedClient] setAssertEnable:YES];
-//#ifdef DEBUG
-//    // 是否在写log时开启控制台日志输出，debug模式下建议开启
-//    [[PhotonIMClient sharedClient] openPhotonIMLog:YES];
-//    // 是否开启断言，debug模式下推荐开启
-//    [[PhotonIMClient sharedClient] setAssertEnable:YES];
+//     是否开启断言，debug模式下推荐开启
+    [[PhotonIMClient sharedClient] setAssertEnable:NO];
 //#else
 //    [[PhotonIMClient sharedClient] openPhotonIMLog:NO];
 //    [[PhotonIMClient sharedClient] setAssertEnable:NO];
 //#endif
+    
+    // 通过注册appid 完成sdk的初始化
+    [[PhotonIMClient sharedClient] registerIMClientWithAppid:APP_ID];
+    // 指定使用sdk内的数据库模式，推荐使用异步模式
+    [[PhotonIMClient sharedClient] setPhotonIMDBMode:PhotonIMDBModeDBAsync];
+    [[PhotonIMClient sharedClient] supportGroup];
 }
 
 - (void)login{
     // 客户端登录后
     [[PhotonIMClient sharedClient] bindCurrentUserId:[PhotonContent currentUser].userID];
-//    _messages = [[[PhotonIMClient sharedClient] getAllSendingMessages] mutableCopy];
     // 获取token
     [self getToken];
 }
@@ -138,6 +137,19 @@ static PhotonMessageCenter *center = nil;
     [message setMesageBody:body];
     item.userInfo = message;
     
+    
+    [self _sendMessage:message completion:completion];
+    
+}
+
+- (void)sendTex:(NSString *)text conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion{
+    
+    // 文本消息，直接构建文本消息对象发送
+    PhotonIMMessage *message = [PhotonIMMessage commonMessageWithFrid:[PhotonContent currentUser].userID toid:conversation.chatWith messageType:PhotonIMMessageTypeText chatType:conversation.chatType];
+    NSMutableArray *uids = [[NSMutableArray alloc] init];
+    [message setAtInfoWithAtType:PhotonIMAtTypeNoAt atList:uids];
+    PhotonIMTextBody *body = [[PhotonIMTextBody alloc] initWithText:text];
+    [message setMesageBody:body];
     
     [self _sendMessage:message completion:completion];
     
@@ -537,15 +549,20 @@ static PhotonMessageCenter *center = nil;
     [self getToken];
 }
 - (void)getToken{
+    id en = [[NSUserDefaults standardUserDefaults] objectForKey:@"photon_im_forbid_uploadLog"];
+    NSDictionary *extra = @{};
+    if(en){
+        extra = @{@"photon_im_forbid_uploadLog":[NSString stringWithFormat:@"%@",en]};
+    }
     NSString *token = [[MMKV defaultMMKV] getStringForKey:TOKENKEY defaultValue:@""];
     if ([token isNotEmpty]) {
-         [[PhotonIMClient sharedClient] loginWithToken:token extra:nil];
+         [[PhotonIMClient sharedClient] loginWithToken:token extra:extra];
     }else{
         NSMutableDictionary *paramter = [NSMutableDictionary dictionary];
         [self.netService commonRequestMethod:PhotonRequestMethodPost queryString:PHOTON_TOKEN_PATH paramter:paramter completion:^(NSDictionary * _Nonnull dict) {
             NSString *token = [[dict objectForKey:@"data"] objectForKey:@"token"];
             [[MMKV defaultMMKV] setString:token forKey:TOKENKEY];
-            [[PhotonIMClient sharedClient] loginWithToken:token extra:nil];
+            [[PhotonIMClient sharedClient] loginWithToken:token extra:extra];
             PhotonLog(@"[pim] dict = %@",dict);
         } failure:^(PhotonErrorDescription * _Nonnull error) {
             PhotonLog(@"[pim] error = %@",error.errorMessage);

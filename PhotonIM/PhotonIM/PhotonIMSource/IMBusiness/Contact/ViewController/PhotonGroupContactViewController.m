@@ -24,6 +24,7 @@
 {
     self = [super init];
     if (self) {
+        self.model = [[PhotonGroupContactModel alloc] init];
     }
     return self;
 }
@@ -56,12 +57,6 @@
     self.dataSource = dataSource;
 }
 
-- (PhotonGroupContactModel *)model{
-    if (!_model) {
-        _model = [[PhotonGroupContactModel alloc] init];
-    }
-    return _model;
-}
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
     if ([cell isKindOfClass:[PhotonGroupContactCell class]]) {

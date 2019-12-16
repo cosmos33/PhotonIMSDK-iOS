@@ -12,7 +12,7 @@
 #import "PhotonEmptyTableItem.h"
 @interface PhotonGroupMemberListViewController ()
 @property (nonatomic, copy, nullable)NSString *gid;
-@property (nonatomic, strong, nullable)PhotonGroupMemberListModel *model;
+
 @end
 
 @implementation PhotonGroupMemberListViewController
@@ -21,7 +21,8 @@
     self = [super init];
     if (self) {
         _gid = gid;
-        self.model.showSelectBtn = NO;
+        self.model = [[PhotonGroupMemberListModel alloc] init];
+        ((PhotonGroupMemberListModel *)self.model).showSelectBtn = NO;
     }
     return self;
 }
@@ -42,7 +43,7 @@
     if (![self.gid isNotEmpty]) {
         return;
     }
-    self.model.gid = self.gid;
+    ((PhotonGroupMemberListModel *)self.model).gid = self.gid;
     
     [self.model loadItems:nil finish:^(NSDictionary * _Nullable dict) {
         [weakself loadData];
@@ -60,11 +61,5 @@
     }
     PhotonContacDataSource *dataSource = [[PhotonContacDataSource alloc] initWithItems:self.model.items];
     self.dataSource = dataSource;
-}
-- (PhotonGroupMemberListModel *)model{
-    if (!_model) {
-        _model = [[PhotonGroupMemberListModel alloc] init];
-    }
-    return _model;
 }
 @end

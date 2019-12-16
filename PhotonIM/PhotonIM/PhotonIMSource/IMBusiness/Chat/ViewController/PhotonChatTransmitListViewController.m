@@ -38,6 +38,7 @@
 - (instancetype)initWithMessage:(PhotonIMMessage *)message block:(nullable ChatTransmitBlock)chatBlock{
     self = [super init];
     if (self) {
+        self.model = [[PhotonChatTransmitModel alloc] init];
         _message = message;
         _chatBlock = [chatBlock copy];
     }
@@ -99,12 +100,7 @@
     PhotonChatTransmitListDataSource *dataSource = [[PhotonChatTransmitListDataSource alloc] initWithItems:self.model.items];
     self.dataSource = dataSource;
 }
-- (PhotonChatTransmitModel *)model{
-    if (!_model) {
-        _model = [[PhotonChatTransmitModel alloc] init];
-    }
-    return _model;
-}
+
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
     if ([cell isKindOfClass:[PhotonChatTransmitCell class]]) {

@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)registerIMClientWithAppid:(NSString *)appid;
 
+/// 支持群组功能
+- (void)supportGroup;
 /**
  设置使用db的模式
  

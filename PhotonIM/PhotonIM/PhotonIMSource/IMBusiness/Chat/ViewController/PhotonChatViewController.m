@@ -15,19 +15,15 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 @interface PhotonChatViewController ()
-@property(nonatomic, strong, nullable)PhotonChatModel *model;
 @property(nonatomic,strong,nullable)PhotonChatPanelManager *panelManager;
 @property(nonatomic,strong,nullable)PhotonCharBar *chatBar;
 @property(nonatomic,strong,nullable)PhotonMenuView *menuView;
 
 @property(nonatomic, strong, nullable)PhotonIMConversation *conversation;
 
-@property (nonatomic, strong, nullable)MFDispatchSource  *uiDispatchSource;
 @property (nonatomic, strong, nullable)MFDispatchSource  *dataDispatchSource;
 
 @property (nonatomic, assign)BOOL isFirstPage;
-
-
 @property (nonatomic, strong,nullable)UIView  *testUIView;
 // 内容
 @property (nonatomic, strong,nullable)UITextField  *contentFiled;
@@ -37,24 +33,16 @@
 @property (nonatomic, strong,nullable)UITextField  *countFiled;
 //发送按钮
 @property (nonatomic, strong,nullable)UIButton  *autoSendMessage;
-
 //发送按钮
 @property (nonatomic, strong,nullable)UIButton  *stopSendMessage;
-
 //发送按钮
 @property (nonatomic, copy,nullable)NSString  *content;
-
 // login内容
 @property (nonatomic, strong,nullable)UILabel  *authFiled;
-
 @property (nonatomic, assign)NSTimeInterval  interval;
-
 @property (atomic, assign)BOOL  isStop;
-
 @property (nonatomic, assign)NSInteger authSucceedCount;
-
 @property (nonatomic, assign)NSInteger authFaileddCount;
-
 @property (atomic, assign)BOOL scrollTop;
 @end
 
@@ -66,7 +54,6 @@
         _panelManager = [[PhotonChatPanelManager alloc] initWithIdentifier:conversation.chatWith];
         _panelManager.delegate = self;
         
-        _uiDispatchSource = [MFDispatchSource sourceWithDelegate:self type:refreshType_UI dataQueue:dispatch_get_main_queue()];
         _dataDispatchSource = [MFDispatchSource sourceWithDelegate:self type:refreshType_Data dataQueue:dispatch_queue_create("com.cosmos.PhotonIM.chatdata", DISPATCH_QUEUE_SERIAL)];
     }
     return self;
@@ -77,24 +64,17 @@
     [[PhotonMessageCenter sharedCenter] removeObserver:self];
     [self.tableView removeObserver:self forKeyPath:@"bounds"];
     [PhotonUtil resetLastShowTimestamp];
-    [_uiDispatchSource clearDelegateAndCancel];
     [_dataDispatchSource clearDelegateAndCancel];
 }
 - (instancetype)init
 {
     self = [super init];
     if (self) {
+        self.model = [[PhotonChatModel alloc] init];
         self.items = [NSMutableArray array];
-        // 添加接收消息的监听
-        [[PhotonMessageCenter sharedCenter] addObserver:self];
         [self.tableView addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     }
     return self;
-}
-
-
-- (void)firstLoadMessages{
-    [self loadDataItems];
 }
 
 - (void)viewDidLoad {
@@ -117,9 +97,12 @@
     }];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
     [self.tableView addGestureRecognizer:tap];
-    [self firstLoadMessages];
+    
+    [self startLoadData];
     
     [self addTextUI];
+    // 添加接收消息的监听
+    [[PhotonMessageCenter sharedCenter] addObserver:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -161,20 +144,20 @@
 }
 // 加载数据
 - (void)loadDataItems{
-    [self.dataDispatchSource addSemaphore];
+    [self p_loadDataItems];
 }
 
 - (void)p_loadDataItems{
     PhotonWeakSelf(self);
     BOOL isEmpty = (self.model.items.count == 0);
-    [self.model loadMoreMeesages:self.conversation.chatType chatWith:self.conversation.chatWith beforeAuthor:YES asc:YES finish:^(NSDictionary * _Nullable pa) {
+    [(PhotonChatModel *)self.model loadMoreMeesages:self.conversation.chatType chatWith:self.conversation.chatWith beforeAuthor:YES asc:YES finish:^(NSDictionary * _Nullable pa) {
         if (!isEmpty) {
             weakself.enableWithoutScrollToTop = YES;
         }else{
             weakself.enableWithoutScrollToTop = NO;
         }
         if(isEmpty){
-            [weakself.uiDispatchSource addSemaphore];
+            [weakself reloadData];
         }else{
              [weakself p_reloadData];
         }
@@ -182,29 +165,15 @@
     }];
 }
 
-- (void)reloadData{
-    [self.uiDispatchSource addSemaphore];
-}
 
 - (void)p_reloadData{
-     [self endRefreshing];
-    if (!self.model.items.count) {
-       
-        return;
-    }
-    // 刷新数据
+    [self endRefreshing];
     PhotonChatDataSource *dataSource = [[PhotonChatDataSource alloc] initWithItems:self.model.items];
     dataSource.delegate = self;
     self.dataSource = dataSource;
 }
 
 #pragma mark ----- getter --------
-- (PhotonChatModel *)model{
-    if (!_model) {
-        _model = [[PhotonChatModel alloc] init];
-    }
-    return _model;
-}
 - (PhotonCharBar *)chatBar{
     return [_panelManager chatBar];
 }
@@ -239,7 +208,7 @@
     
 }
 #pragma mark --- 刷新数据 ------
-- (void)refreshUI{
+- (void)refreshTableView{
     [UIView animateWithDuration:0 animations:^{
         [self p_reloadData];
     } completion:^(BOOL finished) {
@@ -248,16 +217,13 @@
     }];
 }
 
-- (void)refreshData{
-    [self p_loadDataItems];
-}
 
 
 
 #pragma mark ------ demo uitextView ----
 
 - (void)addTextUI{
-//    return;
+    return;
     [self.view addSubview:self.testUIView];
     [self.testUIView addSubview:self.contentFiled];
     [self.testUIView addSubview:self.countFiled];
@@ -445,7 +411,7 @@
 
 - (void)setSendFailedCount:(NSInteger)sendFailedCount{
     _sendFailedCount = sendFailedCount;
-       self.sendFailedCountLable.text = [NSString stringWithFormat:@"发送失败数：%@",@(_sendFailedCount)];
+    self.sendFailedCountLable.text = [NSString stringWithFormat:@"发送失败数：%@",@(_sendFailedCount)];
 }
 
 - (void)autoSendMessage:(UIButton *)sender{

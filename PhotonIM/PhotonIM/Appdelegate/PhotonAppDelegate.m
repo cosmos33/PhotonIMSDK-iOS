@@ -11,8 +11,10 @@
 #import <pushsdk/MoPushManager.h>
 #import "PhotonAppLaunchManager.h"
 #import "PhotonMessageCenter.h"
+#import "YYFPSLabel.h"
 @interface PhotonAppDelegate ()<UNUserNotificationCenterDelegate>
 
+@property (nonatomic, strong) YYFPSLabel *fpsLabel;
 @end
 
 @implementation PhotonAppDelegate
@@ -20,6 +22,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+   NSString *timeStamp =  [[NSUserDefaults standardUserDefaults] valueForKey:@"timeStamp_pushqq"];
     [[PhotonMessageCenter sharedCenter] initPhtonIMSDK];
     
     [self registerPushSDK];
@@ -38,6 +41,9 @@
     
     [PhotonAppLaunchManager registerWithWindow:self.window];
     [PhotonAppLaunchManager launchInWindow];
+    
+    [self addFPSLabel];
+    
     return YES;
 }
 
@@ -52,12 +58,19 @@
 #endif
     [MoPushManager addCommandListener:@selector(onMoPushManagerCommand:) target:self];
     [MoPushManager registerToken];
-    
    
 }
 - (void)onMoPushManagerCommand:(CallbackMessage *)message {
-    PhotonLog(@"AppDelegate callback ----->> commandName:%@,  code: %d, message:%@", [message commandName],[message resultCode], [message message]);
+    PhotonLog(@"onMoPushManagerCommand ----->> commandName:%@,  code: %d, message:%@", [message commandName],[message resultCode], [message message]);
 }
+
+- (void)addFPSLabel {
+    _fpsLabel = [YYFPSLabel new];
+    _fpsLabel.frame = CGRectMake(35, 35, 50, 30);
+    [_fpsLabel sizeToFit];
+    [self.window addSubview:_fpsLabel];
+}
+
 
 #pragma mark - Notification
 
@@ -70,11 +83,14 @@
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
+     [[NSUserDefaults standardUserDefaults] setValue:[@([[NSDate date] timeIntervalSince1970]) stringValue] forKey:@"timeStamp_pushqq"];
     if ([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
         NSDictionary *dict = response.notification.request.content.userInfo;
         NSLog(@"%@",dict);
     }
     completionHandler();
+}
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler __API_AVAILABLE(macos(10.14), ios(10.0), watchos(3.0), tvos(10.0)){
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

@@ -19,6 +19,7 @@
     PhotonWeakSelf(self);
         [super loadItems:params finish:finish failure:failure];
         NSArray<PhotonIMConversation *> *conversations = [[PhotonIMClient sharedClient] findConversationList:0 size:200 asc:NO];
+        [weakself.items removeAllObjects];
         if (conversations.count > 0) {
             NSMutableArray *chatWiths = [NSMutableArray array];
             for (PhotonIMConversation *conversation in  conversations) {
@@ -30,26 +31,25 @@
                 }else if (conversation.chatType == PhotonIMChatTypeGroup){
                     [[PhotonContent currentUser]loadMembersFormGroup:conversation.chatWith completion:nil];
                 }
-                
+                conversation.FAvatarPath = user.avatarURL;
+                conversation.FName = user.nickName;
+                PhotonConversationItem *conItem = [[PhotonConversationItem alloc] init];
+                conItem.userInfo = conversation;
+                [weakself.items addObject:conItem];
+            }
+            if (chatWiths.count > 0) {
+                [[PhotonContent currentUser] loadFriendProfileBatch:chatWiths completion:^(BOOL success) {
+                }];
             }
            
-            [[PhotonContent currentUser] loadFriendProfileBatch:chatWiths completion:^(BOOL success) {
-                [weakself.items removeAllObjects];
-                for (PhotonIMConversation *conversation in  conversations){
-                    PhotonUser *tempUser = [PhotonContent friendDetailInfo:conversation.chatWith];
-                    conversation.FAvatarPath = tempUser.avatarURL;
-                    conversation.FName = tempUser.nickName;
-                    PhotonConversationItem *conItem = [[PhotonConversationItem alloc] init];
-                    conItem.userInfo = conversation;
-                    [weakself.items addObject:conItem];
-                }
-                [PhotonUtil runMainThread:^{
-                    if (finish) {
-                        finish(nil);
-                    }
-                }];
-            }];
         }
+        [PhotonUtil runMainThread:^{
+            if (finish) {
+                finish(nil);
+            }
+        }];
+    
+
         BOOL excute = [[MMKV defaultMMKV] getBoolForKey:[PhotonContent currentUser].userID];
         if (conversations.count == 0 && !excute) {
             [[MMKV defaultMMKV] setBool:YES forKey:[PhotonContent currentUser].userID];
