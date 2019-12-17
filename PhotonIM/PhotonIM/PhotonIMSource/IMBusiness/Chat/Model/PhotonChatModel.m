@@ -19,7 +19,7 @@
     if (self) {
         self.pageSize = 500;
         _anchorMsgId = @"";
-        _startSyncServer = YES;
+        _startSyncServer = NO;
     }
     return self;
 }
