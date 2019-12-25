@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'PhotonIMSDK'
-  s.version          = '2.1.0-hw'
+  s.version          = '2.1.1-hw'
   s.summary          = 'A short description of PhotonIMSDK.'
 
   s.description      = <<-DESC
@@ -16,11 +16,10 @@ TODO: Add long description of the pod here.
 
   s.framework   = 'Foundation','SystemConfiguration','CoreTelephony'
   s.vendored_frameworks = 'Products/PhotonIMSDK.framework','Products/MDAudioKit.framework'
-  s.vendored_libraries = 'Products/libProtocolBuffers.a'
   s.resources = 'Products/PhotonImResource.bundle'
-  s.vendored_libraries = 'Products/libProtocolBuffers.a'
   s.ios.libraries = 'c++','z','resolv','stdc++','sqlite3'
   s.dependency 'protobuf-lib'
   s.dependency 'MDLog'
+  s.dependency 'Protobuf','3.6.1'
   s.dependency 'MMFileService'
 end

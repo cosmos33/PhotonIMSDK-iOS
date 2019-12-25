@@ -184,15 +184,35 @@ typedef NS_ENUM(NSInteger, PhotonIMNetworkType) {
     PhotonIMNetworkType4g      = 4,
 };
 
+/**
+会话中的at类型
+
+- PhotonIMConversationAtTypeNoAt: 会话不包含at
+- PhotonIMConversationAtTypeAtMe: 会话中有at，非全部，包含我
+- PhotonIMConversationTypeAtAll: 会话处于at所有群成员
+*/
 typedef NS_ENUM(NSInteger, PhotonIMConversationAtType) {
-    PhotonIMConversationAtTypeNoAt = 0,//会话不包含at
-    PhotonIMConversationAtTypeAtMe = 1,//会话处于at中，非全部，包含我
-    PhotonIMConversationTypeAtAll = 2,//会话处于at所有群成员
+    PhotonIMConversationAtTypeNoAt = 0,
+    PhotonIMConversationAtTypeAtMe = 1,
+    PhotonIMConversationTypeAtAll = 2,
 };
 
+/**
+消息中的at类型
+
+- PhotonIMAtTypeNoAt: 非at消息
+- PhotonIMAtTypeNotAtAll: 消息中包含at接收方，但不是at全部
+- PhotonIMAtTypeAtAll: 消息为at所有人
+*/
 typedef NS_ENUM(NSInteger, PhotonIMAtType) {
     PhotonIMAtTypeNoAt = 0,
     PhotonIMAtTypeNotAtAll = 1,
     PhotonIMAtTypeAtAll = 2,
+};
+
+typedef NS_ENUM(NSInteger, PhotonIMForbidenAutoResendType){
+    PhotonIMForbidenAutoResendTypeNO = 0,
+    PhotonIMForbidenAutoResendTypeLogin = 2,
+    PhotonIMForbidenAutoResendTypeColdStart = 3,
 };
 #endif /* PhotonIMEnum_h */
