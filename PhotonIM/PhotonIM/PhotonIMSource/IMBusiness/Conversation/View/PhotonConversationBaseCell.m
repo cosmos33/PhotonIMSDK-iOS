@@ -48,7 +48,11 @@
         return;
     }
     PhotonConversationItem *item = (PhotonConversationItem *)object;
+    
     PhotonIMConversation *conversation = (PhotonIMConversation *)item.userInfo;
+    if(!conversation){
+           return;
+    }
     [self.iconView sd_setImageWithURL:[NSURL URLWithString:conversation.FAvatarPath] placeholderImage:[UIImage imageWithColor:RGBAColor(0, 0, 0, 0.6)]];
     
     NSString *nickName = @"";

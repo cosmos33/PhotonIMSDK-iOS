@@ -249,9 +249,8 @@ static NSString *message_syncing = @"消息(收取中......)";
         [self.model.items insertObject:temp atIndex:0];
         [self reloadData];
         return;
-    }
-    if (temp && index == 0) {
-        [self updateItem:temp];
+    }else{
+          [self updateItem:temp];
     }
 }
 

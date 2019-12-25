@@ -1971,7 +1971,7 @@
 				CODE_SIGN_ENTITLEMENTS = PhotonIM/PhotonIM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 42;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_TEAM = 4BXE593ED8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2007,7 +2007,7 @@
 					"$(PROJECT_DIR)/PhotonIM",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 2.4;
+				MARKETING_VERSION = 2.5;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2051,7 +2051,7 @@
 				CODE_SIGN_ENTITLEMENTS = PhotonIM/PhotonIM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 42;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_TEAM = 4BXE593ED8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2087,7 +2087,7 @@
 					"$(PROJECT_DIR)/PhotonIM",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 2.4;
+				MARKETING_VERSION = 2.5;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
