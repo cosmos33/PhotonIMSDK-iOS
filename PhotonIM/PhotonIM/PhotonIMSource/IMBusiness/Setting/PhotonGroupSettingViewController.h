@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PhotonGroupSettingDataSource : PotonTableViewDataSource
 @end
 @interface PhotonGroupSettingViewController : PhotonBaseViewController
-- (instancetype)initWithGroupID:(PhotonIMConversation *)conversation;
+- (instancetype)initWithGroupID:(PhotonIMConversation *)conversation compeltion:(void(^)(BOOL deleteMsg))completion;
 @end
 
 NS_ASSUME_NONNULL_END

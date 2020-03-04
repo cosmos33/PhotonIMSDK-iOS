@@ -86,6 +86,7 @@ static NSString *message_syncing = @"消息(收取中......)";
          [[PhotonMessageCenter sharedCenter] addObserver:self];
         _refreshCount = 0;
         _firstLoadData = YES;
+        self.isAppeared = YES;
         [self.tabBarItem setTitle:@"消息"];
         self.tabBarItem.tag = 1;
         [self.tabBarItem setImage:[UIImage imageNamed:@"message"]];
@@ -111,10 +112,6 @@ static NSString *message_syncing = @"消息(收取中......)";
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    if (self.needRefreshData) {
-        [self.dataDispatchSource addSemaphore];
-        self.needRefreshData = YES;
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -124,7 +121,6 @@ static NSString *message_syncing = @"消息(收取中......)";
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    self.isAppeared = NO;
 }
 
 - (void)viewDidLoad {
@@ -149,7 +145,7 @@ static NSString *message_syncing = @"消息(收取中......)";
     }
     [self reloadData];
 }
-- (void)loadDataItems{
+- (void)loadPreDataItems{
     __weak typeof(self)weakSlef = self;
     [self.model loadItems:nil finish:^(NSDictionary * _Nullable dict) {
         [weakSlef removeNoDataView];
@@ -223,7 +219,14 @@ static NSString *message_syncing = @"消息(收取中......)";
     conversation.FAvatarPath = user.avatarURL;
     conversation.FName = user.nickName;
     temp.userInfo = conversation;
-    [self.model.items insertObject:temp atIndex:0];
+    int count = 0;
+    for (PhotonConversationItem *item in self.model.items) {
+        PhotonIMConversation *conver = [item userInfo];
+        if(conver.sticky && !conversation.sticky){
+            count ++;
+        }
+    }
+    [self.model.items insertObject:temp atIndex:count];
     [self reloadData];
 }
 
@@ -231,27 +234,35 @@ static NSString *message_syncing = @"消息(收取中......)";
     PhotonConversationItem *temp = nil;
     NSInteger index = -1;
     BOOL isToTop = NO;
+    PhotonIMConversation *firstConver = [self.model.items.firstObject userInfo];
+    int count = 0;
     for (PhotonConversationItem *item in self.model.items) {
         PhotonIMConversation *conver = [item userInfo];
+        if(conver.sticky && !conversation.sticky){
+            count ++;
+        }
         if ([[conver chatWith] isEqualToString:chatWith] && ([conver chatType] == chatType)) {
+            if (conversation.sticky != conver.sticky) {
+                 [self.dataDispatchSource addSemaphore];
+                 return;
+            }
             PhotonUser *user = [PhotonContent friendDetailInfo:conversation.chatWith];
             conversation.FAvatarPath = user.avatarURL;
             conversation.FName = user.nickName;
             temp = item;
             temp.userInfo = conversation;
             index = [self.model.items indexOfObject:item];
-            isToTop = (conversation.lastTimeStamp > conver.lastTimeStamp) && (index > 0);
+            isToTop = (conversation.lastTimeStamp > conver.lastTimeStamp) && (conversation.lastTimeStamp > firstConver.lastTimeStamp) && (index > 0);
             break;
         }
     }
     if (temp && isToTop) {
         [self.model.items removeObjectAtIndex:index];
-        [self.model.items insertObject:temp atIndex:0];
+        [self.model.items insertObject:temp atIndex:count];
         [self reloadData];
         return;
-    }
-    if (temp && index == 0) {
-        [self updateItem:temp];
+    }else{
+          [self updateItem:temp];
     }
 }
 - (void)readyRefreshConversations{
@@ -263,11 +274,11 @@ static NSString *message_syncing = @"消息(收取中......)";
 }
 
 - (void)startRefreshConversations{
-    [self loadDataItems];
+    [self loadPreDataItems];
 }
 
 - (void)getIgnoreAlerm:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith{
-    [[PhotonContent currentUser] getIgnoreAlert:chatType chatWith:chatWith completion:^(BOOL success, BOOL open) {
+    [[PhotonContent currentUser] getIgnoreAlert:(int)chatType chatWith:chatWith completion:^(BOOL success, BOOL open) {
          PhotonIMConversation *conversation = [[PhotonIMConversation alloc] initWithChatType:chatType chatWith:chatWith];
         conversation.ignoreAlert = !open;
         [[PhotonMessageCenter sharedCenter] updateConversationIgnoreAlert:conversation];
@@ -289,6 +300,7 @@ static NSString *message_syncing = @"消息(收取中......)";
             break;
         case PhotonIMLoginStatusLoginSucceed:// 登录成功
              [self setNavTitle:message_title];
+            [(PhotonConversationModel *)self.model loadConversationMessage];
             break;
         case PhotonIMLoginStatusConnectFailed:// 连接失败
              [self setNavTitle:message_no_connect];

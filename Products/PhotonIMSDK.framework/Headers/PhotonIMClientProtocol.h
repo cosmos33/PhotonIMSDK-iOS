@@ -109,6 +109,21 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)imClient:(id)client didReceiveReadMesage:(PhotonIMMessage *)message;
 
 
+/**
+ 收到消息的删除消息
+ 
+ @param client
+ @param chatType 删除的消息所属的会话类型
+ @param chatWith 删除的消息所属的会话id
+ @param delMsgIds 删除消息的msgid
+ @userInfo 预留属性字段
+ */
+- (void)imClient:(id)client
+                didReceiveDeleteMesage:(PhotonIMChatType)chatType
+                chatWith:(NSString *)chatWith
+                delMsgIds:(NSArray<NSString *> *)delMsgIds
+                userInfo:(nullable NSDictionary<NSString *,id>  *)userInfo;
+
 #pragma mark ======== 其他 ===========
 /**
 会话信息有变化时回调

@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PhotonSingleSettingDataSource : PotonTableViewDataSource
 @end
 @interface PhotonSingleSettingViewController : PhotonBaseViewController
-- (instancetype)initWithConversation:(PhotonIMConversation *)conversation;
+- (instancetype)initWithConversation:(PhotonIMConversation *)conversation compeltion:(void(^)(BOOL deleteMsg))completion;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -297,7 +297,7 @@ static AFHTTPSessionManager *manager;
         if (self.mutifileItems.count <= 0) {
             return;
         }
-        NSMutableURLRequest *request=[[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:self.urlString  parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        NSMutableURLRequest *request=[[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:self.urlString  parameters:self.parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
             for (PhotonUploadFileInfo *fileinfo in self.mutifileItems) {
                 [formData appendPartWithFileURL:[NSURL fileURLWithPath:fileinfo.fileURLString] name:fileinfo.name fileName:fileinfo.fileName mimeType:fileinfo.mimeType error:nil];
             }
@@ -319,7 +319,10 @@ static AFHTTPSessionManager *manager;
             }
         }];
         
+        [request setAllHTTPHeaderFields:self.requestHeaders];
+        
     }
+    
     [_uploadTask resume];
     
 }

@@ -60,6 +60,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSAttributedString *)toMessageString;
 
+- (NSAttributedString *)toAttributedString;
+
+- (NSAttributedString *)toAttributedString:(NSString *)token;
+
 // 判断字符是否为nil
 - (BOOL)isNotEmpty;
 

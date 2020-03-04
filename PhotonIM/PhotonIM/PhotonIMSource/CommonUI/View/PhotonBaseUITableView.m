@@ -14,7 +14,9 @@
 
 @implementation PhotonBaseUITableView
 
-
+- (void)scrollToMiddleScroll:(NSIndexPath *)indexPath{
+    [self scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+}
 
 - (void)reloadDataWithoutScrollToTop {
     [self reloadData];

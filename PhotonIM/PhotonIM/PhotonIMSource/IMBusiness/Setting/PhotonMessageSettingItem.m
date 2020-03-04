@@ -9,6 +9,15 @@
 #import "PhotonMessageSettingItem.h"
 
 @implementation PhotonMessageSettingItem
+
+- (instancetype)init{
+    self = [super init];
+    if (self) {
+        _showSwitch = YES;
+    }
+    return self;
+}
+
 - (CGFloat)itemHeight{
     return 52.0f;
 }

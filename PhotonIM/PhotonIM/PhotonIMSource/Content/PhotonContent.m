@@ -13,6 +13,7 @@
 #import "PhotonAppLaunchManager.h"
 @interface PhotonContent()
 @property(nonatomic, strong, nullable)PhotonUser *currentUser;
+@property(nonatomic, strong, nullable)PhotonLoadDataSetModel *setModel;
 @end
 @implementation PhotonContent
 + (instancetype)sharedInstance{
@@ -27,6 +28,7 @@
 {
     self = [super init];
     if (self) {
+        _setModel = [[PhotonLoadDataSetModel alloc] init];
         _currentUser = [[PhotonUser alloc] init];
        id user = [[NSUserDefaults standardUserDefaults] objectForKey:@"photon_current_user"];
         if ([user isKindOfClass:[NSDictionary class]]) {
@@ -55,6 +57,10 @@
 }
 + (PhotonUser *)currentUser{
     return [PhotonContent sharedInstance].currentUser;
+}
+
++ (PhotonLoadDataSetModel *)currentSettingModel{
+    return [PhotonContent sharedInstance].setModel;
 }
 
 + (void)persistenceCurrentUser{

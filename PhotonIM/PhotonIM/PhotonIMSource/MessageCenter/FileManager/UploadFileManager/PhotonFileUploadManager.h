@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)uploadRequestMethodWithMutiFile:(NSString *)queryString
                                paramter:(nullable NSDictionary *)paramter
+                                 header:(nonnull NSDictionary *)header
                               fromFiles:(NSArray *)fileItems
                           progressBlock:(void(^)(NSProgress *))progressBlock
                              completion:(void (^)(NSDictionary *))completion

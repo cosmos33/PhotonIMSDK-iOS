@@ -242,7 +242,7 @@ static NSString *message_syncing = @"消息(收取中......)";
     }];
     [self.dataDispatchSource addSemaphore];
 }
-- (void)loadDataItems{
+- (void)loadPreDataItems{
     __weak typeof(self)weakSlef = self;
     [self.model loadItems:nil finish:^(NSDictionary * _Nullable dict) {
         [weakSlef removeNoDataView];
@@ -285,48 +285,34 @@ static NSString *message_syncing = @"消息(收取中......)";
         self.needRefreshData  = YES;
         return;
     }
+    PhotonWeakSelf(self)
     switch (envent) {
         case PhotonIMConversationEventCreate:{
-             [self.dataDispatchSource addSemaphore];
+            [weakself insertConversation:conversation];
         }
             break;
         case PhotonIMConversationEventDelete:
             break;
         case PhotonIMConversationEventUpdate:{
-            [self updateConversation:conversation chatType:chatType chatWith:chatWith];
+            [weakself updateConversation:conversation chatType:chatType chatWith:chatWith];
         }
             break;
         default:
             break;
     }
 }
-- (void)imClientLogin:(id)client loginStatus:(PhotonIMLoginStatus)loginstatus{
-    PhotonWeakSelf(self)
-    [PhotonUtil runMainThread:^{
-        [weakself _imClientLogin:client loginStatus:loginstatus];
-    }];
-}
-- (void)_imClientLogin:(id)client loginStatus:(PhotonIMLoginStatus)loginstatus{
-    switch (loginstatus) {
-        case PhotonIMLoginStatusLogining:{
-            
-        }
-            break;
-        case PhotonIMLoginStatusLoginSucceed:{
-            _authSuccessedCount++;
-            self.authSuccessedCountLable.text = [NSString stringWithFormat:@"%@",@(_authSuccessedCount)];
-        }
-                  
-            break;
-        case PhotonIMLoginStatusLoginFailed:{
-            _authFailedCount++;
-            self.authFailedCountLable.text = [NSString stringWithFormat:@"%@",@(_authFailedCount)];
-        }
-            break;
-            
-        default:
-            break;
+
+- (void)insertConversation:(PhotonIMConversation *)conversation{
+    if (!conversation) {
+        return;
     }
+    PhotonChatTestItem *temp = [[PhotonChatTestItem alloc] init];
+    PhotonUser *user = [PhotonContent friendDetailInfo:conversation.chatWith];
+    conversation.FAvatarPath = user.avatarURL;
+    conversation.FName = user.nickName;
+    temp.userInfo = conversation;
+    [self.model.items insertObject:temp atIndex:0];
+    [self reloadData];
 }
 
 - (void)updateConversation:(PhotonIMConversation *)conversation chatType:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith{
@@ -351,6 +337,36 @@ static NSString *message_syncing = @"消息(收取中......)";
     }
 }
 
+- (void)imClientLogin:(id)client loginStatus:(PhotonIMLoginStatus)loginstatus{
+    PhotonWeakSelf(self)
+    [PhotonUtil runMainThread:^{
+        [weakself _imClientLogin:client loginStatus:loginstatus];
+    }];
+}
+- (void)_imClientLogin:(id)client loginStatus:(PhotonIMLoginStatus)loginstatus{
+    switch (loginstatus) {
+        case PhotonIMLoginStatusLogining:{
+        }
+            break;
+        case PhotonIMLoginStatusLoginSucceed:{
+            _authSuccessedCount++;
+            self.authSuccessedCountLable.text = [NSString stringWithFormat:@"%@",@(_authSuccessedCount)];
+        }
+                  
+            break;
+        case PhotonIMLoginStatusLoginFailed:{
+            _authFailedCount++;
+            self.authFailedCountLable.text = [NSString stringWithFormat:@"%@",@(_authFailedCount)];
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+
+
 - (PhotonIMDispatchSourceEventBlock)uiEventBlock{
     __weak typeof(self)weakSlef = self;
     PhotonIMDispatchSourceEventBlock eventBlock = ^(id userInfo){
@@ -368,7 +384,7 @@ static NSString *message_syncing = @"消息(收取中......)";
            return;
        }
        _isRefreshing = YES;
-    [self loadDataItems];
+    [self loadPreDataItems];
 }
 
 - (void)refreshData{
@@ -419,9 +435,9 @@ static NSString *message_syncing = @"消息(收取中......)";
            NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970] * 1000.0;
           int index =  0;
           while (index < chatData.totalMsgCount && chatData.toStart) {
-//              if(![[PhotonContent currentUser] userID]){
-//                  return;
-//              }
+              if(![[PhotonContent currentUser] userID]){
+                  return;
+              }
               chatData.sendedMessageCount ++;
               index ++;
               [NSThread sleepForTimeInterval:chatData.msgInterval/1000.0];

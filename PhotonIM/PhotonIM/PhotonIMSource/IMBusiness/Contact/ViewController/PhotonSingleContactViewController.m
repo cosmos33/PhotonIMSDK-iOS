@@ -31,10 +31,10 @@
         make.edges.mas_equalTo(self.view);
     }];
     
-    [self loadDataItems];
+    [self loadPreDataItems];
 }
 
-- (void)loadDataItems{
+- (void)loadPreDataItems{
     __weak typeof(self)weakSlef = self;
     [self.model loadItems:nil finish:^(NSDictionary * _Nullable dict) {
         [weakSlef removeNoDataView];

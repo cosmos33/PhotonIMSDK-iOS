@@ -1,0 +1,6 @@
+framework module MDAudioKit {
+  umbrella header "MDAudioKit.h"
+
+  export *
+  module * { export * }
+}

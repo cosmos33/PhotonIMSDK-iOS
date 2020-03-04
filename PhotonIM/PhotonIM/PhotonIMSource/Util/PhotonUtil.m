@@ -95,7 +95,7 @@
 #pragma mark - # HUD Loading ----
 + (void)showLoading:(nullable NSString *)hintText
 {
-    [SVProgressHUD showWithStatus:nil];
+    [SVProgressHUD showWithStatus:hintText];
 }
 
 + (void)hiddenLoading

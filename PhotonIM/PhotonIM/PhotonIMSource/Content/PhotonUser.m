@@ -100,6 +100,22 @@
     }
 }
 
+- (void)modifiedName:(NSString *)nickName
+            completion:(void(^)(BOOL success,BOOL open))completion{
+    NSMutableDictionary *paramter = [NSMutableDictionary dictionary];
+    NSString *url = @"photonimdemo/user/my/editProfile";
+    [paramter setValue:nickName forKey:@"nickname"];
+    [self.netService commonRequestMethod:PhotonRequestMethodPost queryString:url paramter:paramter completion:^(NSDictionary * _Nonnull dict) {
+        if (completion) {
+            completion(YES,YES);
+        }
+    } failure:^(PhotonErrorDescription * _Nonnull error) {
+        if (completion) {
+            completion(NO,NO);
+        }
+    }];
+}
+
 - (void)getIgnoreAlert:(int)chatType
               chatWith:(NSString *)chatWith
             completion:(void(^)(BOOL success,BOOL open))completion{

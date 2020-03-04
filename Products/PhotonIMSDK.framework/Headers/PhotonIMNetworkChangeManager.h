@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)stopMonitoring;
 + (PhotonIMNetworkStatus)currentNetworkStatus;
 + (PhotonIMNetworkType)currentNetworkType;
++ (NSString *)currentNetworkName;
 + (BOOL)isNetworkValid;
 @end
 

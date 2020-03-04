@@ -103,7 +103,7 @@
 - (PhotonIMDispatchSourceEventBlock)reloadDataEventBlock{
     __weak typeof(self)weakSlef = self;
     PhotonIMDispatchSourceEventBlock eventBlock = ^(id userInfo){
-         [weakSlef loadDataItems];
+         [weakSlef loadPreDataItems];
     };
     return eventBlock;
 }
@@ -113,7 +113,11 @@
         [weakSelf.loadDataSource addEventSource:nil];
     }];
 }
-- (void)loadDataItems{
+- (void)loadPreDataItems{
+    
+}
+
+- (void)loadMoreDataItems{
     
 }
 
@@ -137,7 +141,9 @@
 - (void)addItem:(PhotonBaseTableItem *)item{
     __weak typeof(self)weakSelf = self;
        [self runPhotonLoadDataQueue:^{
-           [weakSelf.addDataRefreshUISource addEventSource:@[item]];
+           if (item) {
+            [weakSelf.addDataRefreshUISource addEventSource:@[item]];
+           }
        }];
 }
 - (PhotonIMDispatchSourceEventBlock)addCellEventBlock{
@@ -150,6 +156,9 @@
     return eventBlock;
 }
 - (void)_addItem:(NSArray<PhotonBaseTableItem *> *)items{
+    if (!items) {
+        return;
+    }
     NSInteger index = self.model.items.count;
     [self.model.items addObjectsFromArray:items];
     if(!self.dataSource || self.dataSource.items == 0){
@@ -166,7 +175,9 @@
 - (void)updateItem:(PhotonBaseTableItem *)item{
     __weak typeof(self)weakSelf = self;
      [self runPhotonLoadDataQueue:^{
-         [weakSelf.updateDataRefreshUISource addEventSource:@[item]];
+         if (item) {
+             [weakSelf.updateDataRefreshUISource addEventSource:@[item]];
+         }
      }];
 }
 
