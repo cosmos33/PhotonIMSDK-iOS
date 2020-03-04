@@ -242,7 +242,7 @@ static NSString *message_syncing = @"消息(收取中......)";
     }];
     [self.dataDispatchSource addSemaphore];
 }
-- (void)loadDataItems{
+- (void)loadPreDataItems{
     __weak typeof(self)weakSlef = self;
     [self.model loadItems:nil finish:^(NSDictionary * _Nullable dict) {
         [weakSlef removeNoDataView];
@@ -384,7 +384,7 @@ static NSString *message_syncing = @"消息(收取中......)";
            return;
        }
        _isRefreshing = YES;
-    [self loadDataItems];
+    [self loadPreDataItems];
 }
 
 - (void)refreshData{

@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
  1006    参数错误
  1008    客户端群消息开关关闭,暂不支持群组聊天
 -1001   消息格式错误
+ -1     消息发送超时
+ -2     消息格式错误
  */
 
 @interface PhotonIMError : NSError

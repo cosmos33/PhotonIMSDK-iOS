@@ -52,6 +52,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSMutableDictionary<NSString*, NSString*> *extra;
 
 
+/**
+ snippet content
+ */
+@property(nonatomic, copy, nullable) NSString *snippetContent;
 
 #pragma mark ---- 协议外的消息状态 ---------
 

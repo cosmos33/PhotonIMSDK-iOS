@@ -21,10 +21,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"登录";
-    [self loadDataItems];
+    [self loadPreDataItems];
 }
 
-- (void)loadDataItems{
+- (void)loadPreDataItems{
     PhotonAccountItem *item = [[PhotonAccountItem alloc] init];
     item.accountType = PhotonAccountTypeLogin;
     [self.items addObject:item];

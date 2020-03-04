@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable)NSString *url;
 
 /**
- 本地资源名称
+ 本地资源名称或者路径
  */
 @property (nonatomic, copy, nullable)NSString *localFileName;
 @end

@@ -21,7 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong,nullable) NSMutableArray *items;
 @property(nonatomic,assign) UITableViewStyle tableViewStyle;
 - (void)startLoadData;
-- (void)loadDataItems;
+
+- (void)loadPreDataItems;
+- (void)loadMoreDataItems;
 
 - (void)reloadData;
 - (void)refreshTableView;

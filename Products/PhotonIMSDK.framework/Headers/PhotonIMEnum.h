@@ -105,10 +105,10 @@ typedef NS_ENUM(NSInteger,PhotonIMChatType){
     PhotonIMChatTypeSingle = 1,
     PhotonIMChatTypeGroup,
     PhotonIMChatTypeCustom,
-    
-    PhotonIMChatTypeSingleWithDraw = 66,
-    PhotonIMChatTypeGroupWithDraw = 67,
-    PhotonIMChatTypeRead = 68
+//    
+//    PhotonIMChatTypeSingleWithDraw = 66,
+//    PhotonIMChatTypeGroupWithDraw = 67,
+//    PhotonIMChatTypeRead = 68
 };
 
 /**
@@ -120,6 +120,8 @@ typedef NS_ENUM(NSInteger,PhotonIMChatType){
  - PhotonIMMessageTypeImage: 图片
  - PhotonIMMessageTypeAudio: 语音
  - PhotonIMMessageTypeVideo: 视频
+ - PhotonIMMessageTypeFile: 文件信息
+ - PhotonIMMessageTypeLocation: 位置信息
  */
 typedef NS_ENUM(NSInteger,PhotonIMMessageType) {
     PhotonIMMessageTypeUnknow = 0,
@@ -128,6 +130,8 @@ typedef NS_ENUM(NSInteger,PhotonIMMessageType) {
     PhotonIMMessageTypeImage = 3,
     PhotonIMMessageTypeAudio = 4,
     PhotonIMMessageTypeVideo = 5,
+    PhotonIMMessageTypeFile = 6,
+    PhotonIMMessageTypeLocation = 7,
 
 };
 
@@ -181,7 +185,7 @@ typedef NS_ENUM(NSInteger, PhotonIMNetworkType) {
     PhotonIMNetworkTypeWIFI    = 1,
     PhotonIMNetworkType2G      = 2,
     PhotonIMNetworkType3G      = 3,
-    PhotonIMNetworkType4g      = 4,
+    PhotonIMNetworkType4G      = 4,
 };
 
 /**

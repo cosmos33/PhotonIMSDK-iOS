@@ -76,10 +76,10 @@
         make.top.and.left.and.right.mas_equalTo(self.view).mas_equalTo(0);
         make.bottom.mas_equalTo(okBtn.mas_top).mas_equalTo(- 13);
     }];
-    [self loadDataItems];
+    [self loadPreDataItems];
 }
 
-- (void)loadDataItems{
+- (void)loadPreDataItems{
     
     PhotonWeakSelf(self);
     if (![self.gid isNotEmpty]) {

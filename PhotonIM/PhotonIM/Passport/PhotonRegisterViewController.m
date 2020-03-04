@@ -18,9 +18,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"注册";
-    [self loadDataItems];
+    [self loadPreDataItems];
 }
-- (void)loadDataItems{
+- (void)loadPreDataItems{
     PhotonAccountItem *item = [[PhotonAccountItem alloc] init];
     item.accountType = PhotonAccountTypeRegister;
     [self.items addObject:item];

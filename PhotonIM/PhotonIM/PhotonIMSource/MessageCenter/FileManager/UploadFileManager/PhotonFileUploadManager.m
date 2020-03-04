@@ -27,6 +27,7 @@
 
 - (void)uploadRequestMethodWithMutiFile:(NSString *)queryString
                                paramter:(nullable NSDictionary *)paramter
+                                 header:(nonnull NSDictionary *)header
                               fromFiles:(NSArray *)fileItems
                           progressBlock:(void(^)(NSProgress *))progressBlock
                              completion:(void (^)(NSDictionary *))completion
@@ -35,7 +36,7 @@
     if (fileItems.count == 0) {
         return;
     }
-    PhotonFileUploadOperation *uploadOperation = [[PhotonFileUploadOperation  alloc]initUploadRequestMethodWithMutiFile:queryString paramter:paramter fromFiles:fileItems progress:^(NSProgress *  progress) {
+    PhotonFileUploadOperation *uploadOperation = [[PhotonFileUploadOperation  alloc]initUploadRequestMethodWithMutiFile:queryString paramter:paramter header:header fromFiles:fileItems progress:^(NSProgress *  progress) {
         progressBlock(progress);
     } completion:^(NSDictionary * _Nonnull dict) {
         completion(dict);

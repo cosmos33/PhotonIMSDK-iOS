@@ -57,6 +57,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 - (void)chatBarTextViewDidChange:(PhotonCharBar *)charBar;
+
+
+/**
+* 编辑结束
+*/
+- (void)textViewDidEndEditing:(PhotonCharBar *)charBar;
 @end
 
 @interface PhotonCharBar : UIView
@@ -70,9 +76,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSArray<PhotonChatAtInfo *>*atInfos;
 @property (nonatomic, assign)AtType atType;
 
-- (void)addEmojiString:(nullable NSString *)emojiString;
+//- (void)addEmojiString:(nullable NSString *)emojiString;
+//
+//- (void)addAtContent:(NSString *)content;
 
-- (void)addAtContent:(NSString *)content;
+- (void)addContent:(NSString *)content;
 
 - (void)sendCurrentText;
 

@@ -63,6 +63,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)loadGroupProfile:(NSString *)gid completion:(nullable void(^)(NSString *gid ,BOOL success))completion;
 
+- (void)modifiedName:(NSString *)nickName
+          completion:(void(^)(BOOL success,BOOL open))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

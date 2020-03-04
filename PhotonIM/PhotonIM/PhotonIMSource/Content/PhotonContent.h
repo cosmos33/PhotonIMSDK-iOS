@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "PhotonAppDelegate.h"
 #import "PhotonUser.h"
+#import "PhotonLoadDataSetModel.h"
 NS_ASSUME_NONNULL_BEGIN
 //#define APP_ID @"280f8ef2cec41cde3bed705236ab9bc4"
 
@@ -17,6 +18,7 @@ static NSString* APP_ID = @"280f8ef2cec41cde3bed705236ab9bc4";
 + (instancetype)sharedInstance;
 + (PhotonAppDelegate *)sharedAppDelegate;
 + (PhotonUser *)currentUser;
++ (PhotonLoadDataSetModel *)currentSettingModel;
 + (void)persistenceCurrentUser;
 
 + (PhotonUser *)userDetailInfo;

@@ -18,7 +18,7 @@
 #import "PhotonRecorderIndicator.h"
 NS_ASSUME_NONNULL_BEGIN
 @class PhotonIMConversation;
-@class PhotonBaseChatItem;
+@class PhotonChatBaseItem;
 @interface PhotonChatViewController : PhotonBaseViewController<PhotonChatPanelDelegate,PhotonChatDataSourceDelegate,PhotonMessageProtocol>
 @property(nonatomic, strong, readonly, nullable)PhotonIMConversation *conversation;
 @property(nonatomic,strong,readonly,nullable)PhotonChatPanelManager *panelManager;
@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)NSInteger  count;
 @property(nonatomic, strong)UILabel  *totalTimeLable;
 - (instancetype)initWithConversation:(nullable PhotonIMConversation *)conversation;
+
+- (instancetype)initWithConversation:(nullable PhotonIMConversation *)conversation loadFtsResult:(BOOL)loadFtsRet;
 @end
 
 NS_ASSUME_NONNULL_END

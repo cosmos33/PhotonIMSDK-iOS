@@ -123,6 +123,19 @@
     [self hiddentTextViewLabel];
     [self p_reloadTextViewWithAnimation:YES];
 }
+- (void)addContent:(NSString *)content{
+    if (!content) {
+        return;
+    }
+    NSString *str = [NSString stringWithFormat:@"%@%@", self.textView.text, content];
+    NSInteger length = [self getTextLength:self.textView.text];
+    if (length > _maxTextWordCount) {
+        return;
+    }
+    [self.textView setText:str];
+    [self hiddentTextViewLabel];
+    [self p_reloadTextViewWithAnimation:YES];
+}
 
 - (void)deleteLastCharacter
 {
@@ -247,6 +260,9 @@
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(textViewDidEndEditing:)]){
+        [self.delegate textViewDidEndEditing:self];
+    }
     [self p_reloadTextViewWithAnimation:YES];
 }
 
@@ -645,7 +661,6 @@ static NSString *textRec = @"";
         make.bottom.mas_equalTo(self).mas_offset(-9);
         make.left.mas_equalTo(self.voiceButton.mas_right).mas_offset(4);
         make.right.mas_equalTo(self.emojiButton.mas_left).mas_offset(-4);
-//        make.height.mas_equalTo(HEIGHT_CHATBAR_TEXTVIEW);
     }];
     
     [self.talkButton mas_makeConstraints:^(MASConstraintMaker *make) {

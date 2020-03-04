@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *filePath;
 - (instancetype)initUploadRequestMethodWithMutiFile:(NSString *)queryString
                                            paramter:(nonnull NSDictionary *)paramter
+                                             header:(nonnull NSDictionary *)header
                                           fromFiles:(NSArray *)fileItems
                                            progress:(void(^)(NSProgress *))progress
                                          completion:(void (^)(NSDictionary *))completion

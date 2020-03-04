@@ -103,7 +103,7 @@
 - (PhotonIMDispatchSourceEventBlock)reloadDataEventBlock{
     __weak typeof(self)weakSlef = self;
     PhotonIMDispatchSourceEventBlock eventBlock = ^(id userInfo){
-         [weakSlef loadDataItems];
+         [weakSlef loadPreDataItems];
     };
     return eventBlock;
 }
@@ -113,7 +113,11 @@
         [weakSelf.loadDataSource addEventSource:nil];
     }];
 }
-- (void)loadDataItems{
+- (void)loadPreDataItems{
+    
+}
+
+- (void)loadMoreDataItems{
     
 }
 

@@ -31,6 +31,10 @@
 	<string>App需要您的同意,才能访问媒体资料库</string>
 	<key>NSCameraUsageDescription</key>
 	<string>如果不允许，你将无法在程序中拍摄照片。</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>光子需要使用您的位置信息</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>光子需要使用您的位置信息</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>如果不允许，你将无法在程序中发送语音消息。</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

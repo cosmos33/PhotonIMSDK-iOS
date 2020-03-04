@@ -13,6 +13,8 @@
 #import "PhotonBaseContactItem.h"
 #import "PhotonBaseContactCell.h"
 #import "PhotonEmptyTableItem.h"
+#import "PhotonChatSearchReultTableViewController.h"
+typedef void(^Compention)(BOOL deleteMsg);
 @interface PhotonSingleSettingDataSource ()
 @end
 
@@ -29,14 +31,16 @@
 @interface PhotonSingleSettingViewController ()<UITableViewDelegate,PhotonMessageSettingCellDelegate>
 @property (nonatomic, weak, nullable)PhotonIMConversation *conversation;
 @property (nonatomic, strong, nullable)PhotonNetworkService *netService;
+@property (nonatomic, copy ,nullable)Compention completion;
 @end
 
 @implementation PhotonSingleSettingViewController
 
-- (instancetype)initWithConversation:(PhotonIMConversation *)conversation{
+- (instancetype)initWithConversation:(PhotonIMConversation *)conversation compeltion:(void(^)(BOOL deleteMsg))completion{
     self = [super init];
     if (self) {
         _conversation = conversation;
+        _completion = completion;
     }
     return self;
 }
@@ -52,10 +56,10 @@
         make.top.and.left.and.right.mas_equalTo(self.view).mas_equalTo(0);
         make.bottom.mas_equalTo(self.view).mas_equalTo(-SAFEAREA_INSETS_BOTTOM);
     }];
-    [self loadDataItems];
+    [self loadPreDataItems];
 }
 
-- (void)loadDataItems{
+- (void)loadPreDataItems{
     PhotonEmptyTableItem *emptyItem = [[PhotonEmptyTableItem alloc] init];
     emptyItem.itemHeight = 11;
     emptyItem.backgroudColor = [UIColor clearColor];
@@ -70,22 +74,75 @@
     
     [self.items addObject:emptyItem];
     
+    PhotonMessageSettingItem *searchItem = [[PhotonMessageSettingItem alloc] init];
+    searchItem.settingName = @"查找聊天内容";
+    searchItem.showSwitch = NO;
+    searchItem.icon = @"right_arrow";
+    searchItem.type = PhotonMessageSettingTypeSearch;
+    [self.items addObject:searchItem];
+    
+     [self.items addObject:emptyItem];
+    
     PhotonMessageSettingItem *settionItem = [[PhotonMessageSettingItem alloc] init];
     settionItem.settingName = @"消息免打扰";
+     settionItem.showSwitch = YES;
     settionItem.open = _conversation.ignoreAlert;
     settionItem.type = PhotonMessageSettingTypeIgnoreAlert;
     [self.items addObject:settionItem];
     
     PhotonMessageSettingItem *stickyItem = [[PhotonMessageSettingItem alloc] init];
     stickyItem.settingName = @"置顶";
+     stickyItem.showSwitch = YES;
     stickyItem.open = _conversation.sticky;
     stickyItem.type = PhotonMessageSettingTypeIgnorSticky;
     [self.items addObject:stickyItem];
+    
+    [self.items addObject:emptyItem];
+    PhotonMessageSettingItem *clearItem = [[PhotonMessageSettingItem alloc] init];
+    clearItem.settingName = @"清空聊天记录";
+    clearItem.showSwitch = NO;
+    clearItem.type = PhotonMessageSettingTypeClearHistory;
+    [self.items addObject:clearItem];
     
     PhotonSingleSettingDataSource *dataSource = [[PhotonSingleSettingDataSource alloc] initWithItems:self.items];
     self.dataSource = dataSource;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    id item = self.items[indexPath.row];
+    if ([item isKindOfClass:[PhotonMessageSettingItem class]]) {
+        PhotonMessageSettingItem *tempItem = (PhotonMessageSettingItem *)item;
+        if (tempItem.type == PhotonMessageSettingTypeSearch) {
+            PhotonChatSearchReultTableViewController *contr = [[PhotonChatSearchReultTableViewController alloc] initWithChatType:_conversation.chatType chatWith:_conversation.chatWith];
+            [self.navigationController pushViewController:contr animated:YES];
+        }else if (tempItem.type == PhotonMessageSettingTypeClearHistory){
+            UIAlertController *alertCv = [UIAlertController alertControllerWithTitle:@"删除聊天记录" message:@"清空后不可恢复，请谨慎操作"
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+            __weak typeof(self)weakSelf = self;
+            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [PhotonUtil showLoading:@"删除中...,请等待"];
+                [[PhotonMessageCenter sharedCenter] clearMessagesWithChatType:weakSelf.conversation.chatType chatWith:weakSelf.conversation.chatWith syncServer:YES completion:^(BOOL finish) {
+                    [PhotonUtil hiddenLoading];
+                    if (finish) {
+                        if (weakSelf.completion) {
+                            weakSelf.completion(YES);
+                        }
+                        [PhotonUtil showSuccessHint:@"删除成功"];
+                    }else{
+                        [PhotonUtil showErrorHint:@"删除失败，请重试"];
+                    }
+                     
+                }];
+            }];
+            UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                   
+            }];
+            [alertCv addAction:action1];
+            [alertCv addAction:action2];
+            [self presentViewController:alertCv animated:YES completion:nil];
+        }
+    }
+}
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
     if ([cell isKindOfClass:[PhotonMessageSettingCell class]]) {
         PhotonMessageSettingCell *tempCell = (PhotonMessageSettingCell *)cell;

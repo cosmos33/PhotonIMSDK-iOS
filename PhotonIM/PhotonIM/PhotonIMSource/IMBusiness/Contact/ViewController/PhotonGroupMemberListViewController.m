@@ -34,10 +34,10 @@
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.and.left.and.right.and.bottom.mas_equalTo(self.view).mas_equalTo(0);
     }];
-    [self loadDataItems];
+    [self loadPreDataItems];
 }
 
-- (void)loadDataItems{
+- (void)loadPreDataItems{
     
     PhotonWeakSelf(self);
     if (![self.gid isNotEmpty]) {

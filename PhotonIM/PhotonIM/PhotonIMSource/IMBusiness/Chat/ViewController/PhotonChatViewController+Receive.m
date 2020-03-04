@@ -44,7 +44,7 @@
  @param client <#client description#>
  @param message <#message description#>
  */
-- (void)imClient:(id)client di2dReceiveReadMesage:(PhotonIMMessage *)message{
+- (void)imClient:(id)client didReceiveReadMesage:(PhotonIMMessage *)message{
     [self wrapperReadMessage:message];
 }
 
@@ -81,5 +81,24 @@
         [self reloadData];
     }
     
+}
+
+- (void)imClient:(id)client didReceiveDeleteMesage:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith delMsgIds:(NSArray<NSString *> *)delMsgIds userInfo:(NSDictionary<NSString *,id> *)userInfo{
+     BOOL ret = [self wrapperWithDelMsgIds:delMsgIds];
+       if (ret) {
+            [self reloadData];
+       }
+}
+- (BOOL)wrapperWithDelMsgIds:(NSArray *)delMsgIds{
+    NSArray *items=[self.model.items copy];
+    BOOL rec = NO;
+    for (PhotonChatBaseItem *item in items) {
+        PhotonIMMessage *tempMsg = item.userInfo;
+        if ([delMsgIds containsObject:tempMsg.messageID]) {
+            [self.model.items removeObject:item];
+            rec = YES;
+        }
+    }
+    return rec;
 }
 @end

@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PhotonChatViewController (Send)
-- (void)resendMessage:(PhotonBaseChatItem *)item;
+- (void)resendMessage:(PhotonChatBaseItem *)item;
 @end
 
 NS_ASSUME_NONNULL_END

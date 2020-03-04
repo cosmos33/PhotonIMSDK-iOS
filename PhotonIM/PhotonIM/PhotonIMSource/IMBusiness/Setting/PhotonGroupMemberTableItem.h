@@ -6,7 +6,7 @@
 //  Copyright © 2019 Bruce. All rights reserved.
 //
 
-#import "PhotonBaseChatItem.h"
+#import "PhotonChatBaseItem.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

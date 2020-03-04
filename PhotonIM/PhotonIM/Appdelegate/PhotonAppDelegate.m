@@ -73,7 +73,12 @@
 
 
 #pragma mark - Notification
-
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
+    PhotonLog(@"获取到deviceToken --"); //SDK内部hook，业务层无需配置
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"cdscds" message:@"vxvsd" delegate:self cancelButtonTitle:@"" otherButtonTitles:@"ok", nil];
+    [alert show];
+    
+}
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     PhotonLog(@"获取到deviceToken -- %@", deviceToken); //SDK内部hook，业务层无需配置
 }
