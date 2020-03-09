@@ -7,13 +7,16 @@
 //
 
 #import "PhotonContent.h"
+#import "PhotonAPIMacros.h"
 #import <pushsdk/MoPushManager.h>
 #import "PhotonDBUserStore.h"
 #import "PhotonMessageCenter.h"
 #import "PhotonAppLaunchManager.h"
+#import <MMKV/MMKV.h>
 @interface PhotonContent()
 @property(nonatomic, strong, nullable)PhotonUser *currentUser;
 @property(nonatomic, strong, nullable)PhotonLoadDataSetModel *setModel;
+@property(nonatomic, assign)PhotonIMServerType srType;
 @end
 @implementation PhotonContent
 + (instancetype)sharedInstance{
@@ -164,6 +167,15 @@
    
 }
 
++ (void)autoLogout{
+    [PhotonUtil runMainThread:^{
+        [PhotonDBManager closeDB];
+        [MoPushManager unAlias:[PhotonContent currentUser].userID];
+        [self clearCurrentUser];
+    }];
+   
+}
+
 + (void)login{
    
     [PhotonUtil runMainThread:^{
@@ -171,5 +183,36 @@
         [MoPushManager registerWithAlias:[PhotonContent currentUser].userID];
         [[PhotonContent currentUser] loadFriendProfile];
     }];
+}
+
++ (void)setServerSwitch:(PhotonIMServerType)serverType{
+    [[PhotonContent sharedInstance] setServerSwitch:serverType];
+}
+
+- (void)setServerSwitch:(PhotonIMServerType)serverType{
+   [[MMKV defaultMMKV] setInt32:(int32_t)serverType forKey:@"PhotonIMServerType"];
+    if (serverType != _srType) {
+        _srType = serverType;
+    }
+}
++ (PhotonIMServerType)getServerSwitch{
+    NSInteger serverType = [[MMKV defaultMMKV] getInt32ForKey:@"PhotonIMServerType"];
+    return (PhotonIMServerType)serverType;
+}
+
++ (NSString *)baseUrlString{
+    PhotonIMServerType type = [self getServerSwitch];
+    NSString *baseUrl = @"";
+    switch (type) {
+        case PhotonIMServerTypeInland:
+            baseUrl = PHOTON_BASE_URL;
+            break;
+        case PhotonIMServerTypeOverseas:
+            baseUrl = PHOTON_BASE_HW_URL;
+            break;
+        default:
+            break;
+    }
+    return baseUrl;
 }
 @end

@@ -28,6 +28,9 @@
     if ([[PhotonUtil getCookie] isNotEmpty]) {
         [_requestHeaders setValue:[PhotonUtil getCookie] forKey:@"Cookie"];
     }
+    if ([[PhotonUtil getAppid] isNotEmpty]) {
+        [_requestHeaders setValue:[PhotonUtil getAppid] forKey:@"appId"];
+    }
     return _requestHeaders;
 }
 - (void)setRequestHeader:(NSString *)value key:(NSString *)key{

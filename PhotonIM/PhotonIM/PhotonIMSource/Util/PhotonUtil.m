@@ -18,6 +18,17 @@
     }
     return @"";
 }
+
++ (NSString *)getAppid{
+    PhotonIMServerType serverType = [PhotonContent getServerSwitch];
+    if (serverType == PhotonIMServerTypeInland) {
+        return APP_ID_INLAND;
+    }else if (serverType == PhotonIMServerTypeOverseas){
+        return APP_ID_OVERSEAS;
+    }
+    return @"";
+}
+
 + (BOOL)createDirectoryIfExit:(NSString *)dPath{
     if (![self jugdeFileExit:dPath]) {
         NSError *error;

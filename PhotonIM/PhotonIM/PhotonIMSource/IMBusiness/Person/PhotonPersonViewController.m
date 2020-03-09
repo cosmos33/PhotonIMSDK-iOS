@@ -9,6 +9,8 @@
 #import "PhotonPersonViewController.h"
 #import "PhotonPersonCell.h"
 #import "PhotonEmptyTableItem.h"
+#import "PhotonMessageSettingItem.h"
+#import "PhotonMessageSettingCell.h"
 #import "PhotonMessageCenter.h"
 #import "PhotonSettingView.h"
 @interface PhotonPersonDataSource ()
@@ -18,11 +20,13 @@
 - (Class)tableView:(UITableView *)tableView cellClassForObject:(id)object{
     if ([object isKindOfClass:[PhotonPersonItem class]]) {
         return [PhotonPersonCell class];
+    }else if ([object isKindOfClass:[PhotonMessageSettingItem class]]) {
+        return [PhotonMessageSettingCell class];
     }
     return [super tableView:tableView cellClassForObject:object];
 }
 @end
-@interface PhotonPersonViewController()<PhotonPersonCellDelegate>
+@interface PhotonPersonViewController()<PhotonPersonCellDelegate,PhotonMessageSettingCellDelegate,UIAlertViewDelegate>
 
 @end
 @implementation PhotonPersonViewController
@@ -96,14 +100,36 @@
        
        [self.items addObject:emptyitem];
        
-       [self.items addObject:personItem4];
-       PhotonPersonDataSource *dataSource = [[PhotonPersonDataSource alloc] initWithItems:self.items];
-       self.dataSource = dataSource;
+    
+   
+
+    NSString *name = @"国内服务";
+    BOOL open = false;
+    if([PhotonContent getServerSwitch] == PhotonIMServerTypeOverseas){
+        name = @"海外服务";
+        open = true;
+    }
+    
+    PhotonMessageSettingItem *settionItem = [[PhotonMessageSettingItem alloc] init];
+    settionItem.settingName = name;
+     settionItem.open = open;
+    settionItem.type = PhotonMessageSettingTypeDefault;
+    [self.items addObject:emptyitem];
+    [self.items addObject:settionItem];
+    
+    [self.items addObject:emptyitem];
+    [self.items addObject:personItem4];
+    
+    PhotonPersonDataSource *dataSource = [[PhotonPersonDataSource alloc] initWithItems:self.items];
+    self.dataSource = dataSource;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
     if ([cell isKindOfClass:[PhotonPersonCell class]]) {
         PhotonPersonCell *tempCell = (PhotonPersonCell *)cell;
+        tempCell.delegate = self;
+    }else if ([cell isKindOfClass:[PhotonMessageSettingCell class]]) {
+        PhotonMessageSettingCell *tempCell = (PhotonMessageSettingCell *)cell;
         tempCell.delegate = self;
     }
 }
@@ -159,6 +185,32 @@
 }
 - (void)logout:(id)cell{
     [[PhotonMessageCenter sharedCenter]  logout];
+}
+
+- (void)cell:(id)cell switchItem:(PhotonMessageSettingItem *)item{
+    NSString *name = @"";
+    if (item.type == PhotonMessageSettingTypeDefault) {
+        PhotonMessageSettingCell *tempCell = (PhotonMessageSettingCell *)cell;
+        if (item.open) {
+            name = @"海外服务";
+            
+            [PhotonContent setServerSwitch:PhotonIMServerTypeOverseas];
+        }else{
+            name = @"国内服务";
+            [PhotonContent setServerSwitch:PhotonIMServerTypeInland];
+        }
+        [PhotonContent autoLogout];
+        tempCell.titleLabel.text = name;
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"切换到" message:name delegate:self cancelButtonTitle:@"退出程序" otherButtonTitles:nil];
+        [alertView show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+         exit(0);
+    });
+   
 }
 
 @end

@@ -237,7 +237,7 @@ typedef void(^Compention)(BOOL deleteMsg);
 - (PhotonNetworkService *)netService{
     if (!_netService) {
         _netService = [[PhotonNetworkService alloc] init];
-        _netService.baseUrl = PHOTON_BASE_URL;
+        _netService.baseUrl = [PhotonContent baseUrlString];;
         
     }
     return _netService;

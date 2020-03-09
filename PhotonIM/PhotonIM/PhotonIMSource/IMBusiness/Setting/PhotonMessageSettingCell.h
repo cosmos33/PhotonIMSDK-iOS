@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 @interface PhotonMessageSettingCell : PhotonTableViewCell
+@property (nonatomic,strong,readonly)UILabel *titleLabel;
 @property (nonatomic, weak, nullable)id<PhotonMessageSettingCellDelegate> delegate;
 @end
 

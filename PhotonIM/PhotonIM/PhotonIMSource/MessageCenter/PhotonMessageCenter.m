@@ -47,10 +47,12 @@ static PhotonMessageCenter *center = nil;
 
 - (void)initPhtonIMSDK{
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppWillEnterForegroundNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
-   
+    PhotonIMServerType serverType = [PhotonContent getServerSwitch];
+   [[PhotonIMClient sharedClient] setServerType:serverType];
 //#ifdef DEBUG
     // 是否在写log时开启控制台日志输出，debug模式下建议开启
     [[PhotonIMClient sharedClient] openPhotonIMLog:YES];
+    
 //     是否开启断言，debug模式下推荐开启
     [[PhotonIMClient sharedClient] setAssertEnable:NO];
 //#else
@@ -59,7 +61,12 @@ static PhotonMessageCenter *center = nil;
 //#endif
     
     // 通过注册appid 完成sdk的初始化
-    [[PhotonIMClient sharedClient] registerIMClientWithAppid:APP_ID];
+    if (serverType == PhotonIMServerTypeInland) {
+        [[PhotonIMClient sharedClient] registerIMClientWithAppid:APP_ID_INLAND];
+    }else if (serverType == PhotonIMServerTypeOverseas){
+         [[PhotonIMClient sharedClient] registerIMClientWithAppid:APP_ID_OVERSEAS];
+    }
+    
     // 指定使用sdk内的数据库模式，推荐使用异步模式
     [[PhotonIMClient sharedClient] setPhotonIMDBMode:PhotonIMDBModeDBAsync];
     [[PhotonIMClient sharedClient] supportGroup];
@@ -290,14 +297,21 @@ static PhotonMessageCenter *center = nil;
     fileInfo.mimeType = @"video/mp4";
     fileInfo.fileURLString = [[PhotonMessageCenter sharedCenter] getVoiceFilePath:message.chatWith fileName:body.localFileName];
     PhotonWeakSelf(self)
-    
+    NSString *appId = @"";
+     PhotonIMServerType serverType = [PhotonContent getServerSwitch];
+    if (serverType == PhotonIMServerTypeInland) {
+            appId = APP_ID_INLAND;
+       }else if (serverType == PhotonIMServerTypeOverseas){
+           appId = APP_ID_OVERSEAS;
+       }
+       
     // 处理header
       NSMutableDictionary *header = [NSMutableDictionary dictionary];
-      [header setValue:APP_ID forKey:@"appId"];
+      [header setValue:appId forKey:@"appId"];
       NSString *timestamp = [NSString stringWithFormat:@"%@",@((int64_t)[NSDate date].timeIntervalSince1970)];
       [header setValue:timestamp forKey:@"timestamp"];
      NSString *token = [[MMKV defaultMMKV] getStringForKey:TOKENKEY defaultValue:@""];
-      NSString *signString = [NSString stringWithFormat:@"%@%@%@",APP_ID,token,timestamp];
+      NSString *signString = [NSString stringWithFormat:@"%@%@%@",appId,token,timestamp];
       signString = [signString md5];
       [header setValue:signString forKey:@"sign"];
       [header setValue:[PhotonContent currentUser].userID forKey:@"userId"];
@@ -710,7 +724,7 @@ static PhotonMessageCenter *center = nil;
 - (PhotonNetworkService *)netService{
     if (!_netService) {
         _netService = [[PhotonNetworkService alloc] init];
-        _netService.baseUrl = PHOTON_BASE_URL;
+        _netService.baseUrl = [PhotonContent baseUrlString];;
         
     }
     return _netService;

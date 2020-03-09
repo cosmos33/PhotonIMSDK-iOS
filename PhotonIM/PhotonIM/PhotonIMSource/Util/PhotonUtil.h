@@ -69,6 +69,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param block <#block description#>
  */
 + (void)runMainThread:(dispatch_block_t)block;
+
+
++ (NSString *)getAppid;
 @end
 
 NS_ASSUME_NONNULL_END

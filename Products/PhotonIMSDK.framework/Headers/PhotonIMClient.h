@@ -12,6 +12,7 @@
 #import "PhotonIMMessage.h"
 #import "PhotonIMConversation.h"
 #import "PhotonIMError.h"
+
 NS_ASSUME_NONNULL_BEGIN
 @interface PhotonIMClient : NSObject
 /**
@@ -39,6 +40,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+/**
+设置IM服务走海外还是国内,在注册appid之前调用
+*/
+- (void)setServerType:(PhotonIMServerType)serverType;
 
 #pragma mark ---- 注册IMClient -----
 /**
@@ -114,6 +119,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param block <#block description#>
  */
 - (void)runInPhotonIMDBQueue:(dispatch_block_t)block;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

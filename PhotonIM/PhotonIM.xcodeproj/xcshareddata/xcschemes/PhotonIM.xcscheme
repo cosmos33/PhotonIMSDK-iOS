@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "32286F8422B9F207009B6881"
-               BuildableName = "PhotonIM.app"
+               BuildableName = "PhotonIMMerge.app"
                BlueprintName = "PhotonIM"
                ReferencedContainer = "container:PhotonIM.xcodeproj">
             </BuildableReference>
@@ -31,7 +31,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "32286F8422B9F207009B6881"
-            BuildableName = "PhotonIM.app"
+            BuildableName = "PhotonIMMerge.app"
             BlueprintName = "PhotonIM"
             ReferencedContainer = "container:PhotonIM.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "32286F8422B9F207009B6881"
-            BuildableName = "PhotonIM.app"
+            BuildableName = "PhotonIMMerge.app"
             BlueprintName = "PhotonIM"
             ReferencedContainer = "container:PhotonIM.xcodeproj">
          </BuildableReference>
@@ -81,7 +81,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "32286F8422B9F207009B6881"
-            BuildableName = "PhotonIM.app"
+            BuildableName = "PhotonIMMerge.app"
             BlueprintName = "PhotonIM"
             ReferencedContainer = "container:PhotonIM.xcodeproj">
          </BuildableReference>

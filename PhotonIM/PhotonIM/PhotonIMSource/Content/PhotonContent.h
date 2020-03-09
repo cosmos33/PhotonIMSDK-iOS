@@ -10,10 +10,14 @@
 #import "PhotonAppDelegate.h"
 #import "PhotonUser.h"
 #import "PhotonLoadDataSetModel.h"
+#import <PhotonIMSDK/PhotonIMSDK.h>
 NS_ASSUME_NONNULL_BEGIN
-//#define APP_ID @"280f8ef2cec41cde3bed705236ab9bc4"
 
-static NSString* APP_ID = @"280f8ef2cec41cde3bed705236ab9bc4";
+//  国内
+static NSString* APP_ID_INLAND = @"9122fba3a09654f2972c0fde0ad19f96";//;@"280f8ef2cec41cde3bed705236ab9bc4";
+
+// 海外
+static NSString* APP_ID_OVERSEAS = @"326a7a61d5e8f170957f9bf6591a7c9b";
 @interface PhotonContent : NSObject
 + (instancetype)sharedInstance;
 + (PhotonAppDelegate *)sharedAppDelegate;
@@ -45,10 +49,13 @@ static NSString* APP_ID = @"280f8ef2cec41cde3bed705236ab9bc4";
 + (BOOL)deleteaAllUserFromGroupWithGid:(NSString *)gid;
 
 + (void)logout;
++ (void)autoLogout;
 + (void)login;
 
++ (void)setServerSwitch:(PhotonIMServerType)serverType;
++ (PhotonIMServerType)getServerSwitch;
 
-
++ (NSString *)baseUrlString;
 @end
 
 NS_ASSUME_NONNULL_END
