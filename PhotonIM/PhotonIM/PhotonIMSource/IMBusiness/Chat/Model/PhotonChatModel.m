@@ -183,20 +183,15 @@
     switch (message.messageType) {
         case PhotonIMMessageTypeText:{// 文本
             PhotonChatTextMessageItem *textItem = [[PhotonChatTextMessageItem alloc] init];
-            textItem.fromType = fromeType;
-            textItem.timeStamp = message.timeStamp;
             PhotonIMTextBody * body = (PhotonIMTextBody *)message.messageBody;
             textItem.messageText = [body text];
             textItem.userInfo = message;
-            textItem.avatalarImgaeURL = avatarUrl;
+           
             resultItem = textItem;
         }
             break;
         case PhotonIMMessageTypeImage:{// 图片
             PhotonChatImageMessageItem *imageItem = [[PhotonChatImageMessageItem alloc] init];
-            imageItem.fromType = fromeType;
-            imageItem.timeStamp = message.timeStamp;
-            imageItem.avatalarImgaeURL = avatarUrl;
             PhotonIMImageBody *imgBody = (PhotonIMImageBody *)message.messageBody;
             if([imgBody.thumbURL isNotEmpty]){
                 imageItem.thumURL = imgBody.thumbURL;
@@ -206,55 +201,67 @@
             }
             imageItem.fileName = imgBody.localFileName;
             if(fromeType == PhotonChatMessageFromSelf){
-                imageItem.localPath = [[PhotonMessageCenter sharedCenter] getImageFilePath:message.chatWith fileName:imageItem.fileName];
+                imageItem.localPath = imgBody.localFilePath;
             }
             imageItem.whRatio = imgBody.whRatio;
             
             imageItem.userInfo = message;
+            imageItem.whRatio = imgBody.whRatio;
             resultItem = imageItem;
         }
             break;
         case PhotonIMMessageTypeAudio:{// 语音
             PhotonChatVoiceMessageItem *audioItem = [[PhotonChatVoiceMessageItem alloc] init];
-            audioItem.fromType = fromeType;
-            audioItem.timeStamp = message.timeStamp;
             PhotonIMAudioBody *audioBody = (PhotonIMAudioBody *)message.messageBody;
             if([audioBody.url isNotEmpty]){
                 audioItem.url = [NSURL URLWithString:audioBody.url];
             }
             audioItem.fileName = audioBody.localFileName;
             audioItem.duration = audioBody.mediaTime;
+            audioItem.fileLocalPath = audioBody.localFilePath;
             audioItem.userInfo = message;
             audioItem.isPlayed = audioBody.localMediaPlayed;
-            audioItem.avatalarImgaeURL = avatarUrl;
             resultItem = audioItem;
+        }
+            break;
+        case PhotonIMMessageTypeVideo:{// 视频
+            PhotonChatVideoMessageItem *videoItem = [[PhotonChatVideoMessageItem alloc] init];
+            PhotonIMVideoBody *videoBody = (PhotonIMVideoBody *)message.messageBody;
+            if([videoBody.url isNotEmpty]){
+                videoItem.url = [NSURL URLWithString:videoBody.url];
+            }
+            videoItem.duration = videoBody.mediaTime;
+            videoItem.coverURL = videoBody.coverUrl;
+            videoItem.whRatio = videoBody.whRatio;
+            if (![videoItem.coverURL isNotEmpty]) {
+                videoItem.coverImage = [PhotonUtil firstFrameWithVideoURL:videoBody.localFilePath size:videoItem.contentSize];
+                videoItem.whRatio = videoItem.coverImage.size.width/videoItem.coverImage.size.height;
+            }
+            videoItem.userInfo = message;
+            resultItem = videoItem;
         }
             break;
         case PhotonIMMessageTypeLocation:{// 位置
             PhotonChatLocationItem *locationItem = [[PhotonChatLocationItem alloc] init];
-            locationItem.fromType = fromeType;
-            locationItem.timeStamp = message.timeStamp;
             PhotonIMLocationBody *audioBody = (PhotonIMLocationBody *)message.messageBody;
             locationItem.address = audioBody.address;
             locationItem.detailAddress = audioBody.detailedAddress;
-            locationItem.avatalarImgaeURL = avatarUrl;
             locationItem.locationCoordinate = CLLocationCoordinate2DMake(audioBody.lat, audioBody.lng);
             locationItem.userInfo = message;
             resultItem = locationItem;
         }
             break;
-//        case PhotonIMMessageTypeFile:{// 位置
-//            PhotonChatLocationItem *locationItem = [[PhotonChatLocationItem alloc] init];
-//            locationItem.fromType = fromeType;
-//            locationItem.timeStamp = message.timeStamp;
-//            PhotonIMLocationBody *audioBody = (PhotonIMLocationBody *)message.messageBody;
-//            locationItem.address = audioBody.address;
-//            locationItem.detailAddress = audioBody.detailedAddress;
-//            locationItem.locationCoordinate = CLLocationCoordinate2DMake(audioBody.lat, audioBody.lng);
-//            locationItem.userInfo = message;
-//            resultItem = locationItem;
-//        }
-//            break;
+        case PhotonIMMessageTypeFile:{// 文件
+            PhotonChatFileMessageItem *fileItem = [[PhotonChatFileMessageItem alloc] init];
+            PhotonIMFileBody *fileBody = (PhotonIMFileBody *)message.messageBody;
+            fileItem.fileSize = [NSString stringWithFormat:@"%.1f k",(float)fileBody.fileSize/1024.0];
+            fileItem.fileName = fileBody.fileDisplayName;
+            fileItem.fileICon = [UIImage imageNamed:@"chatfile"];
+            fileItem.filePath = fileBody.localFilePath;
+            fileItem.userInfo = message;
+            resultItem = fileItem;
+        }
+            break;
         case PhotonIMMessageTypeRaw:{// 自定义
             PhotonIMCustomBody *customBody = (PhotonIMCustomBody *)message.messageBody;
             if (customBody.data) {
@@ -263,13 +270,14 @@
                 noticItem.userInfo = message;
                 return noticItem;
             }
-          
         }
             break;
-            
         default:
             break;
     }
+    resultItem.timeStamp = message.timeStamp;
+    resultItem.avatalarImgaeURL = avatarUrl;
+    resultItem.fromType = fromeType;
     resultItem.tipText = message.notic;
     return resultItem;
 }

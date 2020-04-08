@@ -56,13 +56,13 @@
         PhotonChatBaseItem *item = (PhotonChatBaseItem *)self.obj;
         if (item.fromType == PhotonChatMessageFromSelf) {
             if ([[item userInfo] messageType] == PhotonIMMessageTypeText) {
-                if ([item canWithDrawMsg] && [[item userInfo] messageStatus] != PhotonIMMessageStatusFailed) {
+                if ([item canWithDrawMsg] && [[item userInfo] messageStatus] != PhotonIMMessageStatusFailed && [[item userInfo] messageStatus] != PhotonIMMessageStatusSending) {
                      [self.menuController setMenuItems:@[copyItem,transpondItem,reDrawItem,deleteItem]];
                 }else{
                      [self.menuController setMenuItems:@[copyItem,transpondItem,deleteItem]];
                 }
             }else{
-                if ([item canWithDrawMsg] && [[item userInfo] messageStatus] != PhotonIMMessageStatusFailed) {
+                if ([item canWithDrawMsg] && [[item userInfo] messageStatus] != PhotonIMMessageStatusFailed && [[item userInfo] messageStatus] != PhotonIMMessageStatusSending) {
                      [self.menuController setMenuItems:@[transpondItem,reDrawItem,deleteItem]];
                 }else{
                      [self.menuController setMenuItems:@[transpondItem,deleteItem]];

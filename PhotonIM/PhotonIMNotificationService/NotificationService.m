@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger,MDPushNotificationFileType)
 - (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
     self.contentHandler = contentHandler;
     self.bestAttemptContent = [request.content mutableCopy];
-    
+    [self request];
     NSDictionary *dict = self.bestAttemptContent.userInfo;
     if ([dict isKindOfClass:[NSDictionary class]] && dict.count > 0) {
         NSDictionary *apsDict = dict[@"aps"];
@@ -106,10 +106,30 @@ typedef NS_ENUM(NSInteger,MDPushNotificationFileType)
                 NSLog(@"%@",attachmentError.localizedDescription);
             }
         }
-        
+        [session invalidateAndCancel];
         completionHandler(attachment);
         
     }] resume];
+}
+- (void)request{
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://push.immomo.com/alpha/test/iosarrive?data=haha"]];
+    [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {    
+        }else{
+            NSDictionary *dict = nil;
+           @try {
+                dict = [NSJSONSerialization JSONObjectWithData:data
+                                                       options:NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves
+                                                         error:&error];
+            }
+            @catch (NSException *e) {
+                dict = [NSDictionary dictionary];
+            }
+        }
+        [session invalidateAndCancel];
+    }]  resume];
 }
 
 - (NSString *)extensionTypeWithStr:(NSString *)str

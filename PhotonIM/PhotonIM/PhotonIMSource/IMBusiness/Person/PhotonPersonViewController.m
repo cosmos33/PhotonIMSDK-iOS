@@ -13,6 +13,9 @@
 #import "PhotonMessageSettingCell.h"
 #import "PhotonMessageCenter.h"
 #import "PhotonSettingView.h"
+#import "PAirSandbox.h"
+#import <PhotonIMSDK/PhotonIMSDK.h>
+#import <DatabaseVisual/DatabaseManager.h>
 @interface PhotonPersonDataSource ()
 @end
 
@@ -83,6 +86,19 @@
         settingItem.type = PhotonPersonItemTypeLoadHistorySetting;
         settingItem .valueColor = [UIColor colorWithHex:0x5D5C6F];
        
+         PhotonPersonItem *documentItem = [[PhotonPersonItem alloc] init];
+         documentItem.key = @"查看沙盒文件";
+         documentItem.shorArrow = YES;
+         documentItem.value = @"";
+         documentItem.type = PhotonPersonItemTypeDocument;
+         documentItem .valueColor = [UIColor colorWithHex:0x5D5C6F];
+    
+         PhotonPersonItem *dbItem = [[PhotonPersonItem alloc] init];
+         dbItem.key = @"查看数据库";
+         dbItem.shorArrow = YES;
+         dbItem.value = @"";
+         dbItem.type = PhotonPersonItemTypeDB;
+         dbItem .valueColor = [UIColor colorWithHex:0x5D5C6F];
        
        
        PhotonPersonItem *personItem4 = [[PhotonPersonItem alloc] init];
@@ -97,6 +113,13 @@
        [self.items addObject:personItem1];
        [self.items addObject:personItem2];
        [self.items addObject:settingItem];
+    
+//    #ifdef DEBUG
+       [self.items addObject:documentItem];
+       [self.items addObject:dbItem];
+//    #else
+//    #endif
+       
        
        [self.items addObject:emptyitem];
        
@@ -146,8 +169,16 @@
                 PhotonSettingView *view = [[PhotonSettingView alloc] initWithFrame:CGRectMake(50, 150, 300, 300)];
                 [view showViewInSuperView:self.view];
             }
-                break;
-                
+            break;
+            case PhotonPersonItemTypeDocument:{
+                [[PAirSandbox sharedInstance] showSandboxBrowser];
+            }
+            break;
+            case PhotonPersonItemTypeDB:{
+//                [DatabaseManager sharedInstance].dbDocumentPath = [[[PhotonIMClient sharedClient] getDBPath] stringByDeletingLastPathComponent];
+//                [[DatabaseManager sharedInstance] showTables];
+            }
+            break;
             default:
                 break;
         }

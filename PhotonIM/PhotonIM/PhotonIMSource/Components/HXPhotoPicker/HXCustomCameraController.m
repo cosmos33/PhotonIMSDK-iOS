@@ -181,11 +181,7 @@ const CGFloat HXZoomRate = 1.0f;
             [session startRunning];
         }
     });
-//    if (![self.captureSession isRunning]) {
-//        dispatch_async(self.videoQueue, ^{
-//            [self.captureSession startRunning];
-//        });
-//    }
+
 }
 - (void)stopSession {
     AVCaptureSession *session = self.captureSession;
@@ -194,12 +190,7 @@ const CGFloat HXZoomRate = 1.0f;
             [session stopRunning];
         }
     });
-    
-//    if ([self.captureSession isRunning]) {
-//        dispatch_async(self.videoQueue, ^{
-//            [self.captureSession stopRunning];
-//        });
-//    }
+
 }
 - (AVCaptureDevice *)cameraWithPosition:(AVCaptureDevicePosition)position {
     NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];

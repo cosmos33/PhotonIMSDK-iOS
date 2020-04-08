@@ -11,9 +11,23 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PhotonIMAudioBody : PhotonIMMediaBody
+
+/// 构建PhotonIMAudioBody对象,此构造方法适用于业务端自己管理文件上传下载及相关的存储
+/// @param url <#url description#>
+/// @param mediaTime <#mediaTime description#>
+/// @param localFileName <#localFileName description#>
 + (PhotonIMAudioBody *)audioBodyWithURL:(NSString *)url
                               mediaTime:(int64_t)mediaTime
                           localFileName:(nullable NSString *)localFileName;
+
+
+/// <#Description#>
+/// @param audioPath <#audioPath description#>
+/// @param displayName <#displayName description#>
+/// @param mediaTime <#mediaTime description#>
++ (PhotonIMAudioBody *)audioBodyWithAudioPath:(NSString *)audioPath
+                                  displayName:(nullable NSString *)displayName
+                                    mediaTime:(int64_t)mediaTime;
 @end
 
 NS_ASSUME_NONNULL_END

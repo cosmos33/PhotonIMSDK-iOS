@@ -11,7 +11,7 @@
 #import "PhotonCharBar.h"
 #import <UIKit/UIKit.h>
 NS_ASSUME_NONNULL_BEGIN
-
+@class PhotonIMFileBody;
 @protocol PhotonChatPanelDelegate <NSObject>
 
 @optional
@@ -26,6 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 //  发送视频信息
 - (void)sendVideoMessage:(NSString *)fileName duraion:(CGFloat)duraion;
+
+//  发送文本文件信息
+- (void)sendFileMessage:(PhotonIMFileBody *)body;
 
 //初始输入at的处理
 - (void)processAtAction:(PhotonCharBar *)charBar;

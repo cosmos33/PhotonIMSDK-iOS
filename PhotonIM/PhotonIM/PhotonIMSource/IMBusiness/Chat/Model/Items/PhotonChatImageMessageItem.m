@@ -22,7 +22,7 @@
         scale = [UIScreen mainScreen].scale;
     }
     CGSize imageSize = CGSizeZero;
-    CGFloat defaultWith = PhotoScreenWidth * 0.58;
+    CGFloat defaultWith = PhotoScreenWidth * 0.3;
     CGFloat realHeight = defaultWith * scale;
     imageSize = CGSizeMake(defaultWith, realHeight);
     return imageSize;

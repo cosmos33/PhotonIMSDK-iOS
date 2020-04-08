@@ -33,11 +33,20 @@
 #import "PhotonChatTransmitListViewController.h"
 #import "PhotonChatLocationCell.h"
 #import "PhotonChatLocationItem.h"
+
+#import "PhotonChatFileMessageCell.h"
+#import "PhotonChatFileMessageItem.h"
+#import "PhotonChatVideoMessageCell.h"
+#import "PhotonChatVideoMessageItem.h"
 #import "PhotonLocationViewContraller.h"
 #import "PhotonUINavigationController.h"
+
+#import "PhotonPhotoPreviewViewController.h"
+
+#import "PhotonIMSwift-Swift.h"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
-@interface PhotonChatViewController()<PhotonBaseChatCellDelegate,UIActionSheetDelegate,PhotonMenuViewDelegate>
+@interface PhotonChatViewController()<PhotonBaseChatCellDelegate,UIActionSheetDelegate,PhotonMenuViewDelegate,PhotonPhotoPreviewViewControllerDelegate,PhotonPhotoPreviewViewControllerDelegate,FileExplorerViewControllerDelegate>
 @end
 @implementation PhotonChatViewController (Delegate)
 
@@ -64,10 +73,17 @@
     }else if([cell isKindOfClass:[PhotonChatVoiceMessageCell class]]){
         PhotonChatVoiceMessageCell *tempCell = (PhotonChatVoiceMessageCell *)cell;
         tempCell.delegate = self;
+    }else if([cell isKindOfClass:[PhotonChatVideoMessageCell class]]){
+        PhotonChatVideoMessageCell *tempCell = (PhotonChatVideoMessageCell *)cell;
+        tempCell.delegate = self;
     }
     else if([cell isKindOfClass:[PhotonChatLocationCell class]]){
         PhotonChatLocationCell *tempCell = (PhotonChatLocationCell *)cell;
         tempCell.delegate = self;
+    }
+    else if([cell isKindOfClass:[PhotonChatFileMessageCell class]]){
+           PhotonChatFileMessageCell *tempCell = (PhotonChatFileMessageCell *)cell;
+           tempCell.delegate = self;
     }
     
 }
@@ -75,35 +91,84 @@
 #pragma mark --------- PhotonBaseChatCellDelegate ---------
 // 点击内容背景
 - (void)chatCell:(PhotonChatBaseCell *)cell chatMessageCellTap:(PhotonChatBaseItem *)chatItem{
-    
     // 图片单击事件（预览大图）
-    if([cell isKindOfClass:[PhotonChatImageMessageCell class]]){
-        // 查看大图
-        NSString *defaultImage = [chatItem localPath];
-        if (defaultImage.length == 0) {
-            defaultImage = [(PhotonChatImageMessageItem *)chatItem orignURL];
-        }
-        NSMutableArray<NSString *> *imageItems = [[NSMutableArray alloc] init];
+    if([cell isKindOfClass:[PhotonChatImageMessageCell class]] || [cell isKindOfClass:[PhotonChatVideoMessageCell class]]){
+        NSMutableArray *imageItems = [[NSMutableArray alloc] init];
+        int count = 0;
+        int index = -1;
         for (PhotonChatBaseItem *item in self.dataSource.items) {
             if ([item isKindOfClass:[PhotonChatImageMessageItem class]]) {
-                PhotonChatImageMessageItem *imgItem = (PhotonChatImageMessageItem *)item;
-                if ([imgItem localPath]) {
-                    [imageItems addObject:[imgItem localPath]];
-                }else if ([imgItem orignURL]) {
-                     [imageItems addObject:[imgItem orignURL]];
+                PhotonIMMessage *message = item.userInfo;
+                if (!message) {
+                    continue;
                 }
+                index ++;
+                if(chatItem == item){
+                    count = index;
+                }
+                PhotonIMImageBody *msgBody = (PhotonIMImageBody *)[message messageBody];
+                BOOL exist = [[PhotonIMClient sharedClient] fileExistsLocalWithMessage:message
+                                                                           fileQuality:PhotonIMDownloadFileQualityOrigin];
+                HXPhotoModel *model = [HXPhotoModel photoModelWithImageURL:[NSURL URLWithString:[msgBody url]?:@""] thumbURL:[NSURL URLWithString:[msgBody bigURL]?:[msgBody thumbURL]?:@""]];
+                 model.userInfo = message;
+                if (exist && [msgBody localFilePath]) {
+                    model.fileLocalURL = [NSURL URLWithString:[msgBody localFilePath]];
+                    model.cameraPhotoType = HXPhotoModelMediaTypeCameraPhotoTypeLocal;
+                }else{
+                    model.cameraPhotoType = HXPhotoModelMediaTypeCameraPhotoTypeNetWork;
+                }
+                CGFloat fileSize = [[message messageBody] fileSize]/1024.0;
+                if (fileSize <= 100) {
+                    model.cameraPhotoType = HXPhotoModelMediaTypeCameraPhotoTypeLocal;
+                }
+                 [imageItems addObject:model];
+            }else if ([item isKindOfClass:[PhotonChatVideoMessageItem class]]){
+                 PhotonIMMessage *message = item.userInfo;
+                index ++;
+                 if(chatItem == item){
+                     count = index;
+                 }
+                PhotonIMVideoBody *videoBody = (PhotonIMVideoBody *)[item.userInfo messageBody];
+                HXPhotoModel *model = nil;
+                BOOL exist = [[PhotonIMClient sharedClient] fileExistsLocalWithMessage:message fileQuality:PhotonIMDownloadFileQualityOrigin];
+                if (exist && videoBody.localFilePath.length > 0) {
+                    model = [HXPhotoModel photoModelWithNetworkVideoURL:[NSURL fileURLWithPath:videoBody.localFilePath?:@""] videoCoverURL:[NSURL URLWithString:videoBody.coverUrl?:@""] videoDuration:videoBody.mediaTime];
+                    model.cameraVideoType = HXPhotoModelMediaTypeCameraVideoTypeLocal;
+                    model.previewPhoto = [(PhotonChatVideoMessageItem *)item coverImage];
+                }else{
+                    model = [HXPhotoModel photoModelWithNetworkVideoURL:[NSURL URLWithString:videoBody.url?:@""] videoCoverURL:[NSURL URLWithString:videoBody.coverUrl?:@""] videoDuration:videoBody.mediaTime];
+                    model.cameraVideoType = HXPhotoModelMediaTypeCameraVideoTypeNetWork;
+                }
+                model.userInfo = message;
+                [imageItems addObject:model];
             }
         }
         
-        PhotonChatImageMessageCell *imageCell = (PhotonChatImageMessageCell *)cell;
-        [imageCell.contentBackgroundView enterBrowserModeWithImageURLs:imageItems defaultImageURL:defaultImage placeholderImage:nil];
+        HXPhotoManager *manager = [[HXPhotoManager alloc] initWithType:HXPhotoManagerSelectedTypePhotoAndVideo];
+        [manager addModelArray:imageItems];
+        PhotonPhotoPreviewViewController *previewVC = [[PhotonPhotoPreviewViewController alloc] init];
+        if (HX_IOS9Earlier) {
+            previewVC.photoViewController = self;
+        }
+        previewVC.delegate = self;
+        previewVC.modelArray = [NSMutableArray arrayWithArray:imageItems];
+        previewVC.manager = manager;
+        previewVC.selectPreview = YES;
+        previewVC.currentModelIndex = count;
+        previewVC.previewShowDeleteButton = YES;
+        previewVC.outside = YES;
+        previewVC.exteriorPreviewStyle = HXPhotoViewPreViewShowStyleDark;
+        previewVC.previewShowPageControl = NO;
+        previewVC.modalPresentationStyle = UIModalPresentationOverFullScreen;
+        previewVC.modalPresentationCapturesStatusBarAppearance = YES;
+        [self presentViewController:previewVC animated:YES completion:nil];
     }
     // 语音点击事件 (播放语音)
     if([cell isKindOfClass:[PhotonChatVoiceMessageCell class]]){
         PhotonChatVoiceMessageCell *voiceCell = (PhotonChatVoiceMessageCell *)cell;
         PhotonChatVoiceMessageItem *voiceItem = (PhotonChatVoiceMessageItem *)chatItem;
         if(voiceItem.fromType == PhotonChatMessageFromSelf){// 自己发送的语音消息，直接播放
-            NSString *path = [[PhotonMessageCenter sharedCenter] getVoiceFilePath:self.conversation.chatWith fileName:voiceItem.fileName];
+           NSString *path = voiceItem.fileLocalPath;
            [self playAudioSource:path cell:voiceCell];
         }else if(voiceItem.fromType == PhotonChatMessageFromFriend){// 来自好友的消息，先判断本地是否已缓存，已缓存
             PhotonIMMessage *message = (PhotonIMMessage *)voiceItem.userInfo;
@@ -119,12 +184,9 @@
                 [self playAudioSource:filePath cell:voiceCell];
             }else{
                 [[PhotonMessageCenter sharedCenter] insertOrUpdateMessage:message];
-                PhotonDownloadFileReceipt * receipt = [[PhotonDownloadFileReceipt alloc] initWithURL:audioBody.url];
-                receipt.filename = fileName;
-                receipt.filePath = filePath;
                 PhotonWeakSelf(self);
-                [[PhotonDownLoadFileManager defaultManager] downloadFileWithReceipt:receipt progress:nil destination:nil success:^(PhotonDownloadFileReceipt * _Nullable receipt, NSError * _Nullable error) {
-                     [weakself playAudioSource:receipt.filePath cell:voiceCell];
+                [[PhotonIMClient sharedClient] getLocalFileWithMessage:message fileQuality:PhotonIMDownloadFileQualityOrigin progress:nil completion:^(NSString * _Nullable filePath, NSError * _Nullable error) {
+                    [weakself playAudioSource:filePath cell:voiceCell];
                 }];
             }
         }
@@ -141,6 +203,61 @@
         }];
         [self.navigationController pushViewController:locationVC animated:YES];
     }
+    
+    if([cell isKindOfClass:[PhotonChatFileMessageCell class]]){
+        PhotonChatFileMessageItem *fileItem = (PhotonChatFileMessageItem *)chatItem;
+        PhotonIMMessage *message = fileItem.userInfo;
+        NSString *fileLocalPath = [[message messageBody] localFilePath];
+        NSString *fileName = fileItem.fileName;
+        if (fileItem.fromType == PhotonChatMessageFromSelf) {
+            fileLocalPath = fileItem.filePath;
+        }
+        
+        if ([[PhotonIMClient sharedClient] fileExistsLocalWithMessage:message fileQuality:PhotonIMDownloadFileQualityOrigin] && fileLocalPath) {
+            [self previewFile:fileLocalPath fileName:fileName message:message];
+        }else{
+            [[PhotonMessageCenter sharedCenter] getLocalFileWithMessage:message fileQuality:PhotonIMDownloadFileQualityOrigin userInfo:fileName];
+        }
+    }
+}
+
+- (void)imClient:(id)client transportProgressWithMessage:(PhotonIMMessage *)message progess:(NSProgress *)progess{
+     __weak typeof(self)weakSelf = self;
+    [PhotonUtil runMainThread:^{
+        [weakSelf _fileTransportProgress:progess userInfo:message];
+    }];
+    
+}
+
+- (void)_fileTransportProgress:(NSProgress *)downloadProgress userInfo:(id)userInfo{
+    NSArray *items = [self.model.items copy];
+    NSInteger index = 0;
+    for (PhotonChatBaseItem *item in items) {
+        if ([[item.userInfo messageID] isEqualToString:[userInfo messageID]]) {
+            index = [items indexOfObject:item];
+            break;
+        }
+    }
+    id cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+    if ([cell isKindOfClass:[PhotonChatBaseCell class]] && [cell respondsToSelector:@selector(changeProgressValue:)]) {
+        [cell changeProgressValue:(CGFloat)((CGFloat)downloadProgress.completedUnitCount/(CGFloat)downloadProgress.totalUnitCount)];
+    }
+
+}
+- (void)imClient:(id)client downloadCompletionWithMessage:(PhotonIMMessage *)message filePath:(NSString *)filePath error:(PhotonIMError *)error{
+      [self previewFile:filePath?:@"" fileName:[[message messageBody] fileDisplayName] message:message];
+}
+
+
+- (void)previewFile:(NSString *)filePath fileName:(NSString *)fileName message:(PhotonIMMessage *)message{
+    if (message.messageType != PhotonIMMessageTypeFile) {
+        return;
+    }
+    PhotonWeakSelf(self)
+    FileExplorerViewController *fileExpore  = [[FileExplorerViewController alloc]  initWithDirectoryURL:[NSURL fileURLWithPath:filePath] title:fileName compeltion:^{
+            [weakself _share:message];
+    }];
+    [self.navigationController pushViewController:fileExpore animated:YES];
 }
 
 - (void)playAudioSource:(NSString *)path cell:(PhotonChatVoiceMessageCell *)cell{
@@ -266,7 +383,6 @@
 }
 
 - (void)addItems:(id)message{
-    
     id item =  [(PhotonChatModel *)self.model wrapperMessage:message];
     [self.model.items addObject:item];
     [self reloadData];
@@ -276,7 +392,6 @@
     if (item == nil) {
         return;
     }
-   
     BOOL server = YES;
     if (server) {
         PhotonWeakSelf(self);
@@ -323,6 +438,43 @@
     NSInteger index = [self.dataSource.items indexOfObject:item];
     [self.model.items replaceObjectAtIndex:index withObject:noticItem];
     [self reloadData];
+}
+
+#pragma mark ----- PhotonPhotoPreviewViewControllerDelegate ---
+- (void)share:(HXPhotoModel *)model{
+    PhotonIMMessage *message = model.userInfo;
+    [self _share:message];
+}
+
+- (void)_share:(PhotonIMMessage *)message{
+    if ([message isKindOfClass:[PhotonIMMessage class]]) {
+        PhotonWeakSelf(self)
+        PhotonChatTransmitListViewController *transmitVc = [[PhotonChatTransmitListViewController alloc] initWithMessage:message block:^(id  _Nonnull msg) {
+            [weakself addItems:msg];
+        }];
+        [self.navigationController pushViewController:transmitVc animated:YES];
+    }
+}
+- (void)viewOriginImage:(HXPhotoModel *)model completion:(void (^)(UIImage * _Nonnull))completion{
+    [self _downloadImage:model completion:completion];
+}
+
+- (void)downloadImage:(HXPhotoModel *)model completion:(void (^)(UIImage * _Nonnull))completion{
+    [self _downloadImage:model completion:completion];
+}
+- (void)_downloadImage:(HXPhotoModel *)model completion:(void (^)(UIImage * _Nonnull))completion{
+    id message = model.userInfo;
+    if (message && [message isKindOfClass:[PhotonIMMessage class]]) {
+        id msgBody = [message messageBody];
+        if (msgBody && [msgBody isKindOfClass:[PhotonIMImageBody class]]) {
+            [[PhotonIMClient sharedClient] getLocalFileWithMessage:message fileQuality:PhotonIMDownloadFileQualityOrigin progress:nil completion:^(NSString * _Nullable filePath, NSError * _Nullable error) {
+                UIImage *image = [UIImage imageWithContentsOfFile:filePath];
+                if (completion) {
+                    completion(image);
+                }
+            }];
+        }
+    }
 }
 @end
 #pragma clang diagnostic pop

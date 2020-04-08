@@ -1,0 +1,123 @@
+- (void)saveMessageBatch:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith messageList:(NSArray<PhotonIMMessage *>*)messageList{
+    
+    ChatType chatType_ = (ChatType)chatType;
+    std::string chatWith_ = std::string("");
+    if (chatWith) {
+        chatWith_ = std::string(chatWith.UTF8String);
+    }
+    std::shared_ptr<std::list<std::shared_ptr<Message>>> msgList = std::make_shared<std::list<std::shared_ptr<Message>>>();
+    for (PhotonIMMessage *message in messageList) {
+        if ([self isMessageExist:message]) {
+            if (message.remainHistory) {
+                [self UpdateMessageStartLoadHistory:chatType chatWith:chatWith msgId:message.messageID startLoadHistory:message.remainHistory];
+            }
+            continue;
+        }
+        std::shared_ptr<Message> msg = convertMessageWithIMMessage(message);
+        msgList->push_back(msg);
+    }
+    IMDatabase::GetInstance().SaveMessageBatch(chatType_,chatWith_,msgList);
+}
+
+- (void)syncHistoryMessagesFromServer:(PhotonIMChatType)chatType
+                             chatWith:(NSString *)chatWith
+                               anchor:(nullable NSString *)anchor
+                                 size:(int)size beginTimeStamp:(int64_t)beginTimeStamp
+                         endTimeStamp:(int64_t)endTimeStamp
+                          reaultBlock:(void (^)(NSArray<PhotonIMMessage *> * _Nullable messageList,
+                                                NSString * _Nullable anchor,
+                                                NSError * _Nullable error))result{
+    
+    PhotonIMNetworkRequest *reqtest = [[PhotonIMNetworkRequest alloc] init];
+    // 处理header
+    NSMutableDictionary *header = [NSMutableDictionary dictionary];
+    [header setValue:@"application/json" forKey:@"Content-Type"];
+    [header setValue:self.loginData.appId forKey:@"appId"];
+    NSString *timestamp = [NSString stringWithFormat:@"%@",@((int64_t)[NSDate date].timeIntervalSince1970)];
+    [header setValue:timestamp forKey:@"timestamp"];
+    NSString *signString = [NSString stringWithFormat:@"%@%@%@",self.loginData.appId,self.loginData.token,timestamp];
+    signString = [PhotonIMUtils md5:signString];
+    [header setValue:signString forKey:@"sign"];
+    [header setValue:self.loginData.userId forKey:@"userId"];
+    
+    // 处理参数
+    NSMutableDictionary *paramter = [NSMutableDictionary dictionary];
+    [paramter setValue:self.loginData.appId forKey:@"appId"];
+    if (chatType == PhotonIMChatTypeGroup) {
+        [paramter setValue:chatWith forKey:@"to"];
+    }else if (chatType == PhotonIMChatTypeSingle){
+        [paramter setValue:chatWith forKey:@"fr"];
+        [paramter setValue:self.loginData.userId forKey:@"to"];
+    }
+    
+    int64_t beginTimeStamp_ = 0;
+    if (beginTimeStamp >=0) {
+        beginTimeStamp_ = beginTimeStamp;
+    }
+    [paramter setValue:@(beginTimeStamp_) forKey:@"startTimeStamp"];
+    [paramter setValue:@(endTimeStamp) forKey:@"endTimeStamp"];
+    
+    if(anchor){
+         [paramter setValue:anchor forKey:@"nextKey"];
+    }
+    
+    int size_ = 50;
+    if (size  > 0) {
+        size_ = size;
+    }
+    [paramter setValue:@(size_) forKey:@"size"];
+    
+    NSString *urlString = [NSString stringWithFormat:@"https://cosmos-im-api.immomo.com/api-test/v1/group/getHisMsgList"];
+    {// 接入referee
+        NSURLComponents *component = [NSURLComponents componentsWithString:urlString];
+        NSString *usedHost = [[PhotonIMRefereeManager shareInstance] getHostFromRefereeCache:component.host defaultPort:443].ip;
+        NSString *mainHost = component.host;
+        if ([PhotonIMUtils hostIsIPAddress:usedHost]) {
+            [header setValue:mainHost forKey:@"Host"];
+        }
+        component.host = usedHost;
+        NSURL *url = component.URL;
+        urlString = [url absoluteString];
+    }
+    
+    __weak typeof(self)weakSelf = self;
+    [reqtest requestWithMethod:PhotonIMRequestMethodPost urlString:urlString header:header paramter:paramter completion:^(NSURLResponse * _Nullable response, id  _Nullable responseObject, NSError * _Nullable error) {
+        __strong typeof(self)strongSelf = weakSelf;
+        if (error) {
+            if (result) {
+                result(nil,nil,error);
+            }
+        }else{
+            [strongSelf warpperMessageByResponseData:responseObject reaultBlock:result];
+        }
+    }];
+}
+
+- (void)syncHistoryMessagesFromServer:(PhotonIMChatType)chatType
+                             chatWith:(NSString *)chatWith
+                                 size:(int)size
+                       beginTimeStamp:(int64_t)beginTimeStamp
+                          reaultBlock:(void (^)(NSArray<PhotonIMMessage *> * _Nullable,
+                                                NSError * _Nullable error))result{
+    PhotonIMMessage *anchorMessage = [self.imCore findMessageWithAnchorTimeStamp:chatType chatWith:chatWith];
+    int64_t endStamp = (int64_t)([NSDate date].timeIntervalSince1970 * 1000);
+    if (anchorMessage) {
+        endStamp  = anchorMessage.timeStamp - 1;
+    }
+      __weak typeof(self)weakSelf = self;
+    [self syncHistoryMessagesFromServer:chatType chatWith:chatWith anchor:nil size:size beginTimeStamp:beginTimeStamp endTimeStamp:endStamp reaultBlock:^(NSArray<PhotonIMMessage *> * _Nullable messageList, NSString * _Nullable anchor, NSError * _Nullable error) {
+         __strong typeof(self)strongSelf = weakSelf;
+        if (messageList.count > 0) {
+            if(strongSelf.dbMode != PhotonIMDBModeNoDB){
+                messageList.firstObject.remainHistory  = YES;
+                [strongSelf saveMessageBatch:chatType chatWith:chatWith messageList:messageList];
+            }
+            if (anchorMessage) {
+                [self.imCore UpdateMessageStartLoadHistory:chatType chatWith:chatWith msgId:anchorMessage.messageID startLoadHistory:NO];
+            }
+        }
+        if (result) {
+            result(messageList,error);
+        }
+    }];
+}

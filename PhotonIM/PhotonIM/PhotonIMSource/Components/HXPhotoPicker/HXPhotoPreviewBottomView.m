@@ -129,7 +129,7 @@
     NSString *text;
     if (selectCount <= 0) {
         text = @"";
-        [self.doneBtn setTitle:[NSBundle hx_localizedStringForKey:@"完成"] forState:UIControlStateNormal];
+        [self.doneBtn setTitle:[NSBundle hx_localizedStringForKey:@"发送"] forState:UIControlStateNormal];
     }else {
         if (self.manager.configuration.doneBtnShowDetail) {
             if (!self.manager.configuration.selectTogether) {
@@ -147,7 +147,7 @@
             text = [NSString stringWithFormat:@"(%ld)", selectCount];
         }
     }
-    [self.doneBtn setTitle:[NSString stringWithFormat:@"%@%@",[NSBundle hx_localizedStringForKey:@"完成"], text] forState:UIControlStateNormal];
+    [self.doneBtn setTitle:[NSString stringWithFormat:@"%@%@",[NSBundle hx_localizedStringForKey:@"发送"], text] forState:UIControlStateNormal];
     [self changeDoneBtnFrame];
 }
 #pragma mark - < UICollectionViewDataSource >
@@ -331,7 +331,7 @@
 - (UIButton *)doneBtn {
     if (!_doneBtn) {
         _doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_doneBtn setTitle:[NSBundle hx_localizedStringForKey:@"完成"] forState:UIControlStateNormal];
+        [_doneBtn setTitle:[NSBundle hx_localizedStringForKey:@"发送"] forState:UIControlStateNormal];
         _doneBtn.titleLabel.font = [UIFont systemFontOfSize:14];
         _doneBtn.layer.cornerRadius = 3;
         [_doneBtn addTarget:self action:@selector(didDoneBtnClick) forControlEvents:UIControlEventTouchUpInside];

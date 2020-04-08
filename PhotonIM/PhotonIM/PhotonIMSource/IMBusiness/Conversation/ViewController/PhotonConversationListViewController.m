@@ -91,12 +91,23 @@ static NSString *message_syncing = @"消息(收取中......)";
         self.tabBarItem.tag = 1;
         [self.tabBarItem setImage:[UIImage imageNamed:@"message"]];
         [self.tabBarItem setSelectedImage:[UIImage imageNamed:@"message_onClick"]];
-        
-        _sessionChangeQueue = dispatch_queue_create("com.cosmos.PhotonIM.conversationchange", DISPATCH_QUEUE_SERIAL);
-        _dataDispatchSource = [MFDispatchSource sourceWithDelegate:self type:refreshType_Data dataQueue:dispatch_queue_create("com.cosmos.PhotonIM.conversationdata", DISPATCH_QUEUE_SERIAL)];
 
     }
     return self;
+}
+
+- (dispatch_queue_t)sessionChangeQueue{
+    if (!_sessionChangeQueue) {
+          _sessionChangeQueue = dispatch_queue_create("com.cosmos.PhotonIM.conversationchange", DISPATCH_QUEUE_SERIAL);
+    }
+    return _sessionChangeQueue;
+}
+
+- (MFDispatchSource *)dataDispatchSource{
+    if (!_dataDispatchSource) {
+            _dataDispatchSource = [MFDispatchSource sourceWithDelegate:self type:refreshType_Data dataQueue:dispatch_queue_create("com.cosmos.PhotonIM.conversationdata", DISPATCH_QUEUE_SERIAL)];
+    }
+    return _dataDispatchSource;
 }
 
 //判断是否跳转
@@ -171,9 +182,12 @@ static NSString *message_syncing = @"消息(收取中......)";
 }
 - (void)conversationChange:(PhotonIMConversationEvent)envent chatType:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith{
     __weak typeof(self)weakSelf = self;
-    dispatch_async(self.sessionChangeQueue, ^{
-        [weakSelf _conversationChange:envent chatType:chatType chatWith:chatWith];
-    });
+    if (self.sessionChangeQueue) {
+        dispatch_async(self.sessionChangeQueue, ^{
+            [weakSelf _conversationChange:envent chatType:chatType chatWith:chatWith];
+        });
+    }
+
 }
 - (void)_conversationChange:(PhotonIMConversationEvent)envent chatType:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith{
     if (_firstLoadData) {

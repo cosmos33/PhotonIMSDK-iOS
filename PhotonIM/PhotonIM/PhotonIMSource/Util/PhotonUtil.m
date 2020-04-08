@@ -8,6 +8,7 @@
 
 #import "PhotonUtil.h"
 #import "PhotonMacros.h"
+#import <AVFoundation/AVFoundation.h>
 #import <SVProgressHUD/SVProgressHUD.h>
 @implementation PhotonUtil
 
@@ -135,17 +136,26 @@
 
 + (void)showSuccessHint:(nullable NSString *)hintText
 {
-    [SVProgressHUD showSuccessWithStatus:hintText];
+    [self runMainThread:^{
+        [SVProgressHUD setMaximumDismissTimeInterval:2];
+        [SVProgressHUD showSuccessWithStatus:hintText];
+    }];
 }
 
 + (void)showErrorHint:(nullable NSString *)hintText
 {
-    [SVProgressHUD showErrorWithStatus:hintText];
+    [self runMainThread:^{
+        [SVProgressHUD setMaximumDismissTimeInterval:1];
+        [SVProgressHUD showErrorWithStatus:hintText];
+    }];
 }
 
 + (void)showInfoHint:(nullable NSString *)hintText
 {
-    [SVProgressHUD showInfoWithStatus:hintText];
+    [self runMainThread:^{
+        [SVProgressHUD setMaximumDismissTimeInterval:2];
+        [SVProgressHUD showInfoWithStatus:hintText];
+    }];
 }
 
 + (BOOL)isShowLoading
@@ -199,5 +209,27 @@ static NSTimeInterval lastDateInterval = 0;
         dispatch_async(dispatch_get_main_queue(), block);
     }
     
+}
+
+
+#pragma mark ---- 获取图片第一帧
++ (UIImage *)firstFrameWithVideoURL:(NSString *)fileUrl size:(CGSize)size
+{
+    if (!fileUrl) {
+        return nil;
+    }
+    // 获取视频第一帧
+    NSURL *url = [NSURL fileURLWithPath:fileUrl];
+    NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
+    AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:url options:opts];
+    AVAssetImageGenerator *generator = [AVAssetImageGenerator assetImageGeneratorWithAsset:urlAsset];
+    generator.appliesPreferredTrackTransform = YES;
+    generator.maximumSize = CGSizeMake(size.width, size.height);
+    NSError *error = nil;
+    CGImageRef img = [generator copyCGImageAtTime:CMTimeMake(0, 10) actualTime:NULL error:&error];
+    {
+        return [UIImage imageWithCGImage:img];
+    }
+    return nil;
 }
 @end

@@ -25,7 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
  -1     消息发送超时
  -2     消息格式错误
  */
-
 @interface PhotonIMError : NSError
 @property(nonatomic,copy,readonly,nullable,)NSString *em;
 @property(nonatomic, assign)int16_t retTime;

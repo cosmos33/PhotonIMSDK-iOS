@@ -42,5 +42,4 @@
     NSTimeInterval msgTimeStamp = (_timeStamp/1000.0);
     return ((currentTimeStamp - msgTimeStamp) < 2 * 60);
 }
-
 @end

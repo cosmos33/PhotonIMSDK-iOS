@@ -14,6 +14,8 @@
 #import "PhotonConversationItem.h"
 #import "PhotonChatNoticItem.h"
 #import "PhotonChatLocationItem.h"
+#import "PhotonChatVideoMessageItem.h"
+#import "PhotonChatFileMessageItem.h"
 NS_ASSUME_NONNULL_BEGIN
 @class PhotonIMMessage;
 @interface PhotonChatModel : PhotonBaseModel

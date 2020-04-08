@@ -98,6 +98,45 @@
 		3228700422BA552D009B6881 /* Conversation.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3228700322BA552D009B6881 /* Conversation.xcassets */; };
 		3228700622BA56BE009B6881 /* Mine.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3228700522BA56BD009B6881 /* Mine.xcassets */; };
 		3228700822BA56C6009B6881 /* Friends.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3228700722BA56C6009B6881 /* Friends.xcassets */; };
+		32293162241F5A40000A79C9 /* PhotonTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32293161241F5A40000A79C9 /* PhotonTest.swift */; };
+		322932EB241F5D60000A79C9 /* CheckmarkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932C4241F5D60000A79C9 /* CheckmarkButton.swift */; };
+		322932EC241F5D60000A79C9 /* UIAlertController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932C5241F5D60000A79C9 /* UIAlertController+Extension.swift */; };
+		322932ED241F5D60000A79C9 /* FileItemPresentationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932C6241F5D60000A79C9 /* FileItemPresentationCoordinator.swift */; };
+		322932EE241F5D60000A79C9 /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932C7241F5D60000A79C9 /* ItemCell.swift */; };
+		322932EF241F5D60000A79C9 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932C8241F5D60000A79C9 /* UIView+Extension.swift */; };
+		322932F0241F5D60000A79C9 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932C9241F5D60000A79C9 /* Item.swift */; };
+		322932F1241F5D60000A79C9 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932CA241F5D60000A79C9 /* UIImage+Extension.swift */; };
+		322932F2241F5D60000A79C9 /* ItemPresentationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932CB241F5D60000A79C9 /* ItemPresentationCoordinator.swift */; };
+		322932F3241F5D60000A79C9 /* ImageAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 322932CD241F5D60000A79C9 /* ImageAssets.xcassets */; };
+		322932F4241F5D60000A79C9 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932CE241F5D60000A79C9 /* Result.swift */; };
+		322932F5241F5D60000A79C9 /* FileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932CF241F5D60000A79C9 /* FileViewModel.swift */; };
+		322932F6241F5D60000A79C9 /* DirectoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932D0241F5D60000A79C9 /* DirectoryViewController.swift */; };
+		322932F7241F5D60000A79C9 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932D1241F5D60000A79C9 /* ImageViewController.swift */; };
+		322932F8241F5D60000A79C9 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932D2241F5D60000A79C9 /* Double+Extension.swift */; };
+		322932F9241F5D60000A79C9 /* UknownFileTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932D3241F5D60000A79C9 /* UknownFileTypeViewController.swift */; };
+		322932FA241F5D60000A79C9 /* ImageAssets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932D4241F5D60000A79C9 /* ImageAssets.swift */; };
+		322932FB241F5D60000A79C9 /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932D5241F5D60000A79C9 /* FileService.swift */; };
+		322932FC241F5D60000A79C9 /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932D6241F5D60000A79C9 /* URL+Extension.swift */; };
+		322932FD241F5D60000A79C9 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932D7241F5D60000A79C9 /* UIViewController+Extension.swift */; };
+		322932FE241F5D60000A79C9 /* FileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932D8241F5D60000A79C9 /* FileViewController.swift */; };
+		322932FF241F5D60000A79C9 /* ThumbnailGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932D9241F5D60000A79C9 /* ThumbnailGenerator.swift */; };
+		32293300241F5D60000A79C9 /* FileExplorerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932DA241F5D60000A79C9 /* FileExplorerViewController.swift */; };
+		32293301241F5D60000A79C9 /* FileSpecificationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932DB241F5D60000A79C9 /* FileSpecificationProvider.swift */; };
+		32293302241F5D60000A79C9 /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932DC241F5D60000A79C9 /* ErrorViewController.swift */; };
+		32293303241F5D60000A79C9 /* DirectoryItemPresentationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932DD241F5D60000A79C9 /* DirectoryItemPresentationCoordinator.swift */; };
+		32293304241F5D60000A79C9 /* UICollectionView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932DE241F5D60000A79C9 /* UICollectionView+Extension.swift */; };
+		32293305241F5D60000A79C9 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932DF241F5D60000A79C9 /* WebViewController.swift */; };
+		32293306241F5D60000A79C9 /* DirectoryContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932E0241F5D60000A79C9 /* DirectoryContentViewModel.swift */; };
+		32293307241F5D60000A79C9 /* UIToolbar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932E1241F5D60000A79C9 /* UIToolbar+Extension.swift */; };
+		32293308241F5D60000A79C9 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932E2241F5D60000A79C9 /* Errors.swift */; };
+		32293309241F5D60000A79C9 /* UISearchBar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932E3241F5D60000A79C9 /* UISearchBar+Extension.swift */; };
+		3229330A241F5D60000A79C9 /* UIBezierPath+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932E4241F5D60000A79C9 /* UIBezierPath+Extension.swift */; };
+		3229330B241F5D60000A79C9 /* ActionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932E5241F5D60000A79C9 /* ActionsViewController.swift */; };
+		3229330C241F5D60000A79C9 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932E6241F5D60000A79C9 /* LoadingViewController.swift */; };
+		3229330D241F5D60000A79C9 /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932E7241F5D60000A79C9 /* UITableView+Extension.swift */; };
+		3229330E241F5D60000A79C9 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932E8241F5D60000A79C9 /* Configuration.swift */; };
+		3229330F241F5D60000A79C9 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932E9241F5D60000A79C9 /* Array+Extension.swift */; };
+		32293310241F5D60000A79C9 /* DirectoryContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322932EA241F5D60000A79C9 /* DirectoryContentViewController.swift */; };
 		3235759322C3129400C0B442 /* icon_chat_audio_playstatus_3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3235758822C3129400C0B442 /* icon_chat_audio_playstatus_3@2x.png */; };
 		3235759422C3129400C0B442 /* icon_chat_audio_playstatus_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3235758922C3129400C0B442 /* icon_chat_audio_playstatus_1@2x.png */; };
 		3235759522C3129400C0B442 /* icon_chat_audio_playstatus_9@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3235758A22C3129400C0B442 /* icon_chat_audio_playstatus_9@2x.png */; };
@@ -153,6 +192,11 @@
 		324FE2BD233C5CE900F996D0 /* PhotonAtMemberListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 324FE2BC233C5CE900F996D0 /* PhotonAtMemberListViewController.m */; };
 		324FE2C0233C5D5E00F996D0 /* PhotonGroupMemberListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 324FE2BF233C5D5E00F996D0 /* PhotonGroupMemberListViewController.m */; };
 		3259F3FF23C88B9300701C3F /* PhotonChatSearchReultTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3259F3FE23C88B9300701C3F /* PhotonChatSearchReultTableViewController.m */; };
+		32664EB323F3A67E00201947 /* PAirSandbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 32664EB123F3A67D00201947 /* PAirSandbox.m */; };
+		32664ECD23FA2A6400201947 /* PhotonChatFileMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 32664ECC23FA2A6400201947 /* PhotonChatFileMessageCell.m */; };
+		32664ED023FA2ABD00201947 /* PhotonChatFileMessageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 32664ECF23FA2ABD00201947 /* PhotonChatFileMessageItem.m */; };
+		32664ED323FA613500201947 /* PhotonDocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32664ED223FA613500201947 /* PhotonDocumentViewController.m */; };
+		32664EE523FA70B100201947 /* Files in Resources */ = {isa = PBXBuildFile; fileRef = 32664EE423FA70B100201947 /* Files */; };
 		3272587422F140D000842026 /* PhotonSingleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3272587322F140D000842026 /* PhotonSingleSettingViewController.m */; };
 		3272587722F1433500842026 /* PhotonMessageSettingItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3272587622F1433500842026 /* PhotonMessageSettingItem.m */; };
 		3272587A22F1437100842026 /* PhotonMessageSettingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3272587922F1437100842026 /* PhotonMessageSettingCell.m */; };
@@ -164,6 +208,9 @@
 		32740A4F23C8290B0089F318 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32740A4E23C8290B0089F318 /* CoreLocation.framework */; };
 		32740A5123C829110089F318 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32740A5023C829110089F318 /* MapKit.framework */; };
 		32740A5423C831EE0089F318 /* PhotonChatLocationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 32740A5323C831EE0089F318 /* PhotonChatLocationItem.m */; };
+		32740AE22423351500337225 /* PhotonCircleProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 32740AE12423351500337225 /* PhotonCircleProgressView.m */; };
+		3275F89A2420659100E50E9F /* PhotonFilePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3275F8992420659100E50E9F /* PhotonFilePreviewViewController.swift */; };
+		327E50F82421FF5B00EA8A6A /* UIScreen+PhotonExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 327E50F72421FF5B00EA8A6A /* UIScreen+PhotonExtension.swift */; };
 		32845465238FA886003C0683 /* PhotonChatData.m in Sources */ = {isa = PBXBuildFile; fileRef = 32845464238FA886003C0683 /* PhotonChatData.m */; };
 		32845474238FD1D1003C0683 /* YYWeakProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 32845470238FD1D1003C0683 /* YYWeakProxy.m */; };
 		32845475238FD1D1003C0683 /* YYFPSLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 32845472238FD1D1003C0683 /* YYFPSLabel.m */; };
@@ -172,6 +219,8 @@
 		3289091023C85371002C45CC /* PhotonChatLocationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3289090F23C85371002C45CC /* PhotonChatLocationCell.m */; };
 		328A76532339D8EB009F0668 /* PhotonGroupMemberListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 328A76522339D8EB009F0668 /* PhotonGroupMemberListModel.m */; };
 		329E67F92301460D0097BFDC /* PhotonBaseUITableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 329E67F82301460D0097BFDC /* PhotonBaseUITableView.m */; };
+		32A51CDC2429A9AF005563DE /* PhotonCircleLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 32A51CDB2429A9AF005563DE /* PhotonCircleLoadingView.m */; };
+		32A8D9DF23E911ED009F2120 /* PhotonChatVideoMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 32A8D9DE23E911ED009F2120 /* PhotonChatVideoMessageCell.m */; };
 		32AE413423B4B7E300BCBE5C /* MDAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32AE413323B4B7E300BCBE5C /* MDAudioKit.framework */; };
 		32C5575E23CDD936007F06CE /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32C5575C23CDD936007F06CE /* PhotosUI.framework */; };
 		32C5575F23CDD936007F06CE /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32C5575D23CDD936007F06CE /* Photos.framework */; };
@@ -236,6 +285,7 @@
 		32E0BE0122D3464300DEEFA5 /* PhotonEmptyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E0BE0022D3464300DEEFA5 /* PhotonEmptyTableViewCell.m */; };
 		32E0BE0422D3466A00DEEFA5 /* PhotonEmptyTableItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E0BE0322D3466A00DEEFA5 /* PhotonEmptyTableItem.m */; };
 		32E0BE0822D358DF00DEEFA5 /* PhotonRecorderIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E0BE0722D358DF00DEEFA5 /* PhotonRecorderIndicator.m */; };
+		32E2347523F2574D00040336 /* PhotonPhotoPreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E2347423F2574C00040336 /* PhotonPhotoPreviewViewController.m */; };
 		32E7927F22FAC3AA00CB3E76 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E7927E22FAC3A900CB3E76 /* CoreServices.framework */; };
 		32F94D8C23387D06002DF468 /* PhotonContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F94D8B23387D06002DF468 /* PhotonContactViewController.m */; };
 		32F94D8F23388353002DF468 /* PhotonGroupContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F94D8E23388353002DF468 /* PhotonGroupContactViewController.m */; };
@@ -349,7 +399,7 @@
 		3226080423D0620C00C9E393 /* PhotonLoadDataSetModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonLoadDataSetModel.m; sourceTree = "<group>"; };
 		3226080623D063CD00C9E393 /* PhotonSettingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonSettingView.h; sourceTree = "<group>"; };
 		3226080723D063CD00C9E393 /* PhotonSettingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonSettingView.m; sourceTree = "<group>"; };
-		32286F8522B9F207009B6881 /* PhotonIM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = PhotonIM.app; path = PhotonIMMerge.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		32286F8522B9F207009B6881 /* PhotonIMMerge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotonIMMerge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		32286F8B22B9F207009B6881 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		32286F8C22B9F207009B6881 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		32286F8F22B9F207009B6881 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -388,6 +438,47 @@
 		3228700322BA552D009B6881 /* Conversation.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Conversation.xcassets; sourceTree = "<group>"; };
 		3228700522BA56BD009B6881 /* Mine.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Mine.xcassets; sourceTree = "<group>"; };
 		3228700722BA56C6009B6881 /* Friends.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Friends.xcassets; sourceTree = "<group>"; };
+		32293160241F5A40000A79C9 /* PhotonIM-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PhotonIM-Bridging-Header.h"; sourceTree = "<group>"; };
+		32293161241F5A40000A79C9 /* PhotonTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotonTest.swift; sourceTree = "<group>"; };
+		322932C3241F5D60000A79C9 /* FileExplorer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileExplorer.h; sourceTree = "<group>"; };
+		322932C4241F5D60000A79C9 /* CheckmarkButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckmarkButton.swift; sourceTree = "<group>"; };
+		322932C5241F5D60000A79C9 /* UIAlertController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Extension.swift"; sourceTree = "<group>"; };
+		322932C6241F5D60000A79C9 /* FileItemPresentationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemPresentationCoordinator.swift; sourceTree = "<group>"; };
+		322932C7241F5D60000A79C9 /* ItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
+		322932C8241F5D60000A79C9 /* UIView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		322932C9241F5D60000A79C9 /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		322932CA241F5D60000A79C9 /* UIImage+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		322932CB241F5D60000A79C9 /* ItemPresentationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemPresentationCoordinator.swift; sourceTree = "<group>"; };
+		322932CD241F5D60000A79C9 /* ImageAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ImageAssets.xcassets; sourceTree = "<group>"; };
+		322932CE241F5D60000A79C9 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		322932CF241F5D60000A79C9 /* FileViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileViewModel.swift; sourceTree = "<group>"; };
+		322932D0241F5D60000A79C9 /* DirectoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryViewController.swift; sourceTree = "<group>"; };
+		322932D1241F5D60000A79C9 /* ImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
+		322932D2241F5D60000A79C9 /* Double+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
+		322932D3241F5D60000A79C9 /* UknownFileTypeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UknownFileTypeViewController.swift; sourceTree = "<group>"; };
+		322932D4241F5D60000A79C9 /* ImageAssets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAssets.swift; sourceTree = "<group>"; };
+		322932D5241F5D60000A79C9 /* FileService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
+		322932D6241F5D60000A79C9 /* URL+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URL+Extension.swift"; sourceTree = "<group>"; };
+		322932D7241F5D60000A79C9 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		322932D8241F5D60000A79C9 /* FileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileViewController.swift; sourceTree = "<group>"; };
+		322932D9241F5D60000A79C9 /* ThumbnailGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThumbnailGenerator.swift; sourceTree = "<group>"; };
+		322932DA241F5D60000A79C9 /* FileExplorerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileExplorerViewController.swift; sourceTree = "<group>"; };
+		322932DB241F5D60000A79C9 /* FileSpecificationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSpecificationProvider.swift; sourceTree = "<group>"; };
+		322932DC241F5D60000A79C9 /* ErrorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorViewController.swift; sourceTree = "<group>"; };
+		322932DD241F5D60000A79C9 /* DirectoryItemPresentationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryItemPresentationCoordinator.swift; sourceTree = "<group>"; };
+		322932DE241F5D60000A79C9 /* UICollectionView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extension.swift"; sourceTree = "<group>"; };
+		322932DF241F5D60000A79C9 /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		322932E0241F5D60000A79C9 /* DirectoryContentViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryContentViewModel.swift; sourceTree = "<group>"; };
+		322932E1241F5D60000A79C9 /* UIToolbar+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIToolbar+Extension.swift"; sourceTree = "<group>"; };
+		322932E2241F5D60000A79C9 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		322932E3241F5D60000A79C9 /* UISearchBar+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UISearchBar+Extension.swift"; sourceTree = "<group>"; };
+		322932E4241F5D60000A79C9 /* UIBezierPath+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBezierPath+Extension.swift"; sourceTree = "<group>"; };
+		322932E5241F5D60000A79C9 /* ActionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionsViewController.swift; sourceTree = "<group>"; };
+		322932E6241F5D60000A79C9 /* LoadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		322932E7241F5D60000A79C9 /* UITableView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
+		322932E8241F5D60000A79C9 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		322932E9241F5D60000A79C9 /* Array+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
+		322932EA241F5D60000A79C9 /* DirectoryContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryContentViewController.swift; sourceTree = "<group>"; };
 		322B425F22C1CF760027C1A3 /* PhotonContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonContent.h; sourceTree = "<group>"; };
 		322B426022C1CF760027C1A3 /* PhotonContent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonContent.m; sourceTree = "<group>"; };
 		322B426322C1D18F0027C1A3 /* PhotonImageBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotonImageBrowser.h; sourceTree = "<group>"; };
@@ -515,6 +606,15 @@
 		324FE2BF233C5D5E00F996D0 /* PhotonGroupMemberListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonGroupMemberListViewController.m; sourceTree = "<group>"; };
 		3259F3FD23C88B9300701C3F /* PhotonChatSearchReultTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonChatSearchReultTableViewController.h; sourceTree = "<group>"; };
 		3259F3FE23C88B9300701C3F /* PhotonChatSearchReultTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonChatSearchReultTableViewController.m; sourceTree = "<group>"; };
+		32664EB123F3A67D00201947 /* PAirSandbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAirSandbox.m; sourceTree = "<group>"; };
+		32664EB223F3A67D00201947 /* PAirSandbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAirSandbox.h; sourceTree = "<group>"; };
+		32664ECB23FA2A6400201947 /* PhotonChatFileMessageCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonChatFileMessageCell.h; sourceTree = "<group>"; };
+		32664ECC23FA2A6400201947 /* PhotonChatFileMessageCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonChatFileMessageCell.m; sourceTree = "<group>"; };
+		32664ECE23FA2ABD00201947 /* PhotonChatFileMessageItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonChatFileMessageItem.h; sourceTree = "<group>"; };
+		32664ECF23FA2ABD00201947 /* PhotonChatFileMessageItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonChatFileMessageItem.m; sourceTree = "<group>"; };
+		32664ED123FA613500201947 /* PhotonDocumentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonDocumentViewController.h; sourceTree = "<group>"; };
+		32664ED223FA613500201947 /* PhotonDocumentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonDocumentViewController.m; sourceTree = "<group>"; };
+		32664EE423FA70B100201947 /* Files */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Files; sourceTree = "<group>"; };
 		3270BBFC22C5BA8D004CAA00 /* NSObject+PhotonExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+PhotonExtensions.h"; sourceTree = "<group>"; };
 		3270BBFD22C5BA8D004CAA00 /* NSObject+PhotonExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PhotonExtensions.m"; sourceTree = "<group>"; };
 		3270BC0622C5F5AD004CAA00 /* PhotonNotifycationConstant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonNotifycationConstant.h; sourceTree = "<group>"; };
@@ -545,8 +645,12 @@
 		32740A5023C829110089F318 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		32740A5223C831EE0089F318 /* PhotonChatLocationItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonChatLocationItem.h; sourceTree = "<group>"; };
 		32740A5323C831EE0089F318 /* PhotonChatLocationItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonChatLocationItem.m; sourceTree = "<group>"; };
+		32740AE02423351500337225 /* PhotonCircleProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonCircleProgressView.h; sourceTree = "<group>"; };
+		32740AE12423351500337225 /* PhotonCircleProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonCircleProgressView.m; sourceTree = "<group>"; };
+		3275F8992420659100E50E9F /* PhotonFilePreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotonFilePreviewViewController.swift; sourceTree = "<group>"; };
 		327D8D7D23066A00006E2E90 /* PhotonCommonHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonCommonHeader.h; sourceTree = "<group>"; };
 		327D8D7E230691D6006E2E90 /* PhotonAPIMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonAPIMacros.h; sourceTree = "<group>"; };
+		327E50F72421FF5B00EA8A6A /* UIScreen+PhotonExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+PhotonExtension.swift"; sourceTree = "<group>"; };
 		32845463238FA886003C0683 /* PhotonChatData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonChatData.h; sourceTree = "<group>"; };
 		32845464238FA886003C0683 /* PhotonChatData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonChatData.m; sourceTree = "<group>"; };
 		32845470238FD1D1003C0683 /* YYWeakProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYWeakProxy.m; sourceTree = "<group>"; };
@@ -576,6 +680,10 @@
 		328C32E322C070EC0031E948 /* PhontonMenuItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhontonMenuItem.m; sourceTree = "<group>"; };
 		329E67F72301460D0097BFDC /* PhotonBaseUITableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonBaseUITableView.h; sourceTree = "<group>"; };
 		329E67F82301460D0097BFDC /* PhotonBaseUITableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonBaseUITableView.m; sourceTree = "<group>"; };
+		32A51CDA2429A9AF005563DE /* PhotonCircleLoadingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonCircleLoadingView.h; sourceTree = "<group>"; };
+		32A51CDB2429A9AF005563DE /* PhotonCircleLoadingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonCircleLoadingView.m; sourceTree = "<group>"; };
+		32A8D9DD23E911ED009F2120 /* PhotonChatVideoMessageCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonChatVideoMessageCell.h; sourceTree = "<group>"; };
+		32A8D9DE23E911ED009F2120 /* PhotonChatVideoMessageCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonChatVideoMessageCell.m; sourceTree = "<group>"; };
 		32AE413323B4B7E300BCBE5C /* MDAudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MDAudioKit.framework; sourceTree = "<group>"; };
 		32C5575C23CDD936007F06CE /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
 		32C5575D23CDD936007F06CE /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
@@ -703,6 +811,8 @@
 		32E0BE0322D3466A00DEEFA5 /* PhotonEmptyTableItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonEmptyTableItem.m; sourceTree = "<group>"; };
 		32E0BE0622D358DF00DEEFA5 /* PhotonRecorderIndicator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonRecorderIndicator.h; sourceTree = "<group>"; };
 		32E0BE0722D358DF00DEEFA5 /* PhotonRecorderIndicator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonRecorderIndicator.m; sourceTree = "<group>"; };
+		32E2347323F2574C00040336 /* PhotonPhotoPreviewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonPhotoPreviewViewController.h; sourceTree = "<group>"; };
+		32E2347423F2574C00040336 /* PhotonPhotoPreviewViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonPhotoPreviewViewController.m; sourceTree = "<group>"; };
 		32E7927E22FAC3A900CB3E76 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		32ECA8F122E06B6000C9A899 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		32F0571D23682EF70075D7A7 /* PhotonIM copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PhotonIM copy-Info.plist"; path = "/Users/momo/work/TOB_IM/PhotonIMSDK-iOS/PhotonIM/PhotonIM copy-Info.plist"; sourceTree = "<absolute>"; };
@@ -937,7 +1047,7 @@
 		32286F8622B9F207009B6881 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				32286F8522B9F207009B6881 /* PhotonIM.app */,
+				32286F8522B9F207009B6881 /* PhotonIMMerge.app */,
 				32286F9D22B9F208009B6881 /* PhotonIMUITests.xctest */,
 				321838BB22F84B3F005CCB00 /* PhotonIMNotificationService.appex */,
 			);
@@ -1100,6 +1210,62 @@
 			path = BadgeView;
 			sourceTree = "<group>";
 		};
+		322932C2241F5D60000A79C9 /* FileExplorer */ = {
+			isa = PBXGroup;
+			children = (
+				322932C3241F5D60000A79C9 /* FileExplorer.h */,
+				322932C4241F5D60000A79C9 /* CheckmarkButton.swift */,
+				322932C5241F5D60000A79C9 /* UIAlertController+Extension.swift */,
+				322932C6241F5D60000A79C9 /* FileItemPresentationCoordinator.swift */,
+				322932C7241F5D60000A79C9 /* ItemCell.swift */,
+				322932C8241F5D60000A79C9 /* UIView+Extension.swift */,
+				322932C9241F5D60000A79C9 /* Item.swift */,
+				322932CA241F5D60000A79C9 /* UIImage+Extension.swift */,
+				327E50F72421FF5B00EA8A6A /* UIScreen+PhotonExtension.swift */,
+				322932CB241F5D60000A79C9 /* ItemPresentationCoordinator.swift */,
+				322932CC241F5D60000A79C9 /* Resources */,
+				322932CE241F5D60000A79C9 /* Result.swift */,
+				322932CF241F5D60000A79C9 /* FileViewModel.swift */,
+				322932D0241F5D60000A79C9 /* DirectoryViewController.swift */,
+				322932D1241F5D60000A79C9 /* ImageViewController.swift */,
+				322932D2241F5D60000A79C9 /* Double+Extension.swift */,
+				322932D3241F5D60000A79C9 /* UknownFileTypeViewController.swift */,
+				322932D4241F5D60000A79C9 /* ImageAssets.swift */,
+				322932D5241F5D60000A79C9 /* FileService.swift */,
+				322932D6241F5D60000A79C9 /* URL+Extension.swift */,
+				322932D7241F5D60000A79C9 /* UIViewController+Extension.swift */,
+				322932D8241F5D60000A79C9 /* FileViewController.swift */,
+				322932D9241F5D60000A79C9 /* ThumbnailGenerator.swift */,
+				322932DA241F5D60000A79C9 /* FileExplorerViewController.swift */,
+				322932DB241F5D60000A79C9 /* FileSpecificationProvider.swift */,
+				322932DC241F5D60000A79C9 /* ErrorViewController.swift */,
+				322932DD241F5D60000A79C9 /* DirectoryItemPresentationCoordinator.swift */,
+				322932DE241F5D60000A79C9 /* UICollectionView+Extension.swift */,
+				322932DF241F5D60000A79C9 /* WebViewController.swift */,
+				322932E0241F5D60000A79C9 /* DirectoryContentViewModel.swift */,
+				322932E1241F5D60000A79C9 /* UIToolbar+Extension.swift */,
+				322932E2241F5D60000A79C9 /* Errors.swift */,
+				322932E3241F5D60000A79C9 /* UISearchBar+Extension.swift */,
+				322932E4241F5D60000A79C9 /* UIBezierPath+Extension.swift */,
+				322932E5241F5D60000A79C9 /* ActionsViewController.swift */,
+				322932E6241F5D60000A79C9 /* LoadingViewController.swift */,
+				322932E7241F5D60000A79C9 /* UITableView+Extension.swift */,
+				322932E8241F5D60000A79C9 /* Configuration.swift */,
+				322932E9241F5D60000A79C9 /* Array+Extension.swift */,
+				322932EA241F5D60000A79C9 /* DirectoryContentViewController.swift */,
+				3275F8992420659100E50E9F /* PhotonFilePreviewViewController.swift */,
+			);
+			path = FileExplorer;
+			sourceTree = "<group>";
+		};
+		322932CC241F5D60000A79C9 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				322932CD241F5D60000A79C9 /* ImageAssets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		322B425E22C1CF610027C1A3 /* Content */ = {
 			isa = PBXGroup;
 			children = (
@@ -1138,16 +1304,22 @@
 		322B428E22C234150027C1A3 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				32740ADF242334F600337225 /* Circleprogress */,
+				322932C2241F5D60000A79C9 /* FileExplorer */,
+				32664ECA23F91B9500201947 /* PhotonViews */,
+				32664EB023F3A67D00201947 /* AirSandbox */,
 				32C5576023CDD9DF007F06CE /* HXPhotoPicker */,
 				3284546F238FD1D1003C0683 /* YYFPSLabel */,
 				32E0BE0522D3574D00DEEFA5 /* RecordIndicator */,
 				32286FFF22BA47CB009B6881 /* BadgeView */,
 				32286FEC22BA32A2009B6881 /* KeyBoards */,
 				32286FCA22BA1184009B6881 /* ChatBarView */,
-				322B426222C1D18F0027C1A3 /* ImageBrowser */,
 				328C32DE22C069FD0031E948 /* MenuView */,
+				322B426222C1D18F0027C1A3 /* ImageBrowser */,
 				322B428F22C234150027C1A3 /* AnimatedImageView */,
 				322B427D22C211350027C1A3 /* Media */,
+				32293161241F5A40000A79C9 /* PhotonTest.swift */,
+				32293160241F5A40000A79C9 /* PhotonIM-Bridging-Header.h */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1179,6 +1351,7 @@
 		3235758622C3128D00C0B442 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				32664EE423FA70B100201947 /* Files */,
 				321FE3CF22CEEF4000020CCE /* Common.xcassets */,
 				3228700322BA552D009B6881 /* Conversation.xcassets */,
 				3228700522BA56BD009B6881 /* Mine.xcassets */,
@@ -1223,6 +1396,7 @@
 		3238AB9F22D4AB8700EB3D0B /* Conversation */ = {
 			isa = PBXGroup;
 			children = (
+				3259F3FC23C88B4E00701C3F /* Search */,
 				3238ABA022D4AB8700EB3D0B /* Model */,
 				3238ABBE22D4AB8700EB3D0B /* View */,
 				3238ABD322D4AB8700EB3D0B /* ViewController */,
@@ -1300,6 +1474,10 @@
 				3238AC1122D4AB8700EB3D0B /* PhotonChatImageMessageCell.m */,
 				3238AC0C22D4AB8700EB3D0B /* PhotonChatVoiceMessageCell.h */,
 				3238AC1022D4AB8700EB3D0B /* PhotonChatVoiceMessageCell.m */,
+				32A8D9DD23E911ED009F2120 /* PhotonChatVideoMessageCell.h */,
+				32A8D9DE23E911ED009F2120 /* PhotonChatVideoMessageCell.m */,
+				32664ECB23FA2A6400201947 /* PhotonChatFileMessageCell.h */,
+				32664ECC23FA2A6400201947 /* PhotonChatFileMessageCell.m */,
 				321A0FEF22E6A4BD000AF586 /* PhotonChatNoticCell.h */,
 				321A0FF022E6A4BD000AF586 /* PhotonChatNoticCell.m */,
 				3238AC1722D4AB8700EB3D0B /* PhotonChatPanelManager.h */,
@@ -1327,6 +1505,8 @@
 				3238AC2122D4AB8700EB3D0B /* PhotonChatViewController+Delegate.h */,
 				32740A4B23C827730089F318 /* PhotonLocationViewContraller.h */,
 				32740A4C23C827730089F318 /* PhotonLocationViewContraller.m */,
+				32664ED123FA613500201947 /* PhotonDocumentViewController.h */,
+				32664ED223FA613500201947 /* PhotonDocumentViewController.m */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -1409,6 +1589,8 @@
 				321A0FED22E6A447000AF586 /* PhotonChatNoticItem.m */,
 				3272588222F18D2D00842026 /* PhotonChatTransmitItem.h */,
 				3272588322F18D2D00842026 /* PhotonChatTransmitItem.m */,
+				32664ECE23FA2ABD00201947 /* PhotonChatFileMessageItem.h */,
+				32664ECF23FA2ABD00201947 /* PhotonChatFileMessageItem.m */,
 			);
 			path = Items;
 			sourceTree = "<group>";
@@ -1469,6 +1651,24 @@
 			path = Search;
 			sourceTree = "<group>";
 		};
+		32664EB023F3A67D00201947 /* AirSandbox */ = {
+			isa = PBXGroup;
+			children = (
+				32664EB123F3A67D00201947 /* PAirSandbox.m */,
+				32664EB223F3A67D00201947 /* PAirSandbox.h */,
+			);
+			path = AirSandbox;
+			sourceTree = "<group>";
+		};
+		32664ECA23F91B9500201947 /* PhotonViews */ = {
+			isa = PBXGroup;
+			children = (
+				32E2347323F2574C00040336 /* PhotonPhotoPreviewViewController.h */,
+				32E2347423F2574C00040336 /* PhotonPhotoPreviewViewController.m */,
+			);
+			path = PhotonViews;
+			sourceTree = "<group>";
+		};
 		3270BBFF22C5F049004CAA00 /* FileManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -1499,6 +1699,17 @@
 				324FE2B9233B959D00F996D0 /* PhotonGroupMemberTableItem.m */,
 			);
 			path = Setting;
+			sourceTree = "<group>";
+		};
+		32740ADF242334F600337225 /* Circleprogress */ = {
+			isa = PBXGroup;
+			children = (
+				32740AE02423351500337225 /* PhotonCircleProgressView.h */,
+				32740AE12423351500337225 /* PhotonCircleProgressView.m */,
+				32A51CDA2429A9AF005563DE /* PhotonCircleLoadingView.h */,
+				32A51CDB2429A9AF005563DE /* PhotonCircleLoadingView.m */,
+			);
+			path = Circleprogress;
 			sourceTree = "<group>";
 		};
 		327D8D7C230664B4006E2E90 /* PhotonIMSource */ = {
@@ -1594,6 +1805,7 @@
 				32C5579823CDD9DF007F06CE /* HXPhotoCommon.m */,
 				32C5579923CDD9DF007F06CE /* HXAlbumListViewController.m */,
 				32C5579A23CDD9DF007F06CE /* HXPreviewVideoView.h */,
+				32C557CA23CDD9E0007F06CE /* HXPreviewVideoView.m */,
 				32C5579B23CDD9DF007F06CE /* HXAlbumlistView.h */,
 				32C5579C23CDD9DF007F06CE /* HXCustomPreviewView.h */,
 				32C5579D23CDD9DF007F06CE /* HXPhotoPreviewVideoViewCell.m */,
@@ -1634,14 +1846,13 @@
 				32C557C023CDD9DF007F06CE /* HXPhotoSubViewCell.m */,
 				32C557C123CDD9DF007F06CE /* HXPhotoTools.h */,
 				32C557C223CDD9DF007F06CE /* HXPhotoPreviewViewController.h */,
+				32C557C723CDD9E0007F06CE /* HXPhotoPreviewVideoViewCell.h */,
 				32C557C323CDD9DF007F06CE /* HXAlbumModel.m */,
 				32C557C423CDD9E0007F06CE /* HXPhotoBottomConfiguration.m */,
 				32C557C523CDD9E0007F06CE /* HXPhotoBottomSelectView.h */,
 				32C557C623CDD9E0007F06CE /* HXPhotoCustomNavigationBar.h */,
-				32C557C723CDD9E0007F06CE /* HXPhotoPreviewVideoViewCell.h */,
 				32C557C823CDD9E0007F06CE /* HXAlbumlistView.m */,
 				32C557C923CDD9E0007F06CE /* HXCustomPreviewView.m */,
-				32C557CA23CDD9E0007F06CE /* HXPreviewVideoView.m */,
 				32C557CB23CDD9E0007F06CE /* HXPhotoCommon.h */,
 				32C557CC23CDD9E0007F06CE /* HXAlbumListViewController.h */,
 				32C557CD23CDD9E0007F06CE /* Resource */,
@@ -1759,7 +1970,6 @@
 		32FDC9FD22C4EB8400EECD24 /* IMBusiness */ = {
 			isa = PBXGroup;
 			children = (
-				3259F3FC23C88B4E00701C3F /* Search */,
 				3238AB9F22D4AB8700EB3D0B /* Conversation */,
 				3242C1B6238E23C100C221D2 /* Test */,
 				3272587122F1409800842026 /* Setting */,
@@ -1836,7 +2046,7 @@
 			);
 			name = PhotonIM;
 			productName = PhotonIM;
-			productReference = 32286F8522B9F207009B6881 /* PhotonIM.app */;
+			productReference = 32286F8522B9F207009B6881 /* PhotonIMMerge.app */;
 			productType = "com.apple.product-type.application";
 		};
 		32286F9C22B9F208009B6881 /* PhotonIMUITests */ = {
@@ -1876,6 +2086,7 @@
 					};
 					32286F8422B9F207009B6881 = {
 						CreatedOnToolsVersion = 10.2.1;
+						LastSwiftMigration = 1130;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1923,6 +2134,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32664EE523FA70B100201947 /* Files in Resources */,
 				321FE3D022CEEF4000020CCE /* Common.xcassets in Resources */,
 				32C5580E23CDD9E0007F06CE /* HXPhotoPicker.bundle in Resources */,
 				3228700422BA552D009B6881 /* Conversation.xcassets in Resources */,
@@ -1942,6 +2154,7 @@
 				3235759D22C3129400C0B442 /* icon_chat_audio_playstatus_6@2x.png in Resources */,
 				3235759B22C3129400C0B442 /* icon_chat_audio_playstatus_8@2x.png in Resources */,
 				32286F9022B9F207009B6881 /* Main.storyboard in Resources */,
+				322932F3241F5D60000A79C9 /* ImageAssets.xcassets in Resources */,
 				3228700822BA56C6009B6881 /* Friends.xcassets in Resources */,
 				3235759722C3129400C0B442 /* icon_chat_audio_playstatus_10@2x.png in Resources */,
 			);
@@ -2020,6 +2233,7 @@
 				321A0FEE22E6A447000AF586 /* PhotonChatNoticItem.m in Sources */,
 				3238ACAA22D4AB8800EB3D0B /* PhotonConversationCell.m in Sources */,
 				3221882222CCA5B6007E9FA3 /* PhotonLoginViewController.m in Sources */,
+				322932F2241F5D60000A79C9 /* ItemPresentationCoordinator.swift in Sources */,
 				3221882322CCA5B6007E9FA3 /* PhotonAccountViewController.m in Sources */,
 				32F94D8F23388353002DF468 /* PhotonGroupContactViewController.m in Sources */,
 				3221882422CCA5B6007E9FA3 /* PhotonAccountDataSource.m in Sources */,
@@ -2027,7 +2241,9 @@
 				32F94D96233887EC002DF468 /* PhotonGroupContactItem.m in Sources */,
 				3226080523D0620C00C9E393 /* PhotonLoadDataSetModel.m in Sources */,
 				322607FE23CEAF5200C9E393 /* PhotonChatVideoMessageItem.m in Sources */,
+				322932FC241F5D60000A79C9 /* URL+Extension.swift in Sources */,
 				32C557E323CDD9E0007F06CE /* HXPhotoPersentInteractiveTransition.m in Sources */,
+				327E50F82421FF5B00EA8A6A /* UIScreen+PhotonExtension.swift in Sources */,
 				3221882522CCA5B6007E9FA3 /* PhotonAccountItem.m in Sources */,
 				324FE2B4233B865300F996D0 /* PhotonGroupTitleTableItem.m in Sources */,
 				321A0FF122E6A4BD000AF586 /* PhotonChatNoticCell.m in Sources */,
@@ -2047,10 +2263,12 @@
 				3242C1DD238E255C00C221D2 /* PhotonChatTestBaseCell.m in Sources */,
 				3238ACCD22D4AB8800EB3D0B /* PhotonChatViewController.m in Sources */,
 				32740A4D23C827730089F318 /* PhotonLocationViewContraller.m in Sources */,
+				32293310241F5D60000A79C9 /* DirectoryContentViewController.swift in Sources */,
 				321FE3D722CF0F8E00020CCE /* UINavigation+FixSpace.m in Sources */,
 				32C557FE23CDD9E0007F06CE /* HXPreviewContentView.m in Sources */,
 				3221882B22CCA5B6007E9FA3 /* PhotonUser.m in Sources */,
 				3221882C22CCA5B6007E9FA3 /* PhotonAppDelegate.m in Sources */,
+				32A8D9DF23E911ED009F2120 /* PhotonChatVideoMessageCell.m in Sources */,
 				3221882D22CCA5B6007E9FA3 /* PhotonAppLaunchManager.m in Sources */,
 				32C5580923CDD9E0007F06CE /* HXAlbumModel.m in Sources */,
 				3221882E22CCA5B6007E9FA3 /* PhotonUploadFileInfo.m in Sources */,
@@ -2061,6 +2279,7 @@
 				3226080823D063CD00C9E393 /* PhotonSettingView.m in Sources */,
 				3221883122CCA5B6007E9FA3 /* PhotonErrorDescription.m in Sources */,
 				32C557EC23CDD9E0007F06CE /* UIImage+HXExtension.m in Sources */,
+				3229330B241F5D60000A79C9 /* ActionsViewController.swift in Sources */,
 				3221883222CCA5B6007E9FA3 /* PhotonNetworkService.m in Sources */,
 				32C5580523CDD9E0007F06CE /* HXPhotoView.m in Sources */,
 				32C5580123CDD9E0007F06CE /* HXCustomCameraController.m in Sources */,
@@ -2070,16 +2289,20 @@
 				3238ACC322D4AB8800EB3D0B /* PhotonChatBaseCell.m in Sources */,
 				32C557DE23CDD9E0007F06CE /* HXPhotoPreviewLivePhotoCell.m in Sources */,
 				3238ACBC22D4AB8800EB3D0B /* PhotonChatDataSource.m in Sources */,
+				322932FE241F5D60000A79C9 /* FileViewController.swift in Sources */,
 				3242C1D6238E249E00C221D2 /* PhotonChatTestItem.m in Sources */,
 				32C5580723CDD9E0007F06CE /* HXCustomNavigationController.m in Sources */,
 				3238ACB422D4AB8800EB3D0B /* PhotonConversationListViewController+Delegate.m in Sources */,
 				3221883422CCA5B6007E9FA3 /* PotonTableViewDataSource.m in Sources */,
+				322932EC241F5D60000A79C9 /* UIAlertController+Extension.swift in Sources */,
 				32C557F923CDD9E0007F06CE /* HXPhotoBottomSelectView.m in Sources */,
+				322932F7241F5D60000A79C9 /* ImageViewController.swift in Sources */,
 				3221883522CCA5B6007E9FA3 /* PhotonBaseTableItem.m in Sources */,
 				32C557E423CDD9E0007F06CE /* HXPhotoViewTransition.m in Sources */,
 				3289091023C85371002C45CC /* PhotonChatLocationCell.m in Sources */,
 				3221883622CCA5B6007E9FA3 /* PhotonBaseModel.m in Sources */,
 				32C557DF23CDD9E0007F06CE /* HXPhoto3DTouchViewController.m in Sources */,
+				322932F1241F5D60000A79C9 /* UIImage+Extension.swift in Sources */,
 				3238ACC722D4AB8800EB3D0B /* PhotonChatImageMessageCell.m in Sources */,
 				3221883722CCA5B6007E9FA3 /* PotonBaseTableViewCell.m in Sources */,
 				3221CD2D22D754CA0029EF0A /* PhotonChatViewController+Send.m in Sources */,
@@ -2090,53 +2313,71 @@
 				32845474238FD1D1003C0683 /* YYWeakProxy.m in Sources */,
 				32C5580A23CDD9E0007F06CE /* HXPhotoBottomConfiguration.m in Sources */,
 				3221883922CCA5B6007E9FA3 /* PhoneBadgeView.m in Sources */,
+				32293162241F5A40000A79C9 /* PhotonTest.swift in Sources */,
 				32C557FC23CDD9E0007F06CE /* HXPhotoViewController.m in Sources */,
 				32C557F023CDD9E0007F06CE /* UIButton+HXExtension.m in Sources */,
 				3221883A22CCA5B6007E9FA3 /* PhotonEmojiKeyboardItem.m in Sources */,
 				32C5580423CDD9E0007F06CE /* HXCustomAssetModel.m in Sources */,
 				3221883B22CCA5B6007E9FA3 /* PhotonEmojiKeyboardCell.m in Sources */,
+				32293307241F5D60000A79C9 /* UIToolbar+Extension.swift in Sources */,
 				32C557F623CDD9E0007F06CE /* HXAlbumListViewController.m in Sources */,
 				3238ACBF22D4AB8800EB3D0B /* PhotonChatImageMessageItem.m in Sources */,
+				322932FD241F5D60000A79C9 /* UIViewController+Extension.swift in Sources */,
 				3221883C22CCA5B6007E9FA3 /* PhotonEmojiKeyboard.m in Sources */,
 				3238ACAB22D4AB8800EB3D0B /* PhotonConversationBaseCell.m in Sources */,
 				32258ADB22CD9D61002D56E5 /* PhotonFileUploadManager.m in Sources */,
+				322932F9241F5D60000A79C9 /* UknownFileTypeViewController.swift in Sources */,
 				32F94DB02338F092002DF468 /* PhotonGroup.m in Sources */,
 				32C5581123CDD9E0007F06CE /* HXPhotoPreviewViewCell.m in Sources */,
 				3221883D22CCA5B6007E9FA3 /* PhotonEmojiHorizontalLayout.m in Sources */,
 				32C557E023CDD9E0007F06CE /* HXPhotoEditTransition.m in Sources */,
 				3221883E22CCA5B6007E9FA3 /* PhotonMoreKeyboardItem.m in Sources */,
 				32C557E823CDD9E0007F06CE /* NSBundle+HXPhotoPicker.m in Sources */,
+				322932EB241F5D60000A79C9 /* CheckmarkButton.swift in Sources */,
+				32293309241F5D60000A79C9 /* UISearchBar+Extension.swift in Sources */,
 				32F94D8C23387D06002DF468 /* PhotonContactViewController.m in Sources */,
 				3221883F22CCA5B6007E9FA3 /* PhotonMoreKeyboardCell.m in Sources */,
+				32293303241F5D60000A79C9 /* DirectoryItemPresentationCoordinator.swift in Sources */,
 				32F94D99233888A3002DF468 /* PhotonGroupContactCell.m in Sources */,
 				32C5580C23CDD9E0007F06CE /* HXCustomPreviewView.m in Sources */,
 				3221884022CCA5B6007E9FA3 /* PhotonMoreKeyBoard.m in Sources */,
 				32C557ED23CDD9E0007F06CE /* NSDate+HXExtension.m in Sources */,
 				32C557F723CDD9E0007F06CE /* HXPhotoPreviewVideoViewCell.m in Sources */,
+				32293305241F5D60000A79C9 /* WebViewController.swift in Sources */,
 				3238ACE022D4AB8800EB3D0B /* PhotonContacDataSource.m in Sources */,
 				3221884122CCA5B6007E9FA3 /* PhotonBaseKeyBoard.m in Sources */,
 				3221884222CCA5B6007E9FA3 /* PontonTalkButton.m in Sources */,
+				322932F8241F5D60000A79C9 /* Double+Extension.swift in Sources */,
 				32C557EB23CDD9E0007F06CE /* UIView+HXExtension.m in Sources */,
 				32C5581223CDD9E0007F06CE /* HXPhotoPreviewImageViewCell.m in Sources */,
 				32C557DC23CDD9E0007F06CE /* HXPhotoConfiguration.m in Sources */,
+				322932F5241F5D60000A79C9 /* FileViewModel.swift in Sources */,
 				329E67F92301460D0097BFDC /* PhotonBaseUITableView.m in Sources */,
+				32740AE22423351500337225 /* PhotonCircleProgressView.m in Sources */,
 				3221884322CCA5B6007E9FA3 /* PhotonCharBar.m in Sources */,
 				3221884422CCA5B6007E9FA3 /* PhotonImageBrowser.m in Sources */,
 				3238ACE822D4AB8800EB3D0B /* PhotonBaseContactCell.m in Sources */,
+				32293308241F5D60000A79C9 /* Errors.swift in Sources */,
 				324FE2B7233B93D300F996D0 /* PhotonGroupMemberCell.m in Sources */,
+				32664ED023FA2ABD00201947 /* PhotonChatFileMessageItem.m in Sources */,
 				324FE2B1233B85D000F996D0 /* PhotonGroupTitleTableViewCell.m in Sources */,
+				32293306241F5D60000A79C9 /* DirectoryContentViewModel.swift in Sources */,
 				3272588122F18B8900842026 /* PhotonChatTransmitListViewController.m in Sources */,
 				32740A5423C831EE0089F318 /* PhotonChatLocationItem.m in Sources */,
 				3221884522CCA5B6007E9FA3 /* PhotonScreenImageCell.m in Sources */,
 				32C557EF23CDD9E0007F06CE /* NSTimer+HXExtension.m in Sources */,
 				3238ACC622D4AB8800EB3D0B /* PhotonChatVoiceMessageCell.m in Sources */,
 				3221884622CCA5B6007E9FA3 /* PhotonMenuView.m in Sources */,
+				32664ECD23FA2A6400201947 /* PhotonChatFileMessageCell.m in Sources */,
 				3221884722CCA5B6007E9FA3 /* PhontonMenuItem.m in Sources */,
 				3238ACBB22D4AB8800EB3D0B /* PhotonChatModel.m in Sources */,
 				3238ACEE22D4AB8800EB3D0B /* PhotonSingleContactViewController.m in Sources */,
 				3221884822CCA5B6007E9FA3 /* PhotonAnimatedImageView.m in Sources */,
 				3221884922CCA5B6007E9FA3 /* PhotonAudioRecorder.m in Sources */,
+				3229330C241F5D60000A79C9 /* LoadingViewController.swift in Sources */,
+				322932F0241F5D60000A79C9 /* Item.swift in Sources */,
 				3221884A22CCA5B6007E9FA3 /* PhotonAudioPlayer.m in Sources */,
+				322932FB241F5D60000A79C9 /* FileService.swift in Sources */,
 				3272587422F140D000842026 /* PhotonSingleSettingViewController.m in Sources */,
 				32C557F523CDD9E0007F06CE /* HXPhotoCommon.m in Sources */,
 				32845465238FA886003C0683 /* PhotonChatData.m in Sources */,
@@ -2147,11 +2388,15 @@
 				3221884E22CCA5B6007E9FA3 /* UIButton+PhotonExtensions.m in Sources */,
 				3223E58922D8283C007B77A9 /* PhotonChatViewController+Receive.m in Sources */,
 				3221884F22CCA5B6007E9FA3 /* UIImage+PhotonExtensions.m in Sources */,
+				32293302241F5D60000A79C9 /* ErrorViewController.swift in Sources */,
+				322932EE241F5D60000A79C9 /* ItemCell.swift in Sources */,
 				3259F3FF23C88B9300701C3F /* PhotonChatSearchReultTableViewController.m in Sources */,
 				328A76532339D8EB009F0668 /* PhotonGroupMemberListModel.m in Sources */,
+				32293304241F5D60000A79C9 /* UICollectionView+Extension.swift in Sources */,
 				32C5580223CDD9E0007F06CE /* HXPreviewLivePhotoView.m in Sources */,
 				3272588A22F1A61900842026 /* PhotonChatTransmitModel.m in Sources */,
 				32C557F323CDD9E0007F06CE /* HXCollectionView.m in Sources */,
+				3229330A241F5D60000A79C9 /* UIBezierPath+Extension.swift in Sources */,
 				32C557DB23CDD9E0007F06CE /* HXPhotoPreviewBottomView.m in Sources */,
 				324FE2AE233B83CD00F996D0 /* PhotonGroupSettingViewController.m in Sources */,
 				324FE2BA233B959D00F996D0 /* PhotonGroupMemberTableItem.m in Sources */,
@@ -2166,7 +2411,10 @@
 				3272587A22F1437100842026 /* PhotonMessageSettingCell.m in Sources */,
 				3238ACCB22D4AB8800EB3D0B /* PhotonChatPanelManager.m in Sources */,
 				32C557F123CDD9E0007F06CE /* UILabel+HXExtension.m in Sources */,
+				3275F89A2420659100E50E9F /* PhotonFilePreviewViewController.swift in Sources */,
+				322932EF241F5D60000A79C9 /* UIView+Extension.swift in Sources */,
 				3221885422CCA5B6007E9FA3 /* UIWindow+PhotonExtensions.m in Sources */,
+				32664EB323F3A67E00201947 /* PAirSandbox.m in Sources */,
 				32C5580323CDD9E0007F06CE /* HXCustomCollectionReusableView.m in Sources */,
 				3221885522CCA5B6007E9FA3 /* NSObject+PhotonExtensions.m in Sources */,
 				3242C1D7238E249E00C221D2 /* PhotonChatTestModel.m in Sources */,
@@ -2176,24 +2424,32 @@
 				321E1C6E22F2C9BE00BB9585 /* PhotonTitleTableViewCell.m in Sources */,
 				3221885722CCA5B6007E9FA3 /* PhotonSafeMutableArray.m in Sources */,
 				3221885822CCA5B6007E9FA3 /* PhotonSafeMutableDictionary.m in Sources */,
+				3229330D241F5D60000A79C9 /* UITableView+Extension.swift in Sources */,
 				321FE3E622CF3F3600020CCE /* PhotonNetTableItem.m in Sources */,
 				3238ACDE22D4AB8800EB3D0B /* PhotonSingleContactModel.m in Sources */,
 				32C557F223CDD9E0007F06CE /* HXPhotoPreviewBottomConfiguration.m in Sources */,
 				32C5580823CDD9E0007F06CE /* HXPhotoSubViewCell.m in Sources */,
 				32E0BE0122D3464300DEEFA5 /* PhotonEmptyTableViewCell.m in Sources */,
 				3238ACBA22D4AB8800EB3D0B /* PhotonChatBaseItem.m in Sources */,
+				322932F6241F5D60000A79C9 /* DirectoryViewController.swift in Sources */,
 				3242C1DC238E255C00C221D2 /* PhotonChatTestCell.m in Sources */,
 				321FE3E922CF3F9700020CCE /* PhotonNetTableViewCell.m in Sources */,
+				322932FA241F5D60000A79C9 /* ImageAssets.swift in Sources */,
+				32A51CDC2429A9AF005563DE /* PhotonCircleLoadingView.m in Sources */,
 				3238AC9B22D4AB8800EB3D0B /* PhotonConversationItem.m in Sources */,
 				3238AC9322D4AB8800EB3D0B /* PhotonPersonViewController.m in Sources */,
 				3238AC9822D4AB8800EB3D0B /* PhotonConversationModel.m in Sources */,
+				32293300241F5D60000A79C9 /* FileExplorerViewController.swift in Sources */,
 				32F94D9223388456002DF468 /* PhotonGroupContactModel.m in Sources */,
 				3238ACBE22D4AB8800EB3D0B /* PhotonChatVoiceMessageItem.m in Sources */,
 				32C557F423CDD9E0007F06CE /* HXPhotoModel.m in Sources */,
 				3238ACEF22D4AB8800EB3D0B /* PhotonFriendDetailViewController.m in Sources */,
 				3238ACCC22D4AB8800EB3D0B /* PhotonChatViewController+Delegate.m in Sources */,
 				32258AE722CDA417002D56E5 /* PhotonDownloadFileReceipt.m in Sources */,
+				3229330F241F5D60000A79C9 /* Array+Extension.swift in Sources */,
 				3238AB3222D4325600EB3D0B /* PhotonBaseViewController+Refresh.m in Sources */,
+				32664ED323FA613500201947 /* PhotonDocumentViewController.m in Sources */,
+				322932ED241F5D60000A79C9 /* FileItemPresentationCoordinator.swift in Sources */,
 				32C5581023CDD9E0007F06CE /* HXPhotoEditViewController.m in Sources */,
 				32E0BE0422D3466A00DEEFA5 /* PhotonEmptyTableItem.m in Sources */,
 				32C557DA23CDD9E0007F06CE /* HXCustomCameraViewController.m in Sources */,
@@ -2202,12 +2458,17 @@
 				32C557E123CDD9E0007F06CE /* HXPhotoInteractiveTransition.m in Sources */,
 				3242C1D1238E243600C221D2 /* PhotonChatTestDataSource.m in Sources */,
 				3238ACBD22D4AB8800EB3D0B /* PhotonChatTextMessageItem.m in Sources */,
+				32293301241F5D60000A79C9 /* FileSpecificationProvider.swift in Sources */,
 				3238AC9A22D4AB8800EB3D0B /* PhotonConversationDataSource.m in Sources */,
 				3238ACC422D4AB8800EB3D0B /* PhotonChatTextMessageCell.m in Sources */,
 				3221887922CCA5B7007E9FA3 /* ViewController.m in Sources */,
 				3242C1E2238E267C00C221D2 /* PhotonChatTestListViewController.m in Sources */,
+				322932FF241F5D60000A79C9 /* ThumbnailGenerator.swift in Sources */,
+				32E2347523F2574D00040336 /* PhotonPhotoPreviewViewController.m in Sources */,
+				322932F4241F5D60000A79C9 /* Result.swift in Sources */,
 				3221887A22CCA5B7007E9FA3 /* main.m in Sources */,
 				3238ACB522D4AB8800EB3D0B /* PhotonConversationListViewController.m in Sources */,
+				3229330E241F5D60000A79C9 /* Configuration.swift in Sources */,
 				3238ACDF22D4AB8800EB3D0B /* PhotonBaseContactItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2339,8 +2600,10 @@
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../Products\"";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -2355,10 +2618,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = PhotonIMSwift;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2399,8 +2664,10 @@
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../Products\"";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2409,9 +2676,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_MODULE_NAME = PhotonIMSwift;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2422,17 +2691,19 @@
 			baseConfigurationReference = 006DD1F3F627E43521F03B97 /* Pods-PhotonIM.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PhotonIM/PhotonIM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = "41 ";
 				DEVELOPMENT_TEAM = 4BXE593ED8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"\"$(SRCROOT)/../../photon-im-ios/Products/MDAudioKit.framework\"",
+					"\"$(SRCROOT)/../../photon-im-ios/Products\"",
 					"$(PROJECT_DIR)/PhotonIM",
+					"\"$(SRCROOT)/../Products\"",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/PhotonIM/Appdelegate/PhotonIM.pch";
@@ -2463,7 +2734,7 @@
 					"$(PROJECT_DIR)/PhotonIM",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 4.0;
+				MARKETING_VERSION = 4.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2495,6 +2766,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.wemomo.cosmos.hwphotonim;
 				PRODUCT_NAME = PhotonIMMerge;
 				PROVISIONING_PROFILE_SPECIFIER = PhotonimHWdemo;
+				SWIFT_OBJC_BRIDGING_HEADER = "PhotonIM/PhotonIMSource/Components/PhotonIM-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2504,17 +2778,19 @@
 			baseConfigurationReference = F254C153413A28E07D1CAA4A /* Pods-PhotonIM.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PhotonIM/PhotonIM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = "41 ";
 				DEVELOPMENT_TEAM = 4BXE593ED8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"\"$(SRCROOT)/../../photon-im-ios/Products/MDAudioKit.framework\"",
+					"\"$(SRCROOT)/../../photon-im-ios/Products\"",
 					"$(PROJECT_DIR)/PhotonIM",
+					"\"$(SRCROOT)/../Products\"",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/PhotonIM/Appdelegate/PhotonIM.pch";
@@ -2545,7 +2821,7 @@
 					"$(PROJECT_DIR)/PhotonIM",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 4.0;
+				MARKETING_VERSION = 4.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2577,6 +2853,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.wemomo.cosmos.hwphotonim;
 				PRODUCT_NAME = PhotonIMMerge;
 				PROVISIONING_PROFILE_SPECIFIER = hwphotonimhoc;
+				SWIFT_OBJC_BRIDGING_HEADER = "PhotonIM/PhotonIMSource/Components/PhotonIM-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2584,6 +2862,7 @@
 		32286FAA22B9F208009B6881 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3WCAH9767T;
@@ -2604,6 +2883,7 @@
 		32286FAB22B9F208009B6881 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3WCAH9767T;

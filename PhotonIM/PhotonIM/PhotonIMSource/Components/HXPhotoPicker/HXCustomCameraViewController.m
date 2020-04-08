@@ -16,7 +16,8 @@
 #import "UIImage+HXExtension.h"
 #import <CoreLocation/CoreLocation.h>
 #import "HXPhotoCustomNavigationBar.h"
-
+#import <Masonry/Masonry.h>
+#import "PhotonMacros.h"
 @interface HXCustomCameraViewController ()<HXCustomPreviewViewDelegate,HXCustomCameraBottomViewDelegate,HXCustomCameraControllerDelegate, CLLocationManagerDelegate>
 @property (strong, nonatomic) HXCustomCameraController *cameraController;
 @property (strong, nonatomic) HXCustomPreviewView *previewView;
@@ -24,6 +25,7 @@
 @property (strong, nonatomic) CAGradientLayer *topMaskLayer;
 @property (strong, nonatomic) UIView *topView;
 @property (strong, nonatomic) UIButton *cancelBtn;
+@property (strong, nonatomic) UIButton *resetBtn;
 @property (strong, nonatomic) UIButton *changeCameraBtn;
 @property (strong, nonatomic) UIButton *flashBtn;
 @property (strong, nonatomic) HXCustomCameraBottomView *bottomView;
@@ -64,7 +66,6 @@
     if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusDenied) {
         [self.locationManager startUpdatingLocation];
     }
-//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.cancelBtn];
     if (self.manager.configuration.videoMaximumDuration > self.manager.configuration.videoMaximumSelectDuration) {
         self.manager.configuration.videoMaximumDuration = self.manager.configuration.videoMaximumSelectDuration;
     }else if (self.manager.configuration.videoMaximumDuration < 3.f) {
@@ -100,12 +101,13 @@
     });
     
     [self.view addSubview:self.bottomView];
+    [self.bottomView addSubview:self.changeCameraBtn];
     [self.view addSubview:self.topView];
-    
+    [self.view addSubview:self.flashBtn];
+    [self.view addSubview:self.cancelBtn];
     [self changeSubviewFrame];
     
-    [self.view addSubview:self.customNavigationBar];
-    
+
     if (self.manager.configuration.navigationBar) {
         self.manager.configuration.navigationBar(self.customNavigationBar, self);
     }
@@ -172,17 +174,6 @@
     
     self.previewView.tapToFocusEnabled = self.cameraController.cameraSupportsTapToFocus;
     self.previewView.tapToExposeEnabled = self.cameraController.cameraSupportsTapToExpose;
-    
-    UIBarButtonItem *rightBtn1 = [[UIBarButtonItem alloc] initWithCustomView:self.changeCameraBtn];
-    UIBarButtonItem *rightBtn2 = [[UIBarButtonItem alloc] initWithCustomView:self.flashBtn];
-    if ([self.cameraController canSwitchCameras] && [self.cameraController cameraHasFlash]) {
-        self.navItem.rightBarButtonItems = @[rightBtn1,rightBtn2];
-    }else {
-        if ([self.cameraController cameraHasTorch] || [self.cameraController cameraHasFlash]) {
-            self.navItem.rightBarButtonItems = @[rightBtn2];
-        }
-    }
-    
     self.previewView.maxScale = [self.cameraController maxZoomFactor];
     if ([self.cameraController cameraSupportsZoom]) {
         self.previewView.effectiveScale = 1.0f;
@@ -246,8 +237,27 @@
         self.customNavigationBar.hx_y = self.previewView.hx_y + 10;
         self.topView.hx_y = -10;
     }
+
+   
     self.topMaskLayer.frame = self.topView.bounds;
     self.bottomView.frame = CGRectMake(0, self.view.hx_h - 120 - self.previewView.hx_y, self.view.hx_w, 120);
+    
+    [self.changeCameraBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.bottomView.mas_centerY).offset(3);
+        make.centerX.mas_equalTo(self.bottomView.mas_centerX).offset(90);
+    }];
+    
+    [self.flashBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(hxStatusBarHeight);
+        make.centerX.mas_equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(40, 46));
+    }];
+    
+    [self.cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(hxStatusBarHeight);
+        make.left.mas_equalTo(hxStatusBarHeight);
+        make.size.mas_equalTo(CGSizeMake(40, 40));
+    }];
 }
 - (BOOL)prefersStatusBarHidden {
     return self.statusBarShouldBeHidden;
@@ -291,16 +301,17 @@
     if (HXShowLog) NSSLog(@"dealloc");
 }
 - (void)cancelClick:(UIButton *)button {
-    if (button.selected) {
+    if (button.tag == 1002) {
         [self.cameraController startSession];
         [self.imageView removeFromSuperview];
         [self.doneBtn removeFromSuperview];
+        [self.resetBtn removeFromSuperview];
         [self.playVideoView stopPlay];
         self.playVideoView.hidden = YES;
         self.playVideoView.playerLayer.hidden = YES;
         self.flashBtn.hidden = NO;
         self.changeCameraBtn.hidden = NO;
-        self.cancelBtn.selected = NO;
+        [self setCancelBtnSelect:NO];
         self.bottomView.hidden = NO;
         self.previewView.tapToFocusEnabled = YES;
         self.previewView.pinchToZoomEnabled = [self.cameraController cameraSupportsZoom];
@@ -322,17 +333,32 @@
         HXPhotoModel *model;
         if (!self.videoURL) {
             model = [HXPhotoModel photoModelWithImage:self.imageView.image];
+            [self doneCompleteWithModel:model];
+            return;
         }else {
-            if (self.time < 3) {
-                [self.view hx_showImageHUDText:[NSBundle hx_localizedStringForKey:@"录制时间少于3秒"]];
+            if (self.time < 1) {
+                [self.view hx_showImageHUDText:[NSBundle hx_localizedStringForKey:@"录制时间少于1秒"]];
                 return;
             }
             [self.playVideoView stopPlay];
             model = [HXPhotoModel photoModelWithVideoURL:self.videoURL videoTime:self.time];
         }
+        [self.view hx_immediatelyShowLoadingHudWithText:nil];
         model.creationDate = [NSDate date];
         model.location = self.location;
-        [self doneCompleteWithModel:model];
+        __weak typeof(self)weakSelf = self;
+        [self compressVideo:model.videoURL completion:^(NSURL *videoURL) {
+            if (videoURL) {
+                 [[NSFileManager defaultManager] removeItemAtURL:model.videoURL error:nil];
+            }
+            model.videoURL = videoURL;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.view hx_handleLoading:NO];
+                [weakSelf doneCompleteWithModel:model];
+            });
+           
+        }];
+       
     }else {
         HXWeakSelf
         [self.view hx_immediatelyShowLoadingHudWithText:nil];
@@ -365,6 +391,9 @@
     [self.cameraController stopSession];
     self.cameraController.flashMode = 0;
     self.cameraController.torchMode = 0;
+    
+
+    
     if ([self.delegate respondsToSelector:@selector(customCameraViewController:didDone:)]) {
         [self.delegate customCameraViewController:self didDone:model];
     }
@@ -372,6 +401,41 @@
         self.doneBlock(model, self);
     }
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+// 压缩视频
+- (void)compressVideo:(NSURL *)videoUrl completion:(void (^)(NSURL*))completion{
+    NSURL *saveUrl=videoUrl;
+
+    // 通过文件的 url 获取到这个文件的资源
+    AVURLAsset *avAsset = [[AVURLAsset alloc] initWithURL:saveUrl options:nil];
+    // 用 AVAssetExportSession 这个类来导出资源中的属性
+    NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:avAsset];
+
+    // 压缩视频
+    if ([compatiblePresets containsObject:AVAssetExportPresetHighestQuality]) { // 导出属性是否包含低分辨率
+    // 通过资源（AVURLAsset）来定义 AVAssetExportSession，得到资源属性来重新打包资源 （AVURLAsset, 将某一些属性重新定义
+    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:AVAssetExportPresetHighestQuality];
+    // 设置导出文件的存放路径
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd-HH:mm:ss"];
+    NSDate    *date = [[NSDate alloc] init];
+    NSString *outPutPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"output-%@.mp4",[formatter stringFromDate:date]]];
+    exportSession.outputURL = [NSURL fileURLWithPath:outPutPath];
+    // 是否对网络进行优化
+    exportSession.shouldOptimizeForNetworkUse = true;
+    // 转换成MP4格式
+    exportSession.outputFileType = AVFileTypeMPEG4;
+    // 开始导出,导出后执行完成的block
+    [exportSession exportAsynchronouslyWithCompletionHandler:^{
+        // 如果导出的状态为完成
+        if ([exportSession status] == AVAssetExportSessionStatusCompleted) {
+            if (completion) {
+                completion(exportSession.outputURL);
+            }
+        }
+    }];
+}
 }
 - (void)didchangeCameraClick {
     if ([self.cameraController switchCameras]) {
@@ -408,6 +472,7 @@
     self.imageView.image = image;
     [self.view insertSubview:self.imageView belowSubview:self.bottomView];
     [self.view addSubview:self.doneBtn];
+    [self.view addSubview:self.resetBtn];
     [self.cameraController stopSession];
     self.cancelBtn.hidden = NO;
 }
@@ -415,7 +480,7 @@
     self.cancelBtn.hidden = NO;
     self.flashBtn.hidden = NO;
     self.changeCameraBtn.hidden = NO;
-    self.cancelBtn.selected = NO;
+    [self setCancelBtnSelect:NO];
     self.bottomView.hidden = NO;
     self.previewView.tapToFocusEnabled = YES;
     self.previewView.pinchToZoomEnabled = [self.cameraController cameraSupportsZoom];
@@ -452,18 +517,18 @@
 }
 - (void)videoNeedHideViews {
     self.cancelBtn.hidden = YES;
-    self.cancelBtn.selected = YES;
+    [self setCancelBtnSelect:YES];
     self.flashBtn.hidden = YES;
     self.changeCameraBtn.hidden = YES;
 }
 - (void)videoFinishRecording:(NSURL *)videoURL {
     [self.bottomView stopRecord];
-    if (self.time < 3) {
+    if (self.time < 1) {
         self.bottomView.hidden = NO;
-        self.cancelBtn.selected = NO;
+        [self setCancelBtnSelect:NO];
         self.flashBtn.hidden = NO;
         self.changeCameraBtn.hidden = NO;
-        [self.view hx_showImageHUDText:[NSBundle hx_localizedStringForKey:@"3秒内的视频无效哦~"]];
+        [self.view hx_showImageHUDText:[NSBundle hx_localizedStringForKey:@"1秒内的视频无效哦~"]];
     }else {
         [self.cameraController stopSession];
         self.previewView.tapToFocusEnabled = NO;
@@ -474,6 +539,7 @@
         self.playVideoView.playerLayer.hidden = NO;
         self.playVideoView.videoURL = self.videoURL;
         [self.view addSubview:self.doneBtn];
+        [self.view addSubview:self.resetBtn];
     }
     self.cancelBtn.hidden = NO;
 //    NSSLog(@"%@",videoURL);
@@ -484,7 +550,7 @@
     [self.bottomView stopRecord];
     [self.view hx_showImageHUDText:[NSBundle hx_localizedStringForKey:@"录制视频失败!"]];
     self.bottomView.hidden = NO;
-    self.cancelBtn.selected = NO;
+    [self setCancelBtnSelect:NO];
     self.flashBtn.hidden = NO;
     self.changeCameraBtn.hidden = NO;
     self.cancelBtn.hidden = NO;
@@ -518,7 +584,7 @@
     }
 }
 - (void)needHideViews {
-    self.cancelBtn.selected = YES;
+    [self setCancelBtnSelect:YES];
     self.flashBtn.hidden = YES;
     self.changeCameraBtn.hidden = YES;
     self.bottomView.hidden = YES;
@@ -616,16 +682,56 @@
 - (UIButton *)cancelBtn {
     if (!_cancelBtn) {
         _cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_cancelBtn setTitle:[NSBundle hx_localizedStringForKey:@"重拍"] forState:UIControlStateSelected];
-        [_cancelBtn setTitle:@"" forState:UIControlStateNormal];
+        _cancelBtn.tag = 1001;
         [_cancelBtn setImage:[UIImage hx_imageNamed:@"hx_faceu_cancel"] forState:UIControlStateNormal];
         [_cancelBtn setImage:[[UIImage alloc] init] forState:UIControlStateSelected];
+        _cancelBtn.contentMode = UIViewContentModeScaleAspectFit;
         [_cancelBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
         [_cancelBtn addTarget:self action:@selector(cancelClick:) forControlEvents:UIControlEventTouchUpInside];
         _cancelBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        _cancelBtn.hx_size = CGSizeMake(50, 50);
+        _cancelBtn.hx_size = CGSizeMake(40,40);
     }
     return _cancelBtn;
+}
+
+- (UIButton *)resetBtn {
+    if (!_resetBtn) {
+        _resetBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _resetBtn.tag = 1002;
+        [_resetBtn setImage:[UIImage hx_imageNamed:@"media_back"] forState:UIControlStateNormal];
+        _resetBtn.contentMode = UIViewContentModeScaleAspectFit;
+        [_resetBtn setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.30]];
+       
+        [_resetBtn addTarget:self action:@selector(cancelClick:) forControlEvents:UIControlEventTouchUpInside];
+        _resetBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        _resetBtn.hx_size = CGSizeMake(42,42);
+        _resetBtn.layer.cornerRadius = _resetBtn.hx_size.width/2.0;
+        _resetBtn.clipsToBounds = YES;
+        _resetBtn.hx_centerX = self.view.hx_centerX - _resetBtn.hx_size.width;
+        _resetBtn.hx_y = self.view.hx_h - _resetBtn.hx_size.height - SAFEAREA_INSETS_BOTTOM;
+    }
+    return _resetBtn;
+}
+
+- (UIButton *)doneBtn {
+    if (!_doneBtn) {
+           _doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+           [_doneBtn setImage:[UIImage hx_imageNamed:@"media_ok"] forState:UIControlStateNormal];
+           _doneBtn.contentMode = UIViewContentModeScaleAspectFit;
+           [_doneBtn setBackgroundColor:[UIColor whiteColor]];
+           [_doneBtn addTarget:self action:@selector(didDoneBtnClick) forControlEvents:UIControlEventTouchUpInside];
+           _doneBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+           _doneBtn.hx_size = CGSizeMake(42,42);
+            _doneBtn.layer.cornerRadius = _doneBtn.hx_size.width/2.0;
+            _doneBtn.clipsToBounds = YES;
+           _doneBtn.hx_centerX = self.view.hx_centerX + _doneBtn.hx_size.width;
+           _doneBtn.hx_y = self.view.hx_h - _doneBtn.hx_size.height - SAFEAREA_INSETS_BOTTOM;
+       }
+       return _doneBtn;
+}
+
+- (void)setCancelBtnSelect:(BOOL)selected{
+    self.cancelBtn.selected = selected;
 }
 - (UIButton *)changeCameraBtn {
     if (!_changeCameraBtn) {
@@ -644,6 +750,7 @@
         UIImage *selectedImage = [UIImage hx_imageNamed:@"hx_flash_pic_nopreview"];
         [_flashBtn setImage:selectedImage forState:UIControlStateSelected];
         [_flashBtn addTarget:self action:@selector(didFlashClick:) forControlEvents:UIControlEventTouchUpInside];
+         _flashBtn.hx_size = CGSizeMake(40,40);
     }
     return _flashBtn;
 }
@@ -670,20 +777,7 @@
     }
     return _playVideoView;
 }
-- (UIButton *)doneBtn {
-    if (!_doneBtn) {
-        _doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_doneBtn setTitle:[NSBundle hx_localizedStringForKey:@"完成"] forState:UIControlStateNormal];
-        [_doneBtn setTitleShadowColor:[[UIColor blackColor] colorWithAlphaComponent:0.4] forState:UIControlStateNormal];
-        [_doneBtn.titleLabel setShadowOffset:CGSizeMake(1, 2)];
-        _doneBtn.hx_h = 40;
-        _doneBtn.hx_w = [_doneBtn.titleLabel hx_getTextWidth];
-        _doneBtn.hx_x = self.view.hx_w - 15 - _doneBtn.hx_w;
-        _doneBtn.hx_y = self.view.hx_h - self.previewView.hx_y - _doneBtn.hx_h;
-        [_doneBtn addTarget:self action:@selector(didDoneBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _doneBtn;
-}
+
 - (UIVisualEffectView *)effectView {
     if (!_effectView) {
         UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
@@ -817,8 +911,8 @@
     }
 }
 - (void)changeTime:(NSTimeInterval)time {
-    if (time < 3) {
-        self.timeLb.text = [NSBundle hx_localizedStringForKey:@"3秒内的视频无效哦~"];
+    if (time < 1) {
+        self.timeLb.text = [NSBundle hx_localizedStringForKey:@"1秒内的视频无效哦~"];
     }else {
         self.timeLb.text = [NSString stringWithFormat:@"%.0fs",time];
     }
@@ -846,7 +940,7 @@
 }
 - (void)startRecord {
     self.timeLb.hidden = NO;
-    self.timeLb.text = [NSBundle hx_localizedStringForKey:@"3秒内的视频无效哦~"];
+    self.timeLb.text = [NSBundle hx_localizedStringForKey:@"1秒内的视频无效哦~"];
 }
 - (void)stopRecord {
     if (self.manager.configuration.customCameraType == HXPhotoCustomCameraTypeUnused) {
@@ -998,6 +1092,7 @@
         _playView = [[HXFullScreenCameraPlayView alloc] initWithFrame:CGRectMake(0, 0, 70, 70) color:self.manager.configuration.themeColor];
         self.tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(takePictures)];
         [_playView addGestureRecognizer:self.tap];
+        _playView.color = [UIColor whiteColor];
     }
     return _playView;
 }

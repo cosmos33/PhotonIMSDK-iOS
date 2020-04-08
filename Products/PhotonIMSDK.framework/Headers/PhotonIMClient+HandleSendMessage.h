@@ -12,14 +12,30 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PhotonIMClient (HandleSendMessage)
 #pragma mark ----- 发送消息相关 ------
-/**
- 发送通用消息
- 
- @param message 消息
- @param completion 消息发送的回执，succeed=YES 发送成功此时error = nil;succeed=NO 发送失败此时error包含失败的原因
- */
-- (void)sendMessage:(nullable PhotonIMMessage *)message completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
 
+/// 消息发送方法，此方法适用于不使用SDK的文件托管功能(即SDK负责文件的上传和发送，操作一体化)
+/// @param message 消息对象
+/// @param completion 消息发送完成回调，succeed=YES 发送成功此时error = nil;succeed=NO 发送失败此时error包含失败的原因
+- (void)sendMessage:(nullable PhotonIMMessage *)message
+         completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
+
+/// 消息发送方法，此方法支持文件托管功能(即SDK负责文件的上传和发送，操作一体化)
+/// @param message 消息对象
+/// @param readyToSendBlock 消息准备完成，将要上传和发送，业务端可使用此回调加载刷新ui显示
+/// @param progress 文件的上传进度回调，当上传到totalUnitCount=completedUnitCount时，表示文件上传成功
+/// @param completion 消息发送完成回调，succeed=YES 发送成功此时error = nil;succeed=NO 发送失败此时error包含失败的原因
+- (void)sendMessage:(nullable PhotonIMMessage *)message
+   readyToSendBlock:(nullable void(^)(PhotonIMMessage * _Nullable message ))readyToSendBlock
+ fileUploadProgress:(nullable void(^)(NSProgress * _Nonnull uploadProgress))progress
+      completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error))completion;
+
+/// 消息发送方法，此方法支持文件托管功能(即SDK负责文件的上传和发送，操作一体化)。
+/// 此方法取消了progress来回调文件上传进度，更换使用代理方法 - (void)imClient:transportProgressWithMessage:progess:回调上传的进度。
+/// 取消了completion来回调消息发送完成的结果，更换使用代理方法- (void)imClient:sendResultWithMessage:succceed:error:回调消息发送完成的结果。
+/// @param message 消息对象
+/// @param readyToSendBlock 消息准备完成，将要上传和发送，业务端可使用此回调加载刷新ui显示
+- (void)sendMessage:(nullable PhotonIMMessage *)message
+   readyToSendBlock:(nullable void(^)(PhotonIMMessage * _Nullable message ))readyToSendBlock;
 
 
 /**

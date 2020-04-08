@@ -53,10 +53,9 @@
     
     CAShapeLayer *circleLayer = [CAShapeLayer layer];
     circleLayer.strokeColor = [UIColor clearColor].CGColor;
-    circleLayer.fillColor = self.color.CGColor;
-    circleLayer.path = [self circlePath:(self.frame.size.width * 0.5 - 12)].CGPath;
+    circleLayer.fillColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1].CGColor;//self.color.CGColor;
+    circleLayer.path = [self circlePath:(self.frame.size.width * 0.6 - 12)].CGPath;
     [self.layer addSublayer:circleLayer];
-    circleLayer.hidden = YES;
     self.circleLayer = circleLayer;
     
     self.progressCenter = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
@@ -77,13 +76,13 @@
 }
 - (void)clean {
     self.progressLayer.hidden = YES;
-    self.circleLayer.hidden = YES;
+    self.circleLayer.fillColor =  [UIColor colorWithRed:1 green:1 blue:1 alpha:1].CGColor;
     self.currentProgress = 0;
 }
 - (void)setProgress:(CGFloat)progress {
     _progress = progress; 
     self.progressLayer.hidden = NO;
-    self.circleLayer.hidden = NO;
+    self.circleLayer.fillColor =  [UIColor redColor].CGColor;
     [self.progressLayer removeAnimationForKey:@"circle"];
     CABasicAnimation *circleAnim = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
     circleAnim.fromValue = @(self.currentProgress);
@@ -93,8 +92,7 @@
     circleAnim.removedOnCompletion = NO;
     circleAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     [self.progressLayer addAnimation:circleAnim forKey:@"circle"];
-    
-//    self.progressLayer.path = [UIBezierPath bezierPathWithArcCenter:self.progressCenter radius:self.progressCenter.x startAngle:-M_PI / 2.f endAngle:-M_PI / 2.f + M_PI * 2.f * progress clockwise:true].CGPath;
+
     
     self.currentProgress = progress;
 }

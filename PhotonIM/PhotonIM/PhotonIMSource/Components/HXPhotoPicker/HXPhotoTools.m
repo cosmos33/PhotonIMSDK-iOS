@@ -255,7 +255,7 @@
                 return;
             }
             NSError *error = nil;
-            // 保存相片到相机胶卷
+            // 保存相片到所有照片
             __block PHObjectPlaceholder *createdAsset = nil;
             [[PHPhotoLibrary sharedPhotoLibrary] performChangesAndWait:^{
                 PHAssetCreationRequest *creationRequest = [PHAssetCreationRequest creationRequestForAssetFromVideoAtFileURL:videoURL];
@@ -333,7 +333,7 @@
                 return;
             }
             NSError *error = nil;
-            // 保存相片到相机胶卷
+            // 保存相片到所有照片
             __block PHObjectPlaceholder *createdAsset = nil;
             [[PHPhotoLibrary sharedPhotoLibrary] performChangesAndWait:^{
                 PHAssetCreationRequest *creationRequest = [PHAssetCreationRequest creationRequestForAssetFromImage:photo];

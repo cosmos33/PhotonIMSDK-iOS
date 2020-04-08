@@ -18,7 +18,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable)NSString *fileName;
 
 /**
- 语音文件存储url
+ 语音文件本地存储路径
+ */
+@property(nonatomic, copy, nullable)NSString *fileLocalPath;
+
+/**
+收到的消息线上url
  */
 @property(nonatomic, strong, nullable)NSURL *url;
 /**

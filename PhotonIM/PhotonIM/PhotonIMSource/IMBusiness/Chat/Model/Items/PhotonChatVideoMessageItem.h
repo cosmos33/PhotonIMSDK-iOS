@@ -17,19 +17,23 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable)NSString *fileName;
 
 /**
- 语音文件存储url
+ 视频文件存储url
  */
 @property(nonatomic, strong, nullable)NSURL *url;
 /**
- 语音文件时长
+ 视频时长文件时长
  */
 @property(nonatomic, assign)int64_t duration;
-
-
 /**
- 语音是否点击播放
+ 
+ 语音文件本地存储路径
  */
-@property(nonatomic, assign)BOOL isPlayed;
+@property(nonatomic, copy, nullable)NSString *fileLocalPath;
+
+@property (nonatomic, strong, nullable)NSString *coverURL;
+
+@property (nonatomic, strong, nullable)UIImage *coverImage;
+@property (nonatomic, assign)CGFloat whRatio;
 @end
 
 NS_ASSUME_NONNULL_END

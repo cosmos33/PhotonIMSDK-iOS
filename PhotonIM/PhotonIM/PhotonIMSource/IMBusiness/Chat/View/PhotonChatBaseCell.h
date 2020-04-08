@@ -60,6 +60,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)tapBackgroundView;
 - (void)subview_layout;
+
+- (void)changeProgressValue:(CGFloat)value;
 @end
 
 NS_ASSUME_NONNULL_END

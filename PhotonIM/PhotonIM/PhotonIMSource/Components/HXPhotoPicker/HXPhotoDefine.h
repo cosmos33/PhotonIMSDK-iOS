@@ -44,6 +44,8 @@
 
 #define HasSDWebImage (__has_include(<SDWebImage/UIImageView+WebCache.h>) || __has_include("UIImageView+WebCache.h"))
 
+#define HasPhotonIMSDK __has_include(<PhotonIMSDK/PhotonIMSDK.h>)
+
 #define HX_ScreenWidth [UIScreen mainScreen].bounds.size.width
 #define HX_ScreenHeight [UIScreen mainScreen].bounds.size.height
 
@@ -65,6 +67,7 @@
 
 // 导航栏 + 状态栏 的高度
 #define hxNavigationBarHeight (HX_IS_IPhoneX_All ? 88 : 64)
+#define hxStatusBarHeight [[UIApplication sharedApplication] statusBarFrame].size.height
 #define hxTopMargin (HX_IS_IPhoneX_All ? 44 : 0)
 #define hxBottomMargin (HX_IS_IPhoneX_All ? 34 : 0)
 

@@ -70,6 +70,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)runMainThread:(dispatch_block_t)block;
 
+#pragma mark ---- 获取图片第一帧
++ (UIImage *)firstFrameWithVideoURL:(NSString *)fileUrl size:(CGSize)size;
+
 
 + (NSString *)getAppid;
 @end

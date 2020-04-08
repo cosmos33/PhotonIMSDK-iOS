@@ -244,12 +244,23 @@ NS_ASSUME_NONNULL_BEGIN
                                                 NSError * _Nullable error))result;
 
 
-
+/// 全文搜索功能 针对当前登录用户所有信息的查找
+/// @param matchQuery 搜索的关键词
+/// @param startIdentifier 开始的标识 如@"<a>"
+/// @param andIdentifier 结束的标识 如@"</a>"
+/// @param maxCharacterLenth 搜索结果外显示的字符数
 - (NSArray<PhotonIMMessage *> *)searchMessagesWithMatchQuery:(NSString *)matchQuery
                                            startIdentifier:(NSString *)startIdentifier
                                              andIdentifier:(NSString *)andIdentifier maxCharacterLenth:(NSInteger)maxCharacterLenth;
 
 
+/// 全文搜索功能,不做分页处理，显示所有查询出的结果
+/// @param chatType 会话类型
+/// @param chatWith 会话中对方的id，群组为群组id
+/// @param startIdentifier 开始的标识 如@"<a>"
+/// @param andIdentifier 结束的标识 如@"</a>"
+/// @param maxCharacterLenth 搜索结果外显示的字符数
+/// @param matchQuery 搜索的关键词
 - (NSArray<PhotonIMMessage *> *)searchMessagesWithChatType:(PhotonIMChatType)chatType
                                                 chatWith:(NSString *)chatWith
                                          startIdentifier:(NSString *)startIdentifier
@@ -257,6 +268,16 @@ NS_ASSUME_NONNULL_BEGIN
                                        maxCharacterLenth:(NSInteger)maxCharacterLenth
                                               matchQuery:(NSString *)matchQuery;
 
+
+/// 全文搜索功能，分页处理
+/// @param chatType 会话类型
+/// @param chatWith 会话中对方的id，群组为群组id
+/// @param startIdentifier 开始的标识如@"<a>"
+/// @param andIdentifier 结束的标识如@"</a>"
+/// @param maxCharacterLenth 搜索结果外显示的字符数
+/// @param matchQuery 搜索的关键词
+/// @param anchor 锚点 messagid
+/// @param pageSize 每页的条数
 - (NSArray<PhotonIMMessage *> *)searchMessagesWithChatType:(PhotonIMChatType)chatType
                                                   chatWith:(NSString *)chatWith
                                            startIdentifier:(NSString *)startIdentifier

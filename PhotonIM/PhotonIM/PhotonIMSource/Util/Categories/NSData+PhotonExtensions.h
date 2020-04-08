@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @return md5 hash of this data
  */
-@property (nonatomic, readonly) NSString* md5Hash;
+@property (nonatomic, readonly) NSString* PhotonIMmd5Hash;
 
 /**
  * Calculate the SHA1 hash of this data using CC_SHA1.

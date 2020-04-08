@@ -20,6 +20,13 @@ typedef enum{
 @property(nonatomic,copy)NSString *detailedAddress;// 坐标详细地址名称
 @property(nonatomic,assign)double lng;// 经度
 @property(nonatomic,assign)double lat;// 纬度
+
+/// 构建PhotonIMLocationBody对象
+/// @param coordinateSystem 坐标系系统，默认使用CoordinateSystem_WGS84
+/// @param address 地址
+/// @param detailedAddress 地址详情
+/// @param lng 经度
+/// @param lat 纬度
 +(PhotonIMLocationBody *)locationBodyWithCoordinateSystem:(CoordinateSystem)coordinateSystem
                                                 address:(nullable NSString *)address
                                         detailedAddress:(nullable NSString *)detailedAddress

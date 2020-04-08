@@ -13,12 +13,15 @@
 #import "PhotonChatTextMessageItem.h"
 #import "PhotonChatLocationItem.h"
 #import "PhotonChatVideoMessageItem.h"
+#import "PhotonChatFileMessageItem.h"
 
 NS_ASSUME_NONNULL_BEGIN
 typedef void(^CompletionBlock) (BOOL succeed, PhotonIMError * _Nullable error);
 @protocol PhotonMessageProtocol <PhotonIMClientProtocol>
 @optional
 - (void)sendMessageResultCallBack:(PhotonIMMessage *)message;
+- (void)fileTransportProgress:(NSProgress *)downloadProgress userInfo:(id)userInfo;
+- (void)fileTransportCompletion:(NSString *)filePath fileName:(NSString *)fileName userInfo:(id)userInfo;
 @end
 @interface PhotonMessageCenter : NSObject
 + (instancetype)sharedCenter;
@@ -55,21 +58,26 @@ typedef void(^CompletionBlock) (BOOL succeed, PhotonIMError * _Nullable error);
 //-------- 消息发送相关 -----------
 
 // 发送文本表情消息
-- (void)sendTextMessage:(nullable PhotonChatTextMessageItem *)item conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion;
+- (void)sendTextMessage:(nullable PhotonChatTextMessageItem *)item  conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion;
 
-- (void)sendTex:(NSString *)text conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion;
+- (void)sendTex:(NSString *)text conversation:(nullable PhotonIMConversation *)conversation  completion:(nullable CompletionBlock)completion;
 
 // 发送图片消息
-- (void)sendImageMessage:(nullable PhotonChatImageMessageItem *)item conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion;
+- (void)sendImageMessage:(nullable PhotonChatImageMessageItem *)item conversation:(nullable PhotonIMConversation *)conversation readyCompletion:(nullable void(^)(PhotonIMMessage * _Nullable message ))readyCompletion completion:(nullable CompletionBlock)completion;
 
 // 发送语音消息
-- (void)sendVoiceMessage:(nullable PhotonChatVoiceMessageItem *)item conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion;
+- (void)sendVoiceMessage:(nullable PhotonChatVoiceMessageItem *)item conversation:(nullable PhotonIMConversation *)conversation readyCompletion:(nullable void(^)(PhotonIMMessage * _Nullable message ))readyCompletion completion:(nullable CompletionBlock)completion;
 
 // 发送视频消息
-- (void)sendVideoMessage:(nullable PhotonChatVideoMessageItem *)item conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion;
+- (void)sendVideoMessage:(nullable PhotonChatVideoMessageItem *)item conversation:(nullable PhotonIMConversation *)conversation readyCompletion:(nullable void(^)(PhotonIMMessage * _Nullable message ))readyCompletion completion:(nullable CompletionBlock)completion;
 
 // 发送位置消息
-- (void)sendLocationMessage:(PhotonChatLocationItem *)item conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion;
+- (void)sendLocationMessage:(PhotonChatLocationItem *)item conversation:(nullable PhotonIMConversation *)conversation readyCompletion:(nullable void(^)(PhotonIMMessage * _Nullable message ))readyCompletion completion:(nullable CompletionBlock)completion;
+
+- (void)sendFileMessage:(PhotonChatFileMessageItem *)item
+           conversation:(nullable PhotonIMConversation *)conversation
+        readyCompletion:(nullable void(^)(PhotonIMMessage * _Nullable message ))readyCompletion
+             completion:(nullable CompletionBlock)completion;
 
 // 重发消息
 - (void)resendMessage:(nullable PhotonChatBaseItem *)item completion:(nullable CompletionBlock)completion;
@@ -130,6 +138,10 @@ typedef void(^CompletionBlock) (BOOL succeed, PhotonIMError * _Nullable error);
  @return <#return value description#>
  */
 - (BOOL)deleteImageFile:(NSString *)chatWith fileName:(nullable NSString *)fileName;
+
+- (void)getLocalFileWithMessage:(PhotonIMMessage *)message
+                                            fileQuality:(PhotonIMDownloadFileQuality)fileQuality
+                                               userInfo:(nullable id)userInfo;
 
 #pragma mark === 数据存储 ======
 - (void)insertOrUpdateMessage:(PhotonIMMessage *)message;

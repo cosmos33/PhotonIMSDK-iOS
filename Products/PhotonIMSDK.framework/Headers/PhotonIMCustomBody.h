@@ -20,9 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** 自定义二进制数据 */
 @property(nonatomic, copy, nullable) NSData *data;
 
-+ (PhotonIMCustomBody *)customBodyWithArg1:(int32_t)arg1
++ (PhotonIMCustomBody *)customBodyWithArg1:(int32_t *)arg1
                               arg2:(int32_t)arg2
-                          customData:(nullable NSData *)customData;
+                          customData:(nullable NSData *)data;
 @end
 
 NS_ASSUME_NONNULL_END

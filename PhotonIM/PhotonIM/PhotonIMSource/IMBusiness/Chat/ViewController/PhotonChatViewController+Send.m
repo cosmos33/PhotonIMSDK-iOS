@@ -8,6 +8,7 @@
 
 #import "PhotonChatViewController+Send.h"
 #import "PhotonAtMemberListViewController.h"
+#import "PhotonUtil.h"
 @implementation PhotonChatViewController (Send)
 #pragma mark ------ 发送消息相关 ----------
 
@@ -53,20 +54,17 @@
             if (error.code != -1 && error.code != -2) {
                  [PhotonUtil showErrorHint:error.em];
             }
-            
         }
         if (succeed) {
             textItem.tipText = @"";
         }
         [weakself updateItem:textItem];
     }];
-    
 }
 
 // 发送图片消息
 - (void)sendImageMessage:(NSData *)imageData{
     UIImage *image = [UIImage imageWithData:imageData];
-    
     double dataLength = [imageData length] * 1.0;
     dataLength = (dataLength/1024.0)/1024.0;
     if(dataLength > 10){
@@ -75,22 +73,20 @@
     }
     
     NSString *imageName = [NSString stringWithFormat:@"%.0lf.jpg", [NSDate date].timeIntervalSince1970];
-    NSString *imagePath = [[PhotonMessageCenter sharedCenter] getImageFilePath:self.conversation.chatWith fileName:imageName];
-   
-    BOOL res =  [[NSFileManager defaultManager] createFileAtPath:imagePath contents:imageData attributes:nil];
     PhotonChatImageMessageItem *imageItem = [[PhotonChatImageMessageItem alloc] init];
+    imageItem.imageData = imageData;
     imageItem.fromType = PhotonChatMessageFromSelf;
     imageItem.fileName = imageName;
     imageItem.avatalarImgaeURL = [PhotonContent userDetailInfo].avatarURL;
     imageItem.whRatio = image.size.width/image.size.height;
     imageItem.timeStamp = [[NSDate date] timeIntervalSince1970] * 1000.0;
-    if (res) {
-        imageItem.orignURL = imagePath;
-        imageItem.thumURL = imagePath;
-    }
-    [self addItem:imageItem];
-     PhotonWeakSelf(self)
-    [[PhotonMessageCenter sharedCenter] sendImageMessage:imageItem conversation:self.conversation completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+    PhotonWeakSelf(self)
+    [[PhotonMessageCenter sharedCenter] sendImageMessage:imageItem conversation:self.conversation readyCompletion:^(PhotonIMMessage * _Nullable message) {
+        [PhotonUtil runMainThread:^{
+            imageItem.localPath = message.messageBody.localFilePath;
+            [self addItem:imageItem];
+        }];
+    } completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
         if (!succeed && error.code >=1000 && error.em) {
             imageItem.tipText = error.em;
         }else if (!succeed){
@@ -112,9 +108,11 @@
     audioItem.fileName = fileName;
     audioItem.duration = duraion;
     audioItem.avatalarImgaeURL = [PhotonContent userDetailInfo].avatarURL;
-    [self addItem:audioItem];
     PhotonWeakSelf(self)
-    [[PhotonMessageCenter sharedCenter] sendVoiceMessage:audioItem conversation:self.conversation completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+    [[PhotonMessageCenter sharedCenter] sendVoiceMessage:audioItem conversation:self.conversation readyCompletion:^(PhotonIMMessage * _Nullable message) {
+        audioItem.fileLocalPath = message.messageBody.localFilePath;
+        [self addItem:audioItem];
+    } completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
         if (!succeed && error.em) {
             audioItem.tipText = error.em;
         }else if (!succeed){
@@ -129,6 +127,7 @@
     }];
 }
 
+// 发送视频消息
 - (void)sendVideoMessage:(NSString *)fileName duraion:(CGFloat)duraion{
     PhotonChatVideoMessageItem *vedioItem = [[PhotonChatVideoMessageItem alloc] init];
     vedioItem.fromType = PhotonChatMessageFromSelf;
@@ -136,9 +135,12 @@
     vedioItem.fileName = fileName;
     vedioItem.duration = duraion;
     vedioItem.avatalarImgaeURL = [PhotonContent userDetailInfo].avatarURL;
-    [self addItem:vedioItem];
     PhotonWeakSelf(self)
-    [[PhotonMessageCenter sharedCenter] sendVideoMessage:vedioItem conversation:self.conversation completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+    [[PhotonMessageCenter sharedCenter] sendVideoMessage:vedioItem conversation:self.conversation readyCompletion:^(PhotonIMMessage * _Nullable message) {
+        vedioItem.fileLocalPath = message.messageBody.localFilePath;
+        vedioItem.coverImage = [PhotonUtil firstFrameWithVideoURL:vedioItem.fileLocalPath size:vedioItem.contentSize];
+        [self addItem:vedioItem];
+    } completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
         if (!succeed && error.em) {
             vedioItem.tipText = error.em;
         }else if (!succeed){
@@ -153,6 +155,7 @@
     }];
 }
 
+// 发送位置消息
 - (void)sendLocationMessage:(NSString *)address detailAddress:(NSString *)detailAddress locationCoordinate:(CLLocationCoordinate2D)locationCoordinate{
     PhotonChatLocationItem *locationItem = [[PhotonChatLocationItem alloc] init];
     locationItem.fromType = PhotonChatMessageFromSelf;
@@ -163,7 +166,9 @@
     locationItem.avatalarImgaeURL = [PhotonContent userDetailInfo].avatarURL;
     [self addItem:locationItem];
     PhotonWeakSelf(self)
-    [[PhotonMessageCenter sharedCenter] sendLocationMessage:locationItem conversation:self.conversation completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+    [[PhotonMessageCenter sharedCenter] sendLocationMessage:locationItem conversation:self.conversation readyCompletion:^(PhotonIMMessage * _Nullable message) {
+        
+    } completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
         if (!succeed && error.em) {
             locationItem.tipText = error.em;
         }else if (!succeed){
@@ -178,6 +183,34 @@
     }];
 }
 
+// 发送文件消息
+- (void)sendFileMessage:(PhotonIMFileBody *)body{
+    PhotonChatFileMessageItem *fileItem = [[PhotonChatFileMessageItem alloc] init];
+    fileItem.fromType = PhotonChatMessageFromSelf;
+    fileItem.timeStamp = [[NSDate date] timeIntervalSince1970] * 1000.0;
+    fileItem.fileName = body.fileDisplayName;
+    fileItem.fileSize = [NSString stringWithFormat:@"%.2f k",(float)body.fileSize/1024.0];
+    fileItem.fileICon = [UIImage imageNamed:@"chatfile"];
+    fileItem.filePath = body.localFilePath;
+    fileItem.avatalarImgaeURL = [PhotonContent userDetailInfo].avatarURL;
+    PhotonWeakSelf(self)
+    [[PhotonMessageCenter sharedCenter] sendFileMessage:fileItem conversation:self.conversation readyCompletion:^(PhotonIMMessage * _Nullable message) {
+         fileItem.filePath = [message messageBody].localFilePath;
+         [weakself addItem:fileItem];
+    } completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+        if (!succeed && error.em) {
+            fileItem.tipText = error.em;
+        }else if (!succeed){
+            if (error.code != -1 && error.code != -2) {
+                [PhotonUtil showErrorHint:error.em];
+            }
+        }
+        if (succeed) {
+            fileItem.tipText = @"";
+        }
+        [weakself updateItem:fileItem];
+    }];
+}
 // 发送消息已读
 - (void)sendReadMsgs:(NSArray *)msgids completion:(void (^)(BOOL, PhotonIMError * _Nullable))completion{
     [[PhotonMessageCenter sharedCenter] sendReadMessage:msgids conversation:self.conversation completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
@@ -194,7 +227,7 @@
     [(PhotonChatModel *)self.model addItem:item];
     
     [[PhotonMessageCenter sharedCenter] resendMessage:item completion:^(BOOL succeed, PhotonIMError * _Nullable error){
-        if (!succeed && error.code >=1000 && error.em) {
+        if (!succeed && error.em) {
             item.tipText = error.em;
         }else if (!succeed){
             if (error.code != -1 && error.code != -2) {
@@ -241,6 +274,19 @@
         [self.navigationController pushViewController:memberListCtl animated:YES];
     }
    
-    
+}
+
+- (void)imClient:(id)client sendResultWithMessage:(PhotonIMMessage *)message succceed:(BOOL)succceed error:(PhotonIMError *)error{
+    NSArray *items = [self.model.items copy];
+       for (PhotonChatBaseItem *item in items) {
+           if ([[[item userInfo] messageID] isEqualToString:message.messageID]) {
+               if(!succceed){
+                   item.tipText = error.em;
+               }
+               item.userInfo = message;
+               [self updateItem:item];
+               break;
+           }
+       }
 }
 @end

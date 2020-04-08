@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable)NSString *orignURL;
 @property (nonatomic, strong, nullable)NSString *thumURL;
 @property (nonatomic, assign)CGFloat whRatio;
+@property (nonatomic, strong)NSData *imageData;
 @end
 
 NS_ASSUME_NONNULL_END

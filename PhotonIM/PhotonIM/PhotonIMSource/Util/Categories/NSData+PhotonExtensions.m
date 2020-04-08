@@ -10,7 +10,7 @@
 #import <CommonCrypto/CommonDigest.h>
 @implementation NSData (PhotonExtensions)
 
-- (NSString*)md5Hash {
+- (NSString*)PhotonIMmd5Hash {
     unsigned char result[CC_MD5_DIGEST_LENGTH];
     CC_LONG len1 = (CC_LONG)[self length];
     CC_MD5([self bytes], len1, result);

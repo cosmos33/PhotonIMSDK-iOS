@@ -66,6 +66,11 @@
     }
     self.stopCancel = NO;
 }
+- (void)loadImage:(UIImage *)image{
+    if (self.type == HXPreviewContentViewTypeImage) {
+           [self.imageView setImage:image];
+    }
+}
 - (void)requestHD {
     HXWeakSelf
     if (self.type == HXPreviewContentViewTypeImage) {
@@ -112,6 +117,8 @@
 - (HXPreviewImageView *)imageView {
     if (!_imageView) {
         _imageView = [[HXPreviewImageView alloc] init];
+        _imageView.backgroundColor= [UIColor clearColor];
+        _imageView.contentMode = UIViewContentModeScaleAspectFill;
         HXWeakSelf
         _imageView.downloadNetworkImageComplete = ^{
             if (weakSelf.downloadNetworkImageComplete) {

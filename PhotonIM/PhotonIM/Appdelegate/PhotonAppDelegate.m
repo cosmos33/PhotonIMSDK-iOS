@@ -9,6 +9,7 @@
 #import "PhotonAppDelegate.h"
 #import <UserNotifications/UserNotifications.h>
 #import <pushsdk/MoPushManager.h>
+#import "UIWindow+PhotonExtensions.h"
 #import "PhotonContent.h"
 #import "PhotonAppLaunchManager.h"
 #import "PhotonMessageCenter.h"

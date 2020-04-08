@@ -33,7 +33,7 @@ typedef NS_ENUM(NSUInteger, HXPreviewContentViewType) {
 @property (copy, nonatomic) void (^ downloadNetworkImageComplete)(void);
 - (void)cancelRequest;
 - (void)requestHD;
-
+- (void)loadImage:(UIImage *)image;
 - (instancetype)initWithType:(HXPreviewContentViewType)type;
 @end
 

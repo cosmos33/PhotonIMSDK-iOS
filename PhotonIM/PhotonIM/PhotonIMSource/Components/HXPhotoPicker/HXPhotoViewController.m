@@ -32,7 +32,7 @@
 #import "HXAlbumlistView.h" 
 #import "NSArray+HXExtension.h"
 #import "HXVideoEditViewController.h"
-
+#import "UIColor+PhotonExtensions.h"
 @interface HXPhotoViewController ()
 <
 UICollectionViewDataSource,
@@ -2367,7 +2367,7 @@ HXVideoEditViewControllerDelegate
     self.bottomMaskLayer.frame = CGRectMake(0, self.hx_h - 25, self.hx_w, 25);
     self.selectBtn.hx_size = CGSizeMake(30, 30);
     self.selectBtn.hx_x = self.hx_w - self.selectBtn.hx_w;
-    self.selectBtn.hx_y = 0;
+    self.selectBtn.hx_y = self.hx_h - self.selectBtn.hx_h;
     self.selectMaskLayer.frame = self.bounds;
     self.iCloudMaskLayer.frame = self.bounds;
     self.iCloudIcon.hx_x = self.hx_w - 3 - self.iCloudIcon.hx_w;
@@ -2847,6 +2847,7 @@ HXVideoEditViewControllerDelegate
         themeColor = self.manager.configuration.themeColor;
         selectedTitleColor = self.manager.configuration.selectedTitleColor;
     }
+    themeColor = [UIColor whiteColor];
     
     [self.previewBtn setTitleColor:themeColor forState:UIControlStateNormal];
     [self.previewBtn setTitleColor:[themeColor colorWithAlphaComponent:0.5] forState:UIControlStateDisabled];
@@ -2879,7 +2880,7 @@ HXVideoEditViewControllerDelegate
     if (selectCount <= 0) {
         self.previewBtn.enabled = NO;
         self.doneBtn.enabled = NO;
-        [self.doneBtn setTitle:[NSBundle hx_localizedStringForKey:@"完成"] forState:UIControlStateNormal];
+        [self.doneBtn setTitle:[NSBundle hx_localizedStringForKey:@"发送"] forState:UIControlStateNormal];
     }else {
         self.previewBtn.enabled = YES;
         self.doneBtn.enabled = YES;
@@ -2887,16 +2888,16 @@ HXVideoEditViewControllerDelegate
             if (!self.manager.configuration.selectTogether) {
                 if (self.manager.selectedPhotoCount > 0) {
                     NSInteger maxCount = self.manager.configuration.photoMaxNum > 0 ? self.manager.configuration.photoMaxNum : self.manager.configuration.maxNum;
-                    [self.doneBtn setTitle:[NSString stringWithFormat:@"%@(%ld/%ld)",[NSBundle hx_localizedStringForKey:@"完成"],(long)selectCount,(long)maxCount] forState:UIControlStateNormal];
+                    [self.doneBtn setTitle:[NSString stringWithFormat:@"%@(%ld/%ld)",[NSBundle hx_localizedStringForKey:@"发送"],(long)selectCount,(long)maxCount] forState:UIControlStateNormal];
                 }else {
                     NSInteger maxCount = self.manager.configuration.videoMaxNum > 0 ? self.manager.configuration.videoMaxNum : self.manager.configuration.maxNum;
-                    [self.doneBtn setTitle:[NSString stringWithFormat:@"%@(%ld/%ld)",[NSBundle hx_localizedStringForKey:@"完成"],(long)selectCount,(long)maxCount] forState:UIControlStateNormal];
+                    [self.doneBtn setTitle:[NSString stringWithFormat:@"%@(%ld/%ld)",[NSBundle hx_localizedStringForKey:@"发送"],(long)selectCount,(long)maxCount] forState:UIControlStateNormal];
                 }
             }else {
-                [self.doneBtn setTitle:[NSString stringWithFormat:@"%@(%ld/%lu)",[NSBundle hx_localizedStringForKey:@"完成"],(long)selectCount,(unsigned long)self.manager.configuration.maxNum] forState:UIControlStateNormal];
+                [self.doneBtn setTitle:[NSString stringWithFormat:@"%@(%ld/%lu)",[NSBundle hx_localizedStringForKey:@"发送"],(long)selectCount,(unsigned long)self.manager.configuration.maxNum] forState:UIControlStateNormal];
             }
         }else {
-            [self.doneBtn setTitle:[NSString stringWithFormat:@"%@(%ld)",[NSBundle hx_localizedStringForKey:@"完成"],(long)selectCount] forState:UIControlStateNormal];
+            [self.doneBtn setTitle:[NSString stringWithFormat:@"%@(%ld)",[NSBundle hx_localizedStringForKey:@"发送"],(long)selectCount] forState:UIControlStateNormal];
         }
     }
     UIColor *themeColor = [HXPhotoCommon photoCommon].isDark ? [UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1] : self.manager.configuration.themeColor;
@@ -2973,6 +2974,7 @@ HXVideoEditViewControllerDelegate
     }else {
         self.originalBtn.frame = CGRectMake(CGRectGetMaxX(self.editBtn.frame) + 10, 0, 30, 50);
     }
+    self.originalBtn.frame = CGRectMake((self.width-30)/2.0, 0, 30, 50);
     self.originalBtn.hx_w = self.originalBtn.titleLabel.hx_getTextWidth + 30;
     if (CGRectGetMaxX(self.originalBtn.frame) > self.doneBtn.hx_x - 25) {
         CGFloat w = self.doneBtn.hx_x - 5 - self.originalBtn.hx_x;
@@ -3054,11 +3056,12 @@ HXVideoEditViewControllerDelegate
 - (UIButton *)doneBtn {
     if (!_doneBtn) {
         _doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_doneBtn setTitle:[NSBundle hx_localizedStringForKey:@"完成"] forState:UIControlStateNormal];
-        _doneBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-        [_doneBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_doneBtn setTitleColor:[[UIColor whiteColor] colorWithAlphaComponent:0.5] forState:UIControlStateDisabled];
+        [_doneBtn setTitle:[NSBundle hx_localizedStringForKey:@"发送"] forState:UIControlStateNormal];
+        [_doneBtn setTitleColor:[UIColor colorWithHex:0x000000] forState:UIControlStateNormal];
+        [_doneBtn setBackgroundColor:[[UIColor colorWithHex:0xFFFFFF] colorWithAlphaComponent:0.5] forState:UIControlStateNormal];
+        _doneBtn.titleLabel.font = [UIFont systemFontOfSize:16];
         _doneBtn.layer.cornerRadius = 3;
+        _doneBtn.clipsToBounds = YES;
         _doneBtn.enabled = NO;
         [_doneBtn addTarget:self action:@selector(didDoneBtnClick) forControlEvents:UIControlEventTouchUpInside];
     }

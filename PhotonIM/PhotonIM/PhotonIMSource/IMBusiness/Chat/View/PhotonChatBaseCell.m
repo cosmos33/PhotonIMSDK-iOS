@@ -9,6 +9,8 @@
 #import "PhotonChatBaseCell.h"
 #import "PhotonMessageCenter.h"
 #import <SDWebImage/UIButton+WebCache.h>
+#import "PhotonCircleProgressView.h"
+#import "PhotonCircleLoadingView.h"
 @interface PhotonChatBaseCell()
 /**
  头像
@@ -42,7 +44,11 @@
 
 @property (nonatomic, strong, nullable)UIActivityIndicatorView *indicatorView;
 
+@property (nonatomic, strong, nullable)UIView *maskView;
 
+@property (nonatomic, strong, nullable)PhotonCircleProgressView *progressView;
+
+@property (nonatomic, strong, nullable)PhotonCircleLoadingView *loadingView;
 @end
 
 @implementation PhotonChatBaseCell
@@ -57,7 +63,9 @@
         [self.contentView addSubview:self.tipLable];
         [self.contentView addSubview:self.msgStatusLable];
         [self.contentView addSubview:self.timeLabel];
-       
+        
+        [self.contentBackgroundView addSubview:self.maskView];
+        [self.maskView addSubview:self.progressView];
         
     }
     return self;
@@ -161,6 +169,8 @@
     }
     CGRect contentBackgroundViewFrame = CGRectMake(contentBackgroundViewLeft, contentBackgroundViewTop, contentBackgroundViewWidth, contentBackgroundViewHeight);
     self.contentBackgroundView.frame = contentBackgroundViewFrame;
+    
+  
 }
 
 - (void)subview_layout{
@@ -230,6 +240,18 @@
         self.tipLable.frame = CGRectZero;
         
     }
+    
+    self.maskView.frame = CGRectMake(0, 0, self.contentBackgroundView.width, self.contentBackgroundView.height);
+    
+//    CGRect progressViewFrame = self.progressView.frame;
+//    CGFloat progressHeight = self.maskView.height/2.0;
+//    CGFloat progressWidth = progressHeight;
+//    progressViewFrame.size =CGSizeMake(progressWidth, progressHeight);
+//    CGFloat y = (self.maskView.height - progressHeight)/2.0;
+//    CGFloat x= (self.maskView.width - progressWidth)/2.0;
+//    progressViewFrame.origin = CGPointMake(x, y);
+//    self.progressView.frame = progressViewFrame;
+    self.progressView.center = CGPointMake(self.maskView.width / 2, self.maskView.height / 2);
 }
 
 - (void)prepareForReuse{
@@ -237,6 +259,8 @@
     self.tipLable.text = nil;
     self.msgStatusLable.text = nil;
     self.timeLabel.text = nil;
+    self.maskView.hidden = YES;
+    self.progressView.hidden = YES;
 }
 
 + (CGFloat)tableView:(UITableView *)tableView rowHeightForObject:(id)object{
@@ -348,6 +372,15 @@
     return _msgStatusLable;
 }
 
+- (UIView *)maskView{
+    if (!_maskView) {
+        _maskView = [[UIView alloc] init];
+        _maskView.hidden = YES;
+        _maskView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.0];
+    }
+    return _maskView;
+}
+
 - (UIActivityIndicatorView *)indicatorView{
     if (!_indicatorView) {
         _indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -355,7 +388,39 @@
     return _indicatorView;
 }
 
+- (PhotonCircleProgressView *)progressView{
+    if (!_progressView) {
+        _progressView = [[PhotonCircleProgressView alloc] init];
+        _progressView.hidden = YES;
+    }
+    return _progressView;
+}
+- (void)changeProgressValue:(CGFloat)value
+{
+    if(value >= 1.0){
+        self.maskView.hidden = YES;
+        self.progressView.hidden = YES;
+    }else{
+        self.maskView.hidden = NO;
+        self.progressView.hidden = NO;
+    }
+   
+    self.progressView.progress = value;
+    if (value >= 1) {
+      self.maskView.hidden = YES;
+             self.progressView.hidden = YES;
+    }
 
+}
+
+
+- (PhotonCircleLoadingView *)loadingView{
+    if (!_loadingView) {
+        _loadingView = [[PhotonCircleLoadingView alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
+        _loadingView.backgroundColor = [UIColor clearColor];
+    }
+    return _loadingView;
+}
 #pragma mark -------- Identifier ---------
 + (NSString *) cellIdentifier{
     return @"PhotonBaseChatCell";

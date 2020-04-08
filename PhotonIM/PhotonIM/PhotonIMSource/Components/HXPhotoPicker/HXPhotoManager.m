@@ -556,7 +556,7 @@
     if (type == HXPhotoLanguageTypeSys) {
         albumName = collection.localizedTitle;
     }else {
-        if ([collection.localizedTitle isEqualToString:@"相机胶卷"]) {
+        if ([collection.localizedTitle isEqualToString:@"所有照片"]) {
             return collection.localizedTitle;
         }else if ([collection.localizedTitle isEqualToString:@"Camera Roll"]) {
             return [NSBundle hx_localizedStringForKey:HXAlbumCameraRoll];

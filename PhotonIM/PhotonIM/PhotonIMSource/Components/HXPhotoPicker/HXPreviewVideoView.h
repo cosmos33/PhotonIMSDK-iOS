@@ -39,6 +39,7 @@ typedef NS_ENUM(NSUInteger, HXPreviewVideoSliderType) {
 
 - (void)showOtherView;
 - (void)hideOtherView:(BOOL)animatoin;
+
 @end
 
 @interface HXPreviewVideoSliderView : UIView

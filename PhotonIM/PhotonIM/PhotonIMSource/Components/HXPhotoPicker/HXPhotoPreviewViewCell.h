@@ -43,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) HXPreviewContentView *previewContentView;
 - (UIImage *)image;
+
+- (void)setImage:(UIImage *)image;
 @end
 
 NS_ASSUME_NONNULL_END

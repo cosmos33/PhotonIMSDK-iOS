@@ -507,7 +507,7 @@ HXPhotoPreviewViewController;
 @property (assign, nonatomic) BOOL saveSystemAblum;
 
 /// 拍摄的照片/视频保存到指定相册的名称  默认 BundleName
-/// 需9.0以上系统才可以保存到自定义相册 , 以下的系统只保存到相机胶卷...
+/// 需9.0以上系统才可以保存到自定义相册 , 以下的系统只保存到所有照片...
 @property (copy, nonatomic) NSString *customAlbumName;
 
 /// 视频能选择的最大秒数  -  默认 3分钟/180秒

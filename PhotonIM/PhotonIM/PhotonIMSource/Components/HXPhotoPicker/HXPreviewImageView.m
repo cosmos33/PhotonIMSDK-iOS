@@ -13,6 +13,8 @@
 #import "HXCircleProgressView.h"
 #import "UIView+HXExtension.h"
 
+#import <PhotonIMSDK/PhotonIMSDK.h>
+
 #if __has_include(<SDWebImage/UIImageView+WebCache.h>)
 #import <SDWebImage/UIImageView+WebCache.h>
 #elif __has_include("UIImageView+WebCache.h")
@@ -42,7 +44,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-#if HasYYKitOrWebImage
+#if HasYYKitOrWebImage || HasPhotonIMSDK
         [self addSubview:self.animatedImageView];
 #else
         [self addSubview:self.imageView];
@@ -51,9 +53,16 @@
     }
     return self;
 }
+- (void)setImage:(UIImage *)image{
+#if HasYYKitOrWebImage || HasPhotonIMSDK
+    self.animatedImageView.image = image;
+#else
+    self.imageView.image = image;
+#endif
+}
 - (UIImage *)image {
     UIImage *image;
-#if HasYYKitOrWebImage
+#if HasYYKitOrWebImage || HasPhotonIMSDK
             if (self.model.type == HXPhotoModelMediaTypePhotoGif) {
                 if (self.animatedImageView.image.images.count > 0) {
                     image = self.animatedImageView.image.images.firstObject;
@@ -78,13 +87,86 @@
 }
 - (void)setModel:(HXPhotoModel *)model {
     _model = model;
-HXWeakSelf
+    HXWeakSelf
+    
+    if (model.type == HXPhotoModelMediaTypeCameraVideo) {
+        self.progressView.progress = 1;
+        self.progressView.hidden = YES;
+        self.model.downloadComplete = YES;
+        self.animatedImageView.image = model.previewPhoto;
+        if (self.downloadICloudAssetComplete) {
+            self.downloadICloudAssetComplete();
+        }
+        if (self.downloadNetworkImageComplete) {
+            self.downloadNetworkImageComplete();
+        }
+    }
+
     if (model.type == HXPhotoModelMediaTypeCameraPhoto || model.type == HXPhotoModelMediaTypeCameraVideo) {
         if (model.networkPhotoUrl) {
             self.progressView.hidden = model.downloadComplete;
             CGFloat progress = (CGFloat)model.receivedSize / model.expectedSize;
             self.progressView.progress = progress;
-#if HasYYKitOrWebImage
+#if HasPhotonIMSDK
+            if (model.userInfo) {
+                PhotonIMDownloadFileQuality fileQuality = PhotonIMDownloadFileQualityHight;
+                if (model.cameraPhotoType == HXPhotoModelMediaTypeCameraPhotoTypeLocal) {
+                    fileQuality = PhotonIMDownloadFileQualityOrigin;
+                }
+                NSString *cacheKey = model.fileLocalURL.lastPathComponent;
+                UIImage *image = [[SDWebImageManager sharedManager].imageCache imageFromCacheForKey:cacheKey];
+                if (image) {
+                    self.progressView.progress = 1;
+                    self.progressView.hidden = YES;
+                    self.model.downloadComplete = YES;
+                    self.animatedImageView.image = image;
+                    if (self.downloadICloudAssetComplete) {
+                        self.downloadICloudAssetComplete();
+                    }
+                    if (self.downloadNetworkImageComplete) {
+                        self.downloadNetworkImageComplete();
+                    }
+                }else{
+                    UIImage *image = [UIImage imageWithContentsOfFile:model.fileLocalURL.path];
+                    if (image) {
+                        self.progressView.progress = 1;
+                        self.progressView.hidden = YES;
+                        self.model.downloadComplete = YES;
+                        self.animatedImageView.image = image;
+                        if (self.downloadICloudAssetComplete) {
+                            self.downloadICloudAssetComplete();
+                        }
+                        if (self.downloadNetworkImageComplete) {
+                            self.downloadNetworkImageComplete();
+                        }
+                         [[SDWebImageManager sharedManager].imageCache storeImage:image forKey:model.fileLocalURL.lastPathComponent toDisk:NO completion:nil];
+                    }
+                    [[PhotonIMClient sharedClient] getLocalFileWithMessage:model.userInfo fileQuality:fileQuality progress:^(NSProgress * _Nonnull downloadProgress) {
+                         CGFloat pro = (CGFloat)downloadProgress.completedUnitCount / downloadProgress.totalUnitCount;
+                         weakSelf.progressView.progress = pro;
+                    } completion:^(NSString * _Nullable filePath, NSError * _Nullable error) {
+                        if ((!filePath || filePath.length == 0) || error) {
+                             [weakSelf.progressView showError];
+                        }else{
+                            weakSelf.progressView.progress = 1;
+                            weakSelf.progressView.hidden = YES;
+                            weakSelf.model.downloadComplete = YES;
+                            if (weakSelf.downloadICloudAssetComplete) {
+                                weakSelf.downloadICloudAssetComplete();
+                            }
+                            if (weakSelf.downloadNetworkImageComplete) {
+                                weakSelf.downloadNetworkImageComplete();
+                            }
+                            UIImage *image = [UIImage imageWithContentsOfFile:filePath];
+                            weakSelf.animatedImageView.image = image;
+                            model.fileLocalURL = [NSURL fileURLWithPath:filePath];
+                            [[SDWebImageManager sharedManager].imageCache storeImage:image forKey:filePath.lastPathComponent toDisk:NO completion:nil];
+                        }
+                    }];
+                }
+                return;
+            }
+#elif HasYYKitOrWebImage
             [self.animatedImageView hx_setImageWithModel:model progress:^(CGFloat progress, HXPhotoModel *model) {
                 if (weakSelf.model == model) {
                     weakSelf.progressView.progress = progress;
@@ -133,7 +215,7 @@ HXWeakSelf
             }];
 #endif
         }else {
-#if HasYYKitOrWebImage
+#if HasYYKitOrWebImage || HasPhotonIMSDK
             self.animatedImageView.image = model.thumbPhoto;
 #else
             self.imageView.image = model.thumbPhoto;
@@ -143,7 +225,7 @@ HXWeakSelf
     }else {
         if (model.type == HXPhotoModelMediaTypeLivePhoto) {
             if (model.tempImage) {
-#if HasYYKitOrWebImage
+#if HasYYKitOrWebImage || HasPhotonIMSDK
                 self.animatedImageView.image = model.tempImage;
 #else
                 self.imageView.image = model.tempImage;
@@ -152,7 +234,7 @@ HXWeakSelf
             }else {
                 self.requestID = [model requestThumbImageWithSize:CGSizeMake(self.hx_w * 0.5, self.hx_h * 0.5) completion:^(UIImage *image, HXPhotoModel *model, NSDictionary *info) {
                     if (weakSelf.model != model) return;
-#if HasYYKitOrWebImage
+#if HasYYKitOrWebImage || HasPhotonIMSDK
                     weakSelf.animatedImageView.image = image;
 #else
                     weakSelf.imageView.image = image;
@@ -161,7 +243,7 @@ HXWeakSelf
             }
         }else {
             if (model.previewPhoto) {
-#if HasYYKitOrWebImage
+#if HasYYKitOrWebImage || HasPhotonIMSDK
                 self.animatedImageView.image = model.previewPhoto;
 #else
                 self.imageView.image = model.previewPhoto;
@@ -169,7 +251,7 @@ HXWeakSelf
                 model.tempImage = nil;
             }else {
                 if (model.tempImage) {
-#if HasYYKitOrWebImage
+#if HasYYKitOrWebImage || HasPhotonIMSDK
                     self.animatedImageView.image = model.tempImage;
 #else
                     self.imageView.image = model.tempImage;
@@ -185,7 +267,7 @@ HXWeakSelf
                     }
                     self.requestID =[model requestThumbImageWithSize:requestSize completion:^(UIImage *image, HXPhotoModel *model, NSDictionary *info) {
                         if (weakSelf.model != model) return;
-#if HasYYKitOrWebImage
+#if HasYYKitOrWebImage || HasPhotonIMSDK
                         weakSelf.animatedImageView.image = image;
 #else
                         weakSelf.imageView.image = image;
@@ -246,7 +328,7 @@ HXWeakSelf
             transition.duration = 0.2f;
             transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
             transition.type = kCATransitionFade;
-#if HasYYKitOrWebImage
+#if HasYYKitOrWebImage || HasPhotonIMSDK
             [weakSelf.animatedImageView.layer removeAllAnimations];
             weakSelf.animatedImageView.image = image;
             [weakSelf.animatedImageView.layer addAnimation:transition forKey:nil];
@@ -261,7 +343,7 @@ HXWeakSelf
         }];
     }else if (self.model.type == HXPhotoModelMediaTypePhotoGif) {
         if (self.gifImage) {
-#if HasYYKitOrWebImage
+#if HasYYKitOrWebImage || HasPhotonIMSDK
             if (self.animatedImageView.image != self.gifImage) {
                 self.animatedImageView.image = self.gifImage;
             }
@@ -287,7 +369,7 @@ HXWeakSelf
                 if (weakSelf.model != model) return;
                 [weakSelf downloadICloudAssetComplete];
                 weakSelf.progressView.hidden = YES;
-#if HasYYKitOrWebImage
+#if HasYYKitOrWebImage || HasPhotonIMSDK
                 YYImage *gifImage = [YYImage imageWithData:imageData];
                 weakSelf.animatedImageView.image = gifImage;
                 weakSelf.gifImage = gifImage;
@@ -316,7 +398,7 @@ HXWeakSelf
         self.requestID = -1;
     }
     if (self.model.type == HXPhotoModelMediaTypePhoto) {
-#if HasYYWebImage
+#if HasYYWebImage || HasPhotonIMSDK
         [self.animatedImageView yy_cancelCurrentImageRequest];
 #elif HasYYKit
         [self.animatedImageView cancelCurrentImageRequest];
@@ -325,7 +407,7 @@ HXWeakSelf
 #endif
     }else if (self.model.type == HXPhotoModelMediaTypePhotoGif) {
         if (!self.stopCancel) {
-#if HasYYKitOrWebImage
+#if HasYYKitOrWebImage || HasPhotonIMSDK
             self.animatedImageView.currentAnimatedImageIndex = 0;
 #else
             self.imageView.image = self.gifFirstFrame;
@@ -338,7 +420,7 @@ HXWeakSelf
 }
 - (void)layoutSubviews {
     [super layoutSubviews];
-#if HasYYKitOrWebImage
+#if HasYYKitOrWebImage || HasPhotonIMSDK
     if (!CGRectEqualToRect(self.animatedImageView.frame, self.bounds)) {
         self.animatedImageView.frame = self.bounds;
     }
@@ -350,12 +432,14 @@ HXWeakSelf
     self.progressView.hx_centerX = self.hx_w / 2;
     self.progressView.hx_centerY = self.hx_h / 2;
 }
-#if HasYYKitOrWebImage
+#if HasYYKitOrWebImage || HasPhotonIMSDK
 - (YYAnimatedImageView *)animatedImageView {
     if (!_animatedImageView) {
         _animatedImageView = [[YYAnimatedImageView alloc] init];
         _animatedImageView.clipsToBounds = YES;
-        _animatedImageView.contentMode = UIViewContentModeScaleAspectFill;
+        _animatedImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        _animatedImageView.contentScaleFactor = [UIScreen mainScreen].scale;
+        _animatedImageView.contentMode =  UIViewContentModeScaleAspectFit;
     }
     return _animatedImageView;
 }
