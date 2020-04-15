@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PhotonBaseUITableView : UITableView
+- (void)scrollToMiddleScroll:(NSIndexPath *)indexPath;
 - (void)reloadDataWithoutScrollToTop;
 - (void)scrollToBottomWithAnimation:(BOOL)animation;
 @end

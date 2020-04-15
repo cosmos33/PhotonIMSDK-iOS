@@ -9,7 +9,7 @@
 #import "PhotonMenuView.h"
 #import "PhotonMessageCenter.h"
 #import <objc/runtime.h>
-#import "PhotonBaseChatItem.h"
+#import "PhotonChatBaseItem.h"
 @interface PhotonMenuView()
 @property(nonatomic, strong, nullable) UIMenuController *menuController;
 @end
@@ -52,17 +52,17 @@
     PhontonMenuItem *reDrawItem = [[PhontonMenuItem alloc] initWithTitle:@"撤回" action:@selector(menuReDraw:)];
     PhontonMenuItem *deleteItem = [[PhontonMenuItem alloc] initWithTitle:@"删除" action:@selector(menuDelete:)];
     PhontonMenuItem *transpondItem = [[PhontonMenuItem alloc] initWithTitle:@"转发" action:@selector(menuTranspond:)];
-    if([self.obj isKindOfClass:[PhotonBaseChatItem class]]){
-        PhotonBaseChatItem *item = (PhotonBaseChatItem *)self.obj;
+    if([self.obj isKindOfClass:[PhotonChatBaseItem class]]){
+        PhotonChatBaseItem *item = (PhotonChatBaseItem *)self.obj;
         if (item.fromType == PhotonChatMessageFromSelf) {
             if ([[item userInfo] messageType] == PhotonIMMessageTypeText) {
-                if ([item canWithDrawMsg]) {
+                if ([item canWithDrawMsg] && [[item userInfo] messageStatus] != PhotonIMMessageStatusFailed) {
                      [self.menuController setMenuItems:@[copyItem,transpondItem,reDrawItem,deleteItem]];
                 }else{
                      [self.menuController setMenuItems:@[copyItem,transpondItem,deleteItem]];
                 }
             }else{
-                if ([item canWithDrawMsg]) {
+                if ([item canWithDrawMsg] && [[item userInfo] messageStatus] != PhotonIMMessageStatusFailed) {
                      [self.menuController setMenuItems:@[transpondItem,reDrawItem,deleteItem]];
                 }else{
                      [self.menuController setMenuItems:@[transpondItem,deleteItem]];

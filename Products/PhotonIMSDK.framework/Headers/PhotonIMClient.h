@@ -12,6 +12,7 @@
 #import "PhotonIMMessage.h"
 #import "PhotonIMConversation.h"
 #import "PhotonIMError.h"
+
 NS_ASSUME_NONNULL_BEGIN
 @interface PhotonIMClient : NSObject
 /**
@@ -39,6 +40,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+/**
+设置IM服务走海外还是国内,在注册appid之前调用
+*/
+- (void)setServerType:(PhotonIMServerType)serverType;
 
 #pragma mark ---- 注册IMClient -----
 /**
@@ -47,6 +52,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)registerIMClientWithAppid:(NSString *)appid;
 
+/// 支持群组功能
+- (void)supportGroup;
 /**
  设置使用db的模式
  
@@ -112,6 +119,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param block <#block description#>
  */
 - (void)runInPhotonIMDBQueue:(dispatch_block_t)block;
+
+
+/// 此方法可以设置是否使im在后台一直处于连接中，一定要谨慎使用。
+/// 在确保app进到后台一直保活的前提下设置keep为YES。处于非保活下设置keep为NO
+/// 使用场景一般是后台播放音频，后台定位等场景。进到此场景调用设置keep为YES，退回此场景设置Keep为NO.
+/// @param keep 默认是NO,因切后台在不开启后台运行模式的情况下app休眠的问题，im默认进到后台会断开处理。
+- (void)keepConnectedOnBackground:(BOOL)keep;
+
 @end
 
 NS_ASSUME_NONNULL_END

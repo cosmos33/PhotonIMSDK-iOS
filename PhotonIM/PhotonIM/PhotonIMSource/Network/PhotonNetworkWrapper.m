@@ -9,7 +9,7 @@
 #import "PhotonNetworkWrapper.h"
 #import "PhotonMacros.h"
 @interface PhotonNetworkWrapper()
-@property(nonatomic, strong) NSMutableArray *requestArray;
+@property(nonatomic, strong) PhotonSafeMutableArray *requestArray;
 @end
 
 @implementation PhotonNetworkWrapper
@@ -17,7 +17,7 @@
 {
     self = [super init];
     if (self) {
-        self.requestArray = [NSMutableArray arrayWithCapacity:10];
+        _requestArray = [[PhotonSafeMutableArray alloc] init];
     }
     return self;
 }
@@ -59,7 +59,7 @@
 }
 - (void)removeRequestFromArray:(id<PhotonNetworkProtocol>)pRequest {
     int inx = -1;
-    for (id<PhotonNetworkProtocol> req in _requestArray) {
+    for (id<PhotonNetworkProtocol> req in [_requestArray allObjects]) {
         inx++;
         if (req == pRequest) {
             [req cancel];
@@ -74,7 +74,7 @@
     if (!_requestArray) {
         return;
     }
-    for (id<PhotonNetworkProtocol> req in _requestArray) {
+    for (id<PhotonNetworkProtocol> req in [_requestArray allObjects]) {
         [req cancel];
         [req setDelegate:nil];
     }

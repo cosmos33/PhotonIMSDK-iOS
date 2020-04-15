@@ -7,12 +7,16 @@
 //
 
 #import "PhotonContent.h"
+#import "PhotonAPIMacros.h"
 #import <pushsdk/MoPushManager.h>
 #import "PhotonDBUserStore.h"
 #import "PhotonMessageCenter.h"
 #import "PhotonAppLaunchManager.h"
+#import <MMKV/MMKV.h>
 @interface PhotonContent()
 @property(nonatomic, strong, nullable)PhotonUser *currentUser;
+@property(nonatomic, strong, nullable)PhotonLoadDataSetModel *setModel;
+@property(nonatomic, assign)PhotonIMServerType srType;
 @end
 @implementation PhotonContent
 + (instancetype)sharedInstance{
@@ -27,6 +31,7 @@
 {
     self = [super init];
     if (self) {
+        _setModel = [[PhotonLoadDataSetModel alloc] init];
         _currentUser = [[PhotonUser alloc] init];
        id user = [[NSUserDefaults standardUserDefaults] objectForKey:@"photon_current_user"];
         if ([user isKindOfClass:[NSDictionary class]]) {
@@ -55,6 +60,10 @@
 }
 + (PhotonUser *)currentUser{
     return [PhotonContent sharedInstance].currentUser;
+}
+
++ (PhotonLoadDataSetModel *)currentSettingModel{
+    return [PhotonContent sharedInstance].setModel;
 }
 
 + (void)persistenceCurrentUser{
@@ -93,18 +102,117 @@
     [userDB addFriend:user forUid:[PhotonContent currentUser].userID];
 }
 
+// 查找当前用户的所有所在群组
++ (NSArray<NSString *> *)findAllGroups{
+    PhotonDBUserStore *userDB = [[PhotonDBUserStore alloc] init];
+    NSString *tableName = [NSString stringWithFormat:@"user_group_%@",[PhotonContent currentUser].userID];
+    return [userDB findAllGroupWithTableName:tableName];
+}
+// 当前用户移除群组
++ (BOOL)deleteGroupByGid:(nullable NSString *)gid{
+    PhotonDBUserStore *userDB = [[PhotonDBUserStore alloc] init];
+    NSString *tableName = [NSString stringWithFormat:@"user_group_%@",[PhotonContent currentUser].userID];
+    return [userDB deleteGroupByGid:gid tableName:tableName];
+}
+// 当前用户加入群组
++ (BOOL)addGroupToCurrentUserByGid:(nullable NSString *)gid{
+    PhotonDBUserStore *userDB = [[PhotonDBUserStore alloc] init];
+    NSString *tableName = [NSString stringWithFormat:@"user_group_%@",[PhotonContent currentUser].userID];
+    return [userDB addGroupWithGid:gid tableName:tableName];
+}
+
++ (BOOL)deleteAllGroups{
+    PhotonDBUserStore *userDB = [[PhotonDBUserStore alloc] init];
+    NSString *tableName = [NSString stringWithFormat:@"user_group_%@",[PhotonContent currentUser].userID];
+    return [userDB deleteAllGroups:tableName];
+}
+
++ (NSArray<PhotonUser *> *)findAllUsersWithGroupId:(NSString *)gid{
+    PhotonDBUserStore *userDB = [[PhotonDBUserStore alloc] init];
+    NSString *tableName = [NSString stringWithFormat:@"group_user_%@",gid];
+    return [userDB findAllUsersWithGroupTableName:tableName];
+}
++ (PhotonUser *)findUserWithGroupId:(NSString *)gid uid:(NSString *)uid;{
+    PhotonDBUserStore *userDB = [[PhotonDBUserStore alloc] init];
+    NSString *tableName = [NSString stringWithFormat:@"group_user_%@",gid];
+    return [userDB findUserWithGroupTableName:tableName uid:uid];
+}
++ (BOOL)addUserToGroupWithUser:(nullable PhotonUser *)user gid:(NSString *)gid{
+    PhotonDBUserStore *userDB = [[PhotonDBUserStore alloc] init];
+    NSString *tableName = [NSString stringWithFormat:@"group_user_%@",gid];
+    return [userDB addUserToGroupWithUser:user tableName:tableName];
+}
++ (BOOL)deleteUserFromGroupWithUid:(nullable NSString *)uid gid:(NSString *)gid{
+    PhotonDBUserStore *userDB = [[PhotonDBUserStore alloc] init];
+    NSString *tableName = [NSString stringWithFormat:@"group_user_%@",gid];
+     return [userDB deleteUserFromGroupWithUid:uid tableName:tableName];
+}
+
++ (BOOL)deleteaAllUserFromGroupWithGid:(NSString *)gid{
+    PhotonDBUserStore *userDB = [[PhotonDBUserStore alloc] init];
+    NSString *tableName = [NSString stringWithFormat:@"group_user_%@",gid];
+    return [userDB deleteAllUserFromGroupWithTableName:tableName];
+}
+
+
+
+
 + (void)logout{
     [PhotonUtil runMainThread:^{
-         [MoPushManager unAlias:[PhotonContent currentUser].userID];
+        [PhotonDBManager closeDB];
+        [MoPushManager unAlias:[PhotonContent currentUser].userID];
         [self clearCurrentUser];
         [PhotonAppLaunchManager launchInWindow];
     }];
    
 }
 
-+ (void)login{
++ (void)autoLogout{
     [PhotonUtil runMainThread:^{
-        [MoPushManager registerWithAlias:[PhotonContent currentUser].userID];
+        [PhotonDBManager closeDB];
+        [MoPushManager unAlias:[PhotonContent currentUser].userID];
+        [self clearCurrentUser];
     }];
+   
+}
+
++ (void)login{
+   
+    [PhotonUtil runMainThread:^{
+         [PhotonDBManager openDB];
+        [MoPushManager registerWithAlias:[PhotonContent currentUser].userID];
+        [[PhotonContent currentUser] loadFriendProfile];
+    }];
+}
+
++ (void)setServerSwitch:(PhotonIMServerType)serverType{
+    [[PhotonContent sharedInstance] setServerSwitch:serverType];
+}
+
+- (void)setServerSwitch:(PhotonIMServerType)serverType{
+   [[MMKV defaultMMKV] setInt32:(int32_t)serverType forKey:@"PhotonIMServerType"];
+    if (serverType != _srType) {
+        _srType = serverType;
+    }
+}
++ (PhotonIMServerType)getServerSwitch{
+    NSInteger serverType = [[MMKV defaultMMKV] getInt32ForKey:@"PhotonIMServerType"];
+    return (PhotonIMServerType)serverType;
+}
+
++ (NSString *)baseUrlString{
+    PhotonIMServerType type = [self getServerSwitch];
+    NSString *baseUrl = @"";
+    switch (type) {
+        case PhotonIMServerTypeInland:
+            baseUrl = PHOTON_BASE_URL;
+            break;
+        case PhotonIMServerTypeOverseas:
+            baseUrl = PHOTON_BASE_HW_URL;
+            break;
+        default:
+            break;
+    }
+    return baseUrl;
 }
 @end

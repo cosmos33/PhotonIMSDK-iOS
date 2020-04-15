@@ -9,7 +9,6 @@
 #import "PhotonNetworkRequest.h"
 #import "PhotonMacros.h"
 #import "AFHTTPSessionManager.h"
-#import "PhotonAPIMacros.h"
 NSString *const PhotonRequestMethodGet = @"GET";
 NSString *const PhotonRequestMethodPost = @"POST";
 NSString *const PhotonRequestMethodPut = @"PUT";
@@ -59,6 +58,10 @@ static AFHTTPSessionManager *manager;
     return self;
 }
 
+- (void)dealloc{
+    NSLog(@"PhotonNetworkRequest dealoc");
+}
+
 - (instancetype)initWithUrl:(NSString *)urlString andParamer:(NSDictionary *)paramter{
     self =  [super init];
     if (self) {
@@ -81,7 +84,7 @@ static AFHTTPSessionManager *manager;
     [self.parameters setValue:value forKey:key];
 }
 + (instancetype)initWithUrl:(NSString *)urlString andParamer:(NSDictionary *)paramter{
-    return [[self alloc] initWithUrl:urlString andParamer:paramter];
+    return [[PhotonNetworkRequest alloc] initWithUrl:urlString andParamer:paramter];
 }
 
 - (void)setCompletionBlock:(PhotonNetworkCompletionBlock)aCompletionBlock{
@@ -257,7 +260,7 @@ static AFHTTPSessionManager *manager;
             NSString *value = [self.requestHeaders objectForKey:key];
             [request setValue:value forHTTPHeaderField:key];
         }
-        _uploadTask=[_manager uploadTaskWithStreamedRequest:request progress:^(NSProgress * _Nonnull uploadProgress) {
+        _uploadTask=[self.manager uploadTaskWithStreamedRequest:request progress:^(NSProgress * _Nonnull uploadProgress) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [instance loadPorgress:uploadProgress];
             });
@@ -294,7 +297,7 @@ static AFHTTPSessionManager *manager;
         if (self.mutifileItems.count <= 0) {
             return;
         }
-        NSMutableURLRequest *request=[[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:self.urlString  parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        NSMutableURLRequest *request=[[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:self.urlString  parameters:self.parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
             for (PhotonUploadFileInfo *fileinfo in self.mutifileItems) {
                 [formData appendPartWithFileURL:[NSURL fileURLWithPath:fileinfo.fileURLString] name:fileinfo.name fileName:fileinfo.fileName mimeType:fileinfo.mimeType error:nil];
             }
@@ -304,7 +307,7 @@ static AFHTTPSessionManager *manager;
             NSString *value = [self.requestHeaders objectForKey:key];
             [request setValue:value forHTTPHeaderField:key];
         }
-        _uploadTask=[_manager uploadTaskWithStreamedRequest:request progress:^(NSProgress * _Nonnull uploadProgress) {
+        _uploadTask=[self.manager uploadTaskWithStreamedRequest:request progress:^(NSProgress * _Nonnull uploadProgress) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [instance loadPorgress:uploadProgress];
             });
@@ -316,7 +319,10 @@ static AFHTTPSessionManager *manager;
             }
         }];
         
+        [request setAllHTTPHeaderFields:self.requestHeaders];
+        
     }
+    
     [_uploadTask resume];
     
 }

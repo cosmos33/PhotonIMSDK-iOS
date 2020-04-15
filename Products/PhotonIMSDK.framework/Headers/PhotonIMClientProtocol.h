@@ -10,6 +10,7 @@
 #define PhotonIMClientProtocol_h
 #import "PhotonIMEnum.h"
 #import "PhotonIMError.h"
+NS_ASSUME_NONNULL_BEGIN
 @class PhotonIMMessage;
 @protocol PhotonIMClientProtocol <NSObject>
 
@@ -108,10 +109,25 @@
 - (void)imClient:(id)client didReceiveReadMesage:(PhotonIMMessage *)message;
 
 
+/**
+ 收到消息的删除消息
+ 
+ @param client
+ @param chatType 删除的消息所属的会话类型
+ @param chatWith 删除的消息所属的会话id
+ @param delMsgIds 删除消息的msgid
+ @userInfo 预留属性字段
+ */
+- (void)imClient:(id)client
+                didReceiveDeleteMesage:(PhotonIMChatType)chatType
+                chatWith:(NSString *)chatWith
+                delMsgIds:(NSArray<NSString *> *)delMsgIds
+                userInfo:(nullable NSDictionary<NSString *,id>  *)userInfo;
+
 #pragma mark ======== 其他 ===========
 /**
 会话信息有变化时回调
- 
+ dev_2.0.1
 @param envent 会话的操作类型（创建，删除，更新）
 @param chatType 会话类型
 @param chatWith 会话id
@@ -125,7 +141,7 @@
 - (void)networkChange:(PhotonIMNetworkStatus)networkStatus;
 
 /**
- 收到消息已读的消息
+ 重发程序kill时的消息，消息发出后监听此回执
  
  @param client client
  @param msgID 消息的id
@@ -138,5 +154,16 @@
         chatType:(PhotonIMChatType)chatType
         chatWith:(NSString * _Nullable)chatWith
         error:( PhotonIMError* _Nullable)error;
+
+
+/*
+ 未发送成功的消息在被重新发送前触发，业务端实现返回枚举值
+ 
+ PhotonIMForbidenAutoResendTypeNO // 允许消息重发，此为默认值
+ PhotonIMForbidenAutoResendTypeLogin // 禁止每次登录成功后消息的重发,
+ PhotonIMForbidenAutoResendTypeColdStart = 3 // 仅在app冷启登录时消息重新发送
+ */
+- (PhotonIMForbidenAutoResendType)messageWillBeAutoResend;
 @end
 #endif /* PhotonIMClientProtocol_h */
+NS_ASSUME_NONNULL_END

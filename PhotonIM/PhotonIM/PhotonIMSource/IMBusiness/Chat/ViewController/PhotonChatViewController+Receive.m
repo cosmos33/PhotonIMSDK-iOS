@@ -18,13 +18,10 @@
  @param client client im sdk client 句柄
  @param message 消息
  */
-- (void)imClient:(id)client didReceiveSingleMesage:(PhotonIMMessage *)message{
+- (void)imClient:(id)client didReceiveMesage:(PhotonIMMessage *)message{
     [[PhotonIMClient sharedClient] consumePacket:message.lt lv:message.lv];
     [self wrapperMessage:message];
-    [[PhotonIMClient sharedClient] updateConversationWithCustomArg1:message.chatType chatWith:message.chatWith arg:1];
-    [[PhotonIMClient sharedClient] updateConversationWithCustomArg2:message.chatType chatWith:message.chatWith arg:2];
 }
-
 
 /**
  二人聊天消息的撤回
@@ -34,6 +31,10 @@
  */
 - (void)imClient:(id)client didReceiveSingleWithDrawMesage:(PhotonIMMessage *)message{
     [self wrapperWithdrawMessage:message];
+}
+
+- (void)imClient:(id)client didReceiveGroupWithDrawMesage:(PhotonIMMessage *)message{
+     [self wrapperWithdrawMessage:message];
 }
 
 
@@ -50,27 +51,54 @@
 #pragma mark ------ Private Method---------
 // 处理二人聊天收到的信息
 - (void)wrapperMessage:(PhotonIMMessage *)message{
-    id item = [self.model wrapperMessage:message];
+    [self _wrapperMessage:message];
+}
+- (void)_wrapperMessage:(PhotonIMMessage *)message{
+    id item = [(PhotonChatModel *)self.model wrapperMessage:message];
     if (!item) {
         return;
     }
-    [self.model addItem:item];
-    [self reloadData];
+    [self addItem:item];
+    
+    if(message.chatType == PhotonIMChatTypeGroup && message.msgAtType != PhotonIMAtTypeNoAt){
+        [[PhotonMessageCenter sharedCenter] resetAtType:self.conversation];
+    }
+    
 }
 // 处理撤回消息
 - (void)wrapperWithdrawMessage:(PhotonIMMessage *)message{
-    BOOL ret = [self.model wrapperWithdrawMessage:message];
+    BOOL ret = [(PhotonChatModel *)self.model wrapperWithdrawMessage:message];
     if (ret) {
          [self reloadData];
     }
 }
 
+
 // 消息已读的处理
 - (void)wrapperReadMessage:(PhotonIMMessage *)message{
-    BOOL ret = [self.model wrapperReadMessage:message];
+    BOOL ret = [(PhotonChatModel *)self.model wrapperReadMessage:message];
     if (ret) {
         [self reloadData];
     }
     
+}
+
+- (void)imClient:(id)client didReceiveDeleteMesage:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith delMsgIds:(NSArray<NSString *> *)delMsgIds userInfo:(NSDictionary<NSString *,id> *)userInfo{
+     BOOL ret = [self wrapperWithDelMsgIds:delMsgIds];
+       if (ret) {
+            [self reloadData];
+       }
+}
+- (BOOL)wrapperWithDelMsgIds:(NSArray *)delMsgIds{
+    NSArray *items=[self.model.items copy];
+    BOOL rec = NO;
+    for (PhotonChatBaseItem *item in items) {
+        PhotonIMMessage *tempMsg = item.userInfo;
+        if ([delMsgIds containsObject:tempMsg.messageID]) {
+            [self.model.items removeObject:item];
+            rec = YES;
+        }
+    }
+    return rec;
 }
 @end

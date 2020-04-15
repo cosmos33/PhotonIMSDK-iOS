@@ -11,7 +11,7 @@
 #import "PhotonAccountItem.h"
 #import "PhotonAccountDataSource.h"
 #import "PhotonRegisterViewController.h"
-@interface PhotonLoginViewController ()<PhotonAccountCellDelegate>
+@interface PhotonLoginViewController ()<PhotonAccountCellDelegate,UIAlertViewDelegate>
 @property (nonatomic, copy, nullable)void (^completion)(void);
 @property (nonatomic, strong, nullable)PhotonAccountCell *tempCell;
 @end
@@ -20,11 +20,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"登录";
-    [self loadDataItems];
+    PhotonIMServerType serverType = [PhotonContent getServerSwitch];
+    if (serverType == PhotonIMServerTypeInland) {
+         self.title = @"登录国内环境";
+    }else if(serverType == PhotonIMServerTypeOverseas){
+        self.title = @"登录海外环境";
+    }
+    [self loadPreDataItems];
 }
 
-- (void)loadDataItems{
+- (void)loadPreDataItems{
     PhotonAccountItem *item = [[PhotonAccountItem alloc] init];
     item.accountType = PhotonAccountTypeLogin;
     [self.items addObject:item];
@@ -76,6 +81,20 @@
 
 - (void)resignResponder{
     [self.tempCell resignFirst];
+}
+
+- (void)forbidUpload:(id)gesture{
+    PhotonIMServerType serverType = [PhotonContent getServerSwitch];
+    serverType = (serverType == PhotonIMServerTypeInland)?PhotonIMServerTypeOverseas:PhotonIMServerTypeInland;
+    [PhotonContent setServerSwitch:serverType];
+    NSString *title = (serverType == PhotonIMServerTypeInland)?@"国内服务":@"海外服务";
+    self.title = [NSString stringWithFormat:@"登录%@",title];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"切换到" message:title delegate:self cancelButtonTitle:@"退出程序" otherButtonTitles:nil];
+    [alertView show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    exit(0);
 }
     
 #pragma mark - Navigation

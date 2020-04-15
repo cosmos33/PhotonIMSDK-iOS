@@ -11,14 +11,14 @@
 #import "PhotonMessageCenter.h"
 
 #import "PhotonChatViewController+Send.h"
-#import "PhotonTextMessageChatCell.h"
-#import "PhotonTextMessageChatItem.h"
+#import "PhotonChatTextMessageCell.h"
+#import "PhotonChatTextMessageItem.h"
 
-#import "PhotonImageMessageChatItem.h"
-#import "PhotonImageMessageChatCell.h"
+#import "PhotonChatImageMessageItem.h"
+#import "PhotonChatImageMessageCell.h"
 
-#import "PhotonVoiceMessageChatItem.h"
-#import "PhotonVoiceMessageChatCell.h"
+#import "PhotonChatVoiceMessageItem.h"
+#import "PhotonChatVoiceMessageCell.h"
 
 #import "PhotonChatNoticItem.h"
 #import "PhotonChatNoticCell.h"
@@ -31,6 +31,10 @@
 #import "PhotonDownLoadFileManager.h"
 
 #import "PhotonChatTransmitListViewController.h"
+#import "PhotonChatLocationCell.h"
+#import "PhotonChatLocationItem.h"
+#import "PhotonLocationViewContraller.h"
+#import "PhotonUINavigationController.h"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 @interface PhotonChatViewController()<PhotonBaseChatCellDelegate,UIActionSheetDelegate,PhotonMenuViewDelegate>
@@ -51,14 +55,18 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
-    if ([cell isKindOfClass:[PhotonTextMessageChatCell class]]) {
-        PhotonTextMessageChatCell *tempCell = (PhotonTextMessageChatCell *)cell;
+    if ([cell isKindOfClass:[PhotonChatTextMessageCell class]]) {
+        PhotonChatTextMessageCell *tempCell = (PhotonChatTextMessageCell *)cell;
         tempCell.delegate = self;
-    }else if([cell isKindOfClass:[PhotonImageMessageChatCell class]]){
-        PhotonImageMessageChatCell *tempCell = (PhotonImageMessageChatCell *)cell;
+    }else if([cell isKindOfClass:[PhotonChatImageMessageCell class]]){
+        PhotonChatImageMessageCell *tempCell = (PhotonChatImageMessageCell *)cell;
         tempCell.delegate = self;
-    }else if([cell isKindOfClass:[PhotonVoiceMessageChatCell class]]){
-        PhotonVoiceMessageChatCell *tempCell = (PhotonVoiceMessageChatCell *)cell;
+    }else if([cell isKindOfClass:[PhotonChatVoiceMessageCell class]]){
+        PhotonChatVoiceMessageCell *tempCell = (PhotonChatVoiceMessageCell *)cell;
+        tempCell.delegate = self;
+    }
+    else if([cell isKindOfClass:[PhotonChatLocationCell class]]){
+        PhotonChatLocationCell *tempCell = (PhotonChatLocationCell *)cell;
         tempCell.delegate = self;
     }
     
@@ -66,19 +74,19 @@
 
 #pragma mark --------- PhotonBaseChatCellDelegate ---------
 // 点击内容背景
-- (void)chatCell:(PhotonBaseChatCell *)cell chatMessageCellTap:(PhotonBaseChatItem *)chatItem{
+- (void)chatCell:(PhotonChatBaseCell *)cell chatMessageCellTap:(PhotonChatBaseItem *)chatItem{
     
     // 图片单击事件（预览大图）
-    if([cell isKindOfClass:[PhotonImageMessageChatCell class]]){
+    if([cell isKindOfClass:[PhotonChatImageMessageCell class]]){
         // 查看大图
         NSString *defaultImage = [chatItem localPath];
         if (defaultImage.length == 0) {
-            defaultImage = [(PhotonImageMessageChatItem *)chatItem orignURL];
+            defaultImage = [(PhotonChatImageMessageItem *)chatItem orignURL];
         }
         NSMutableArray<NSString *> *imageItems = [[NSMutableArray alloc] init];
-        for (PhotonBaseChatItem *item in self.model.items) {
-            if ([item isKindOfClass:[PhotonImageMessageChatItem class]]) {
-                PhotonImageMessageChatItem *imgItem = (PhotonImageMessageChatItem *)item;
+        for (PhotonChatBaseItem *item in self.dataSource.items) {
+            if ([item isKindOfClass:[PhotonChatImageMessageItem class]]) {
+                PhotonChatImageMessageItem *imgItem = (PhotonChatImageMessageItem *)item;
                 if ([imgItem localPath]) {
                     [imageItems addObject:[imgItem localPath]];
                 }else if ([imgItem orignURL]) {
@@ -87,13 +95,13 @@
             }
         }
         
-        PhotonImageMessageChatCell *imageCell = (PhotonImageMessageChatCell *)cell;
+        PhotonChatImageMessageCell *imageCell = (PhotonChatImageMessageCell *)cell;
         [imageCell.contentBackgroundView enterBrowserModeWithImageURLs:imageItems defaultImageURL:defaultImage placeholderImage:nil];
     }
     // 语音点击事件 (播放语音)
-    if([cell isKindOfClass:[PhotonVoiceMessageChatCell class]]){
-        PhotonVoiceMessageChatCell *voiceCell = (PhotonVoiceMessageChatCell *)cell;
-        PhotonVoiceMessageChatItem *voiceItem = (PhotonVoiceMessageChatItem *)chatItem;
+    if([cell isKindOfClass:[PhotonChatVoiceMessageCell class]]){
+        PhotonChatVoiceMessageCell *voiceCell = (PhotonChatVoiceMessageCell *)cell;
+        PhotonChatVoiceMessageItem *voiceItem = (PhotonChatVoiceMessageItem *)chatItem;
         if(voiceItem.fromType == PhotonChatMessageFromSelf){// 自己发送的语音消息，直接播放
             NSString *path = [[PhotonMessageCenter sharedCenter] getVoiceFilePath:self.conversation.chatWith fileName:voiceItem.fileName];
            [self playAudioSource:path cell:voiceCell];
@@ -121,9 +129,21 @@
             }
         }
     }
+    if([cell isKindOfClass:[PhotonChatLocationCell class]]){
+        PhotonChatLocationItem *locationItem = (PhotonChatLocationItem *)chatItem;
+        PhotonLocationViewContraller *locationVC = [[PhotonLocationViewContraller alloc]  initWithLocation:locationItem];
+        PhotonWeakSelf(self)
+        [locationVC setActionBlock:^{
+            PhotonChatTransmitListViewController *transmitVc = [[PhotonChatTransmitListViewController alloc] initWithMessage:locationItem.userInfo block:^(id  _Nonnull msg) {
+                [weakself addItems:msg];
+            }];
+            [self.navigationController pushViewController:transmitVc animated:YES];
+        }];
+        [self.navigationController pushViewController:locationVC animated:YES];
+    }
 }
 
-- (void)playAudioSource:(NSString *)path cell:(PhotonVoiceMessageChatCell *)cell{
+- (void)playAudioSource:(NSString *)path cell:(PhotonChatVoiceMessageCell *)cell{
     [[PhotonAudioPlayer sharedAudioPlayer] playAudioAtPath:path complete:^(BOOL finished) {
         if(finished){
             [cell stopAudioAnimating];
@@ -132,8 +152,8 @@
 }
 
 // 长按内容背景
-- (void)chatCell:(PhotonBaseChatCell *)cell chatMessageCellLongPress:(PhotonBaseChatItem *)chatItem rect:(CGRect)rect{
-    NSInteger row = [self.model.items indexOfObject:chatItem];
+- (void)chatCell:(PhotonChatBaseCell *)cell chatMessageCellLongPress:(PhotonChatBaseItem *)chatItem rect:(CGRect)rect{
+    NSInteger row = [self.dataSource.items indexOfObject:chatItem];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
     CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
     rect.origin.y += cellRect.origin.y - self.tableView.contentOffset.y;
@@ -145,7 +165,7 @@
 }
 
 // 重发消息
-- (void)chatCell:(PhotonBaseChatCell *)cell resendChatMessage:(PhotonBaseChatItem *)chatItem{
+- (void)chatCell:(PhotonChatBaseCell *)cell resendChatMessage:(PhotonChatBaseItem *)chatItem{
     __weak typeof(self)weakSelf = self;
     UIAlertController *alterController = [UIAlertController alertControllerWithTitle:nil message:@"是否重发该条消息？" preferredStyle:UIAlertControllerStyleActionSheet];
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定重发" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -164,13 +184,17 @@
 
 
 // 点击头像，查看详情
-- (void)chatCell:(PhotonBaseChatCell *)cell didSelectAvatar:(PhotonBaseChatItem *)chatItem{
+- (void)chatCell:(PhotonChatBaseCell *)cell didSelectAvatar:(PhotonChatBaseItem *)chatItem{
     PhotonUser *user = nil;
     PhotonIMMessage *message = (PhotonIMMessage *)chatItem.userInfo;
     if (chatItem.fromType == PhotonChatMessageFromSelf) {
         user = [PhotonContent userDetailInfo];
     }else{
-        user = [PhotonContent friendDetailInfo:message.chatWith];
+        if(message.chatType == PhotonIMChatTypeSingle){
+            user = [PhotonContent friendDetailInfo:message.chatWith];
+        }else if (message.chatType == PhotonIMChatTypeGroup){
+             user = [PhotonContent friendDetailInfo:message.fr];
+        }
     }
     PhotonFriendDetailViewController * detailCTL = [[PhotonFriendDetailViewController alloc] initWithFriend:user];
     [self.navigationController pushViewController:detailCTL animated:YES];
@@ -183,7 +207,7 @@
     if (!obj) {
         return;
     }
-    PhotonTextMessageChatItem *item = (PhotonTextMessageChatItem *)obj;
+    PhotonChatTextMessageItem *item = (PhotonChatTextMessageItem *)obj;
     switch (Type) {
         case PhotonMenuTypeCopy:{
             NSString *str = [item messageText];
@@ -242,24 +266,41 @@
 }
 
 - (void)addItems:(id)message{
-    id item =  [self.model wrapperMessage:message];
+    
+    id item =  [(PhotonChatModel *)self.model wrapperMessage:message];
     [self.model.items addObject:item];
     [self reloadData];
 }
 #pragma mark ---- 删除消息操作 ----------
-- (void)deleteChatMessage:(PhotonBaseChatItem *)item{
+- (void)deleteChatMessage:(PhotonChatBaseItem *)item{
     if (item == nil) {
         return;
     }
-        NSInteger index = [self.model.items indexOfObject:item];
-    // 先删除库中的信息，成功后移除页面细信息
-    [self.model.items removeObject:item];
-    self.dataSource.items = self.model.items;
-    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation: UITableViewRowAnimationAutomatic];
-    [[PhotonMessageCenter sharedCenter] deleteMessage:item.userInfo];
+   
+    BOOL server = YES;
+    if (server) {
+        PhotonWeakSelf(self);
+        [[PhotonMessageCenter sharedCenter] deleteMessage:item.userInfo completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+            [weakself.model.items removeObject:item];
+            if (succeed) {
+               [weakself removeItem:item];
+            }else{
+                [PhotonUtil runMainThread:^{
+                   [PhotonUtil showErrorHint:@"删除失败"];
+                }];
+            }
+           
+        }];
+    }else{
+        [self.model.items removeObject:item];
+        [self removeItem:item];
+        [[PhotonMessageCenter sharedCenter] deleteMessage:item.userInfo];
+    }
+    
+    
 }
 #pragma mark ---- 撤回消息操作 ----------
-- (void)withDrawChatMessage:(PhotonBaseChatItem *)item{
+- (void)withDrawChatMessage:(PhotonChatBaseItem *)item{
     if (item == nil) {
         return;
     }
@@ -279,7 +320,7 @@
     PhotonChatNoticItem *noticItem = [[PhotonChatNoticItem alloc] init];
     noticItem.notic = em;
     noticItem.userInfo = [item userInfo];
-    NSInteger index = [self.model.items indexOfObject:item];
+    NSInteger index = [self.dataSource.items indexOfObject:item];
     [self.model.items replaceObjectAtIndex:index withObject:noticItem];
     [self reloadData];
 }

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+//#import "PhotonMessageCenter.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PhotonUser : NSObject
@@ -57,7 +57,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)loadFriendProfile:(NSString *)remoteid completion:(void(^)(BOOL success))completion;
 
-- (void)getIgnoreAlert:(NSString *)remoteId completion:(void(^)(BOOL success,BOOL open))completion;
+- (void)getIgnoreAlert:(int)chatType chatWith:(NSString *)chatWith completion:(void(^)(BOOL success,BOOL open))completion;
+
+- (void)loadMembersFormGroup:(NSString *)gid completion:(nullable void(^)(BOOL success))completion;
+
+- (void)loadGroupProfile:(NSString *)gid completion:(nullable void(^)(NSString *gid ,BOOL success))completion;
+
+- (void)modifiedName:(NSString *)nickName
+          completion:(void(^)(BOOL success,BOOL open))completion;
 
 @end
 

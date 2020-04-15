@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setCompletionBlock:(void(^)(void))completionBlock;
 - (void)wrapData:(NSDictionary *)dict;
 - (void)resignResponder;
+- (void)forbidUpload:(id)gesture;
+
 @end
 
 NS_ASSUME_NONNULL_END

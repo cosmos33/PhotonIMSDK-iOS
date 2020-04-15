@@ -10,23 +10,21 @@
 #import <MMFoundation/MMFoundation.h>
 #import "PhotonBaseViewController+Refresh.h"
 #import "PhotonMessageCenter.h"
-#import "PhotonMessageSettingViewController.h"
+#import "PhotonSingleSettingViewController.h"
+#import "PhotonGroupSettingViewController.h"
+#import <AVFoundation/AVFoundation.h>
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 @interface PhotonChatViewController ()
-@property(nonatomic, strong, nullable)PhotonChatModel *model;
 @property(nonatomic,strong,nullable)PhotonChatPanelManager *panelManager;
 @property(nonatomic,strong,nullable)PhotonCharBar *chatBar;
 @property(nonatomic,strong,nullable)PhotonMenuView *menuView;
 
 @property(nonatomic, strong, nullable)PhotonIMConversation *conversation;
 
-@property (nonatomic, strong, nullable)MFDispatchSource  *uiDispatchSource;
 @property (nonatomic, strong, nullable)MFDispatchSource  *dataDispatchSource;
 
 @property (nonatomic, assign)BOOL isFirstPage;
-
-
 @property (nonatomic, strong,nullable)UIView  *testUIView;
 // 内容
 @property (nonatomic, strong,nullable)UITextField  *contentFiled;
@@ -36,17 +34,20 @@
 @property (nonatomic, strong,nullable)UITextField  *countFiled;
 //发送按钮
 @property (nonatomic, strong,nullable)UIButton  *autoSendMessage;
-
 //发送按钮
 @property (nonatomic, strong,nullable)UIButton  *stopSendMessage;
-
 //发送按钮
 @property (nonatomic, copy,nullable)NSString  *content;
-
+// login内容
+@property (nonatomic, strong,nullable)UILabel  *authFiled;
 @property (nonatomic, assign)NSTimeInterval  interval;
-
-
 @property (atomic, assign)BOOL  isStop;
+@property (nonatomic, assign)NSInteger authSucceedCount;
+@property (nonatomic, assign)NSInteger authFaileddCount;
+@property (atomic, assign)BOOL scrollTop;
+@property (nonatomic,assign)BOOL loadFtsRet;
+@property (nonatomic, assign)BOOL isLoading;
+@property (nonatomic, strong)AVAudioPlayer *player;
 @end
 
 @implementation PhotonChatViewController
@@ -55,10 +56,21 @@
     if (self) {
         _conversation = conversation;
         _panelManager = [[PhotonChatPanelManager alloc] initWithIdentifier:conversation.chatWith];
+        _panelManager.draft = conversation.draft;
         _panelManager.delegate = self;
         
-        _uiDispatchSource = [MFDispatchSource sourceWithDelegate:self type:refreshType_UI dataQueue:dispatch_get_main_queue()];
-        _dataDispatchSource = [MFDispatchSource sourceWithDelegate:self type:refreshType_Data dataQueue:dispatch_get_main_queue()];
+        _dataDispatchSource = [MFDispatchSource sourceWithDelegate:self type:refreshType_Data dataQueue:dispatch_queue_create("com.cosmos.PhotonIM.chatdata", DISPATCH_QUEUE_SERIAL)];
+    }
+    return self;
+}
+- (instancetype)initWithConversation:(nullable PhotonIMConversation *)conversation loadFtsResult:(BOOL)loadFtsRet{
+    self = [self initWithConversation:conversation];
+    if (self) {
+        _loadFtsRet = loadFtsRet;
+        if (_conversation.lastMsgId && _loadFtsRet) {
+             [(PhotonChatModel *)self.model setAnchorMsgId:_conversation.lastMsgId];
+        }
+         [(PhotonChatModel *)self.model setLoadFtsData:_loadFtsRet];
     }
     return self;
 }
@@ -68,27 +80,24 @@
     [[PhotonMessageCenter sharedCenter] removeObserver:self];
     [self.tableView removeObserver:self forKeyPath:@"bounds"];
     [PhotonUtil resetLastShowTimestamp];
+    [_dataDispatchSource clearDelegateAndCancel];
 }
 - (instancetype)init
 {
     self = [super init];
     if (self) {
+        _isLoading = NO;
+        self.model = [[PhotonChatModel alloc] init];
         self.items = [NSMutableArray array];
-        // 添加接收消息的监听
-        [[PhotonMessageCenter sharedCenter] addObserver:self];
-       
         [self.tableView addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     }
     return self;
 }
 
-
-- (void)firstLoadMessages{
-    [self loadDataItems];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _authSucceedCount = 0;
+    _authFaileddCount = 0;
     [self addRightBarItem];
     self.title = _conversation.FName;
     self.isStop = YES;
@@ -96,6 +105,9 @@
     [self.tableView setBackgroundColor:[UIColor colorWithHex:0XF3F3F3]];
     
     [self addRefreshHeader];
+    if (_loadFtsRet) {
+        [self addLoadMoreFooter];
+    }
     [_panelManager addChatPanelWithSuperView:self.view];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -105,9 +117,22 @@
     }];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
     [self.tableView addGestureRecognizer:tap];
-    [self firstLoadMessages];
     
-    [self addTextUI];
+    [self startLoadData];
+    
+    // 添加接收消息的监听
+    [[PhotonMessageCenter sharedCenter] addObserver:self];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        int i = 0;
+        while (i < 1000) {
+            [NSThread sleepForTimeInterval:2];
+            i ++;
+            NSLog(@"backGroup test %@",@(i));
+        }
+    });
+    
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -121,18 +146,41 @@
 }
 
 - (void)more{
-    PhotonMessageSettingViewController *msgSetting = [[PhotonMessageSettingViewController alloc] initWithConversation:self.conversation];
-    [self.navigationController pushViewController:msgSetting animated:YES];
+    PhotonWeakSelf(self)
+    if (self.conversation.chatType == PhotonIMChatTypeSingle) {
+        PhotonSingleSettingViewController *msgSetting = [[PhotonSingleSettingViewController alloc] initWithConversation:self.conversation compeltion:^(BOOL deleteMsg) {
+            if (deleteMsg) {
+                [weakself clearLoadData];
+            }
+            
+        }];
+        [self.navigationController pushViewController:msgSetting animated:YES];
+    }else if (self.conversation.chatType == PhotonIMChatTypeGroup){
+        PhotonGroupSettingViewController *msgSetting = [[PhotonGroupSettingViewController alloc] initWithGroupID:self.conversation compeltion:^(BOOL deleteMsg) {
+            if (deleteMsg) {
+                 [weakself clearLoadData];
+            }
+        }];
+        [self.navigationController pushViewController:msgSetting animated:YES];
+    }
+   
 }
 - (void)tapGesture:(id)gesture{
      [_panelManager dismissKeyboard];
      [self.menuView dismiss];
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [self.player play];
+    [[PhotonIMClient sharedClient] keepConnectedOnBackground:YES];
+}
+
 - (void)viewDidDisappear:(BOOL)animated{
     [_panelManager dismissKeyboard];
     self.isStop = YES;
-   
+   [self.player stop];
+    [[PhotonIMClient sharedClient] keepConnectedOnBackground:NO];
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
@@ -142,21 +190,37 @@
      [[PhotonMessageCenter sharedCenter] clearConversationUnReadCount:self.conversation];
 }
 // 加载数据
-- (void)loadDataItems{
-    [self.dataDispatchSource addSemaphore];
+- (void)loadPreDataItems{
+    [self p_loadDataItems:YES];
 }
 
-- (void)p_loadDataItems{
+- (void)loadMoreDataItems{
+    [self p_loadDataItems:NO];
+}
+
+- (void)p_loadDataItems:(BOOL)beforeAuthor{
+    if (self.isLoading) {
+        return;
+    }
     PhotonWeakSelf(self);
     BOOL isEmpty = (self.model.items.count == 0);
-    [self.model loadMoreMeesages:self.conversation.chatType chatWith:self.conversation.chatWith beforeAuthor:YES asc:YES finish:^(NSDictionary * _Nullable pa) {
+    self.isLoading = YES;
+    [(PhotonChatModel *)self.model loadMoreMeesages:self.conversation.chatType chatWith:self.conversation.chatWith beforeAuthor:beforeAuthor asc:YES finish:^(NSDictionary * _Nullable pa) {
+        self.isLoading = NO;
         if (!isEmpty) {
             weakself.enableWithoutScrollToTop = YES;
         }else{
             weakself.enableWithoutScrollToTop = NO;
         }
+        NSInteger result_count = [pa[@"result_count"] intValue];
+        if (result_count == 0) {
+            if (weakself.loadFtsRet) {
+                [self endLoadMore];
+                [self removeLoadMoreFooter];
+            }
+        }
         if(isEmpty){
-            [weakself.uiDispatchSource addSemaphore];
+            [weakself reloadData];
         }else{
              [weakself p_reloadData];
         }
@@ -164,30 +228,22 @@
     }];
 }
 
-- (void)reloadData{
-//    [self p_reloadData];
-    [self.uiDispatchSource addSemaphore];
-  
-}
 
 - (void)p_reloadData{
-    if (!self.model.items.count) {
-        return;
+    [self endRefreshing];
+    if (_loadFtsRet) {
+        [self endLoadMore];
     }
-    // 刷新数据
     PhotonChatDataSource *dataSource = [[PhotonChatDataSource alloc] initWithItems:self.model.items];
     dataSource.delegate = self;
     self.dataSource = dataSource;
-    [self endRefreshing];
 }
 
-#pragma mark ----- getter --------
-- (PhotonChatModel *)model{
-    if (!_model) {
-        _model = [[PhotonChatModel alloc] init];
-    }
-    return _model;
+- (void)clearLoadData{
+    [self.model.items removeAllObjects];
+    [self reloadData];
 }
+#pragma mark ----- getter --------
 - (PhotonCharBar *)chatBar{
     return [_panelManager chatBar];
 }
@@ -215,13 +271,20 @@
 
 #pragma mark ----- PhotonChatPanelDelegate -------
 - (void)scrollToBottomWithAnimation:(BOOL)animation{
+    PhotonWeakSelf(self);
     [PhotonUtil runMainThread:^{
-        [self.tableView scrollToBottomWithAnimation:animation];
+        if (weakself.loadFtsRet && self.model.items.count <= self.model.pageSize) {
+            NSIndexPath *indexPath = [(PhotonChatModel *)self.model getFtsSearchContentIndexpath];
+            [weakself.tableView scrollToMiddleScroll:indexPath];
+        }else{
+            [weakself.tableView scrollToBottomWithAnimation:animation];
+        }
+        
     }];
     
 }
 #pragma mark --- 刷新数据 ------
-- (void)refreshUI{
+- (void)refreshTableView{
     [UIView animateWithDuration:0 animations:^{
         [self p_reloadData];
     } completion:^(BOOL finished) {
@@ -230,218 +293,66 @@
     }];
 }
 
-- (void)refreshData{
-    [self p_loadDataItems];
-}
 
-
-
-#pragma mark ------ demo uitextView ----
-
-- (void)addTextUI{
-    [self.view addSubview:self.testUIView];
-    [self.testUIView addSubview:self.contentFiled];
-    [self.testUIView addSubview:self.countFiled];
-    [self.testUIView addSubview:self.intervalFiled];
-    [self.testUIView addSubview:self.autoSendMessage];
-    [self.testUIView addSubview:self.totleSendCountLable];
-    [self.testUIView addSubview:self.sendSucceedCountLable];
-    [self.testUIView addSubview:self.sendFailedCountLable];
-    [self.testUIView addSubview:self.totalTimeLable];
-    
-    [self.testUIView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(10);
-        make.top.mas_equalTo(90);
-        make.bottom.mas_equalTo(-90);
-        make.width.mas_equalTo(200);
-    }];
-    
-    [self.contentFiled mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.mas_equalTo(0);
-        make.top.mas_equalTo(0);
-        make.height.mas_equalTo(40);
-    }];
-    
-    [self.countFiled mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.mas_equalTo(0);
-        make.top.mas_equalTo(self.contentFiled.mas_bottom).mas_offset(5);
-        make.height.mas_equalTo(40);
-    }];
-    
-    [self.intervalFiled mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.mas_equalTo(0);
-        make.top.mas_equalTo(self.countFiled.mas_bottom).mas_offset(5);
-        make.height.mas_equalTo(40);
-    }];
-
-    [self.autoSendMessage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.mas_equalTo(0);
-        make.top.mas_equalTo(self.intervalFiled.mas_bottom).mas_offset(5);
-        make.height.mas_equalTo(40);
-    }];
-    
-    [self.totleSendCountLable mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.mas_equalTo(0);
-        make.top.mas_equalTo(self.autoSendMessage.mas_bottom).mas_offset(5);
-        make.height.mas_equalTo(40);
-    }];
-    [self.sendSucceedCountLable mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.mas_equalTo(0);
-        make.top.mas_equalTo(self.totleSendCountLable.mas_bottom).mas_offset(5);
-        make.height.mas_equalTo(40);
-    }];
-    
-    [self.sendFailedCountLable mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.mas_equalTo(0);
-        make.top.mas_equalTo(self.sendSucceedCountLable.mas_bottom).mas_offset(5);
-        make.height.mas_equalTo(40);
-    }];
-    
-    [self.totalTimeLable mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.mas_equalTo(0);
-        make.top.mas_equalTo(self.sendFailedCountLable.mas_bottom).mas_offset(5);
-        make.height.mas_equalTo(20);
-    }];
-}
-
-- (UIView *)testUIView{
-    if (!_testUIView) {
-        _testUIView= [[UIView alloc] init];
-        _testUIView.backgroundColor = [UIColor clearColor];
-        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(uigesture)];
-        gesture.numberOfTapsRequired = 1;
-        [_testUIView addGestureRecognizer:gesture];
+- (void)imClientLogin:(nonnull id)client loginStatus:(PhotonIMLoginStatus)loginstatus {
+    BOOL change = NO;
+    switch (loginstatus) {
+        case PhotonIMLoginStatusLoginSucceed:
+            self.authSucceedCount ++;
+            change = YES;
+            break;
+        case PhotonIMLoginStatusLoginFailed:
+            self.authFaileddCount ++;
+            change = YES;
+            break;
+        case PhotonIMLoginStatusUnknow:
+            self.authFaileddCount ++;
+            change = YES;
+            break;
+                      
+        default:
+            break;
     }
-    return _testUIView;
-}
-- (UITextField *)contentFiled{
-    if (!_contentFiled) {
-        _contentFiled = [[UITextField alloc] init];
-        _contentFiled.keyboardType = UIKeyboardTypeDefault;
-         _contentFiled.text = @"测试";
-        _contentFiled.backgroundColor = [UIColor grayColor];
-    }
-    return _contentFiled;
-}
-
-- (UITextField *)intervalFiled{
-    if (!_intervalFiled) {
-        _intervalFiled = [[UITextField alloc] init];
-        _intervalFiled.keyboardType = UIKeyboardTypeNumberPad;
-        _intervalFiled.text = @"1000";
-        _intervalFiled.backgroundColor = [UIColor grayColor];
-    }
-    return _intervalFiled;
-}
-
-- (UITextField *)countFiled{
-    if (!_countFiled) {
-        _countFiled = [[UITextField alloc] init];
-        _countFiled.keyboardType = UIKeyboardTypeNumberPad;
-         _countFiled.text = @"100";
-        _countFiled.backgroundColor = [UIColor grayColor];
-    }
-    return _countFiled;
-}
-
-- (UILabel *)totleSendCountLable{
-    if (!_totleSendCountLable) {
-        _totleSendCountLable = [[UILabel alloc] init];
-        _totleSendCountLable.numberOfLines = 2;
-        _totleSendCountLable.font = [UIFont systemFontOfSize:12];
-        _totleSendCountLable.textColor = [UIColor whiteColor];
-        _totleSendCountLable.backgroundColor = [UIColor grayColor];
-    }
-    return _totleSendCountLable;
-}
-- (UILabel *)sendSucceedCountLable{
-    if (!_sendSucceedCountLable) {
-        _sendSucceedCountLable = [[UILabel alloc] init];
-        _sendSucceedCountLable.numberOfLines = 2;
-         _sendSucceedCountLable.font = [UIFont systemFontOfSize:12];
-        _sendSucceedCountLable.textColor = [UIColor whiteColor];
-        _sendSucceedCountLable.backgroundColor = [UIColor grayColor];
-    }
-    return _sendSucceedCountLable;
-}
-- (UILabel *)sendFailedCountLable{
-    if (!_sendFailedCountLable) {
-        _sendFailedCountLable = [[UILabel alloc] init];
-        _sendFailedCountLable.numberOfLines = 2;
-         _sendFailedCountLable.font = [UIFont systemFontOfSize:12];
-        _sendFailedCountLable.textColor = [UIColor whiteColor];
-        _sendFailedCountLable.backgroundColor = [UIColor grayColor];
-    }
-    return _sendFailedCountLable;
-}
-
-- (UILabel *)totalTimeLable{
-    if (!_totalTimeLable) {
-        _totalTimeLable = [[UILabel alloc] init];
-        _totalTimeLable.numberOfLines = 2;
-        _totalTimeLable.font = [UIFont systemFontOfSize:12];
-        _totalTimeLable.textColor = [UIColor whiteColor];
-        _totalTimeLable.backgroundColor = [UIColor grayColor];
-    }
-    return _totalTimeLable;
-}
-
-- (UIButton *)autoSendMessage{
-    if (!_autoSendMessage) {
-        _autoSendMessage = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_autoSendMessage setTitle:@"开始" forState:UIControlStateNormal];
-        _autoSendMessage.backgroundColor = [UIColor grayColor];
-        [_autoSendMessage addTarget:self action:@selector(autoSendMessage:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _autoSendMessage;
-}
-
--(void)setTotleSendCount:(NSInteger)totleSendCount{
-    _totleSendCount = totleSendCount;
-     self.totleSendCountLable.text = [NSString stringWithFormat:@"发送数：%@",@(_totleSendCount)];
-}
-
-- (void)setSendSucceedCount:(NSInteger)sendSucceedCount{
-    _sendSucceedCount = sendSucceedCount;
-     self.sendSucceedCountLable.text = [NSString stringWithFormat:@"发送成功数：%@",@(_sendSucceedCount)];
-}
-
-- (void)setSendFailedCount:(NSInteger)sendFailedCount{
-    _sendFailedCount = sendFailedCount;
-       self.sendFailedCountLable.text = [NSString stringWithFormat:@"发送失败数：%@",@(_sendFailedCount)];
-}
-
-- (void)autoSendMessage:(UIButton *)sender{
-    if(!self.isStop){
-        self.isStop = YES;
-        [sender setTitle:@"开始" forState:UIControlStateNormal];
-       
-        return;
-    }
-    [sender setTitle:@"停止" forState:UIControlStateNormal];
-    self.sendSucceedCount = 0;
-    self.sendFailedCount = 0;
-    self.totleSendCount = 0;
-    self.isStop = NO;
-    self.content = self.contentFiled.text;
-    self.count = [self.countFiled.text integerValue];
-    self.interval = [self.intervalFiled.text integerValue]/1000.0;
-    self.startTime = [[NSDate date] timeIntervalSince1970] * 1000.0;
-    PhotonWeakSelf(self);
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        int index =  0;
-        while (index < weakself.count && !weakself.isStop) {
-            index ++;
-            [NSThread sleepForTimeInterval:weakself.interval];
-            [weakself sendTextMessage:[NSString stringWithFormat:@"%@-%@",self.content,@(index)]];
+    __weak typeof(self)weakself = self;
+    [PhotonUtil runMainThread:^{
+        if (change) {
+            weakself.authFiled.text = [NSString stringWithFormat:@"authSucceedCount = %@ authFaileddCount =%@",@(weakself.authSucceedCount),@(weakself.authFaileddCount)];
         }
-    });
+    }];
+   
 }
+
 
 - (void)uigesture{
     [self.countFiled resignFirstResponder];
     [self.contentFiled resignFirstResponder];
     [self.intervalFiled resignFirstResponder];
 }
+
+- (void)keyboardWillShow{
+    if (_loadFtsRet) {
+        [self removeLoadMoreFooter];
+        _loadFtsRet = NO;
+        [(PhotonChatModel *)self.model resetFtsSearch];
+        [self startLoadData];
+    }
+}
+
+
+- (AVAudioPlayer *)player {
+    if (!_player) {
+        //后台播放音频设置
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+        [session setActive:YES error:nil];
+        [session setCategory:AVAudioSessionCategoryPlayback error:nil];
+        [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+        NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"025b_525d_040c_51958d1f13e76f9787173fe94bdca8fc" withExtension:@"mp3"];
+        AVAudioPlayer *audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:nil];
+        audioPlayer.numberOfLoops = -1;
+        _player = audioPlayer;
+    }
+    return _player;
+}
+
 @end
 #pragma clang diagnostic pop

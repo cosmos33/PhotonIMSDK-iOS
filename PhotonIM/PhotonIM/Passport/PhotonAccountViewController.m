@@ -32,10 +32,23 @@
         make.top.mas_equalTo(NavAndStatusHight);
     }];
     
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(forbidUpload:)];
+    tap.numberOfTapsRequired = 3;
+    [self.iconView addGestureRecognizer:tap];
+    
+    
+    
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(120);
-        make.bottom.left.right.mas_equalTo(self.view).mas_equalTo(-SAFEAREA_INSETS_BOTTOM);
+        make.top.mas_equalTo(self.iconView.mas_bottom).offset(0);
+        make.bottom.left.right.mas_equalTo(self.view).mas_equalTo(0);
     }];
+}
+- (void)forbidUpload:(id)gesture{
+    id en = [[NSUserDefaults standardUserDefaults] objectForKey:@"photon_im_forbid_uploadLog"];
+    BOOL enSwitch = [en boolValue];
+    enSwitch = !enSwitch;
+    [PhotonUtil showInfoHint:enSwitch?@"关闭日志上传":@"打开日志上传"];
+    [[NSUserDefaults standardUserDefaults] setObject:@(enSwitch) forKey:@"photon_im_forbid_uploadLog"];
 }
 
 -(void)setCompletionBlock:(void (^)(void))completionBlock{
@@ -75,7 +88,7 @@
     if (!_iconView) {
         _iconView = [[UIImageView alloc] init];
         _iconView.backgroundColor = [UIColor clearColor];
-        _iconView.userInteractionEnabled = NO;
+        _iconView.userInteractionEnabled = YES;
         _iconView.image = [UIImage imageNamed:@"photon_icon"];
         _iconView.contentMode = UIViewContentModeScaleAspectFit;
     }
@@ -85,7 +98,7 @@
 - (PhotonNetworkService *)netService{
     if (!_netService) {
         _netService = [[PhotonNetworkService alloc] init];
-        _netService.baseUrl = PHOTON_BASE_URL;
+        _netService.baseUrl = [PhotonContent baseUrlString];;
         
     }
     return _netService;

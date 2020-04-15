@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PhotonIMClient(HandleLog)
 
 /**
-IMLog 日志处理，调用此方法，会包日志写到本地，不调用此方法不会处理日志。
+IMLog 日志处理，调用此方法，会把日志写到本地，不调用此方法不会处理日志。
 @param cansoleEnable YES：打开控制台输出日志，NO：关闭控制台c输出日志
 */
 - (void)openPhotonIMLog:(BOOL)cansoleEnable;

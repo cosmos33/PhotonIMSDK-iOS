@@ -80,4 +80,14 @@
         [instance.mutableArray removeObject:object];
     });
 }
+
+- (NSArray *)allObjects{
+    __weak PhotonSafeMutableArray *instance = self;
+   __block NSArray *items;
+    dispatch_sync(instance.cacheQueue, ^{
+       items = [instance.mutableArray copy];
+    });
+    return items;
+    
+}
 @end

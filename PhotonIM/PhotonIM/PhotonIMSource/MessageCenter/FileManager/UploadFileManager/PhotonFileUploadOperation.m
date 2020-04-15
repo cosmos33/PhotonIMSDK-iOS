@@ -11,6 +11,7 @@
 @property (nonatomic, strong) PhotonNetworkService *netService;
 @property (nonatomic, strong) NSString *queryString;
 @property (nonatomic, strong) NSDictionary *paramter;
+@property (nonatomic, strong) NSDictionary *header;
 @property (nonatomic, strong) NSArray *fileItems;
 
 @property (assign, nonatomic, getter = isExecuting) BOOL executing;
@@ -40,6 +41,7 @@
 @implementation PhotonFileUploadOperation
 - (instancetype)initUploadRequestMethodWithMutiFile:(NSString *)queryString
                                            paramter:(nonnull NSDictionary *)paramter
+                                             header:(nonnull NSDictionary *)header
                                           fromFiles:(NSArray *)fileItems
                                            progress:(void(^)(NSProgress *))progress
                                          completion:(void (^)(NSDictionary *))completion
@@ -51,6 +53,7 @@
         self.failureBlock = failure;
         self.queryString = queryString;
         self.paramter = paramter;
+        self.header = header;
         self.fileItems = fileItems;
         PhotonUploadFileInfo *fileInfo = (PhotonUploadFileInfo *)[fileItems firstObject];
         self.filePath = fileInfo.fileURLString;
@@ -82,7 +85,7 @@
     NSDictionary *userInfo = @{@"filePath":self.filePath?self.filePath:@""};
     
     PhotonNotify(PhotonFileUploadStartNotification, nil, userInfo);// 开始上传的通知
-    [self.netService uploadRequestMethodWithMutiFile:self.queryString paramter:self.paramter fromFiles:self.fileItems progress:^(NSProgress * _Nonnull progress) {
+    [self.netService uploadRequestMethodWithMutiFile:self.queryString paramter:self.paramter header:self.header fromFiles:self.fileItems progress:^(NSProgress * _Nonnull progress) {
         if (weakself.progressBlock) {
             weakself.progressBlock(progress);
         }
@@ -120,7 +123,7 @@
 - (PhotonNetworkService *)netService{
     if (!_netService) {
         _netService = [[PhotonNetworkService alloc]init];
-        _netService.baseUrl = PHOTON_BASE_URL;
+        _netService.baseUrl = [PhotonContent baseUrlString];;
     }
     return _netService;
 }

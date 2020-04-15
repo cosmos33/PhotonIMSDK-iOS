@@ -9,17 +9,20 @@
 #import "PhotonAppDelegate.h"
 #import <UserNotifications/UserNotifications.h>
 #import <pushsdk/MoPushManager.h>
+#import "PhotonContent.h"
 #import "PhotonAppLaunchManager.h"
 #import "PhotonMessageCenter.h"
+#import "YYFPSLabel.h"
 @interface PhotonAppDelegate ()<UNUserNotificationCenterDelegate>
 
+@property (nonatomic, strong) YYFPSLabel *fpsLabel;
 @end
 
 @implementation PhotonAppDelegate
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  
+    
     [[PhotonMessageCenter sharedCenter] initPhtonIMSDK];
     
     [self registerPushSDK];
@@ -38,29 +41,51 @@
     
     [PhotonAppLaunchManager registerWithWindow:self.window];
     [PhotonAppLaunchManager launchInWindow];
+    
+    [self addFPSLabel];
+    
     return YES;
 }
 
 - (void)registerPushSDK{
-     [MoPushManager initSDK:APP_ID];
+    if ([PhotonContent getServerSwitch] == PhotonIMServerTypeInland) {
+        [MoPushManager setServerType:MOPushServerTypeInland];
+        [MoPushManager initSDK:APP_ID_INLAND];
+    }else if ([PhotonContent getServerSwitch] == PhotonIMServerTypeOverseas){
+        [MoPushManager setServerType:MOPushServerTypeOverseas];
+        [MoPushManager initSDK:APP_ID_OVERSEAS];
+    }
+    
 #ifdef DEBUG
     [MoPushManager setBuildStat:MOBuildStat_DEBUG];
 #elif INHOUSE
     [MoPushManager setBuildStat:MOBuildStat_INHOUSE];
 #else
-    [MoPushManager setBuildStat:MOBuildStat_DEBUG];
+    [MoPushManager setBuildStat:MOBuildStat_RELEASE];
 #endif
     [MoPushManager addCommandListener:@selector(onMoPushManagerCommand:) target:self];
     [MoPushManager registerToken];
-    
    
 }
 - (void)onMoPushManagerCommand:(CallbackMessage *)message {
-    PhotonLog(@"AppDelegate callback ----->> commandName:%@,  code: %d, message:%@", [message commandName],[message resultCode], [message message]);
+    PhotonLog(@"onMoPushManagerCommand ----->> commandName:%@,  code: %d, message:%@", [message commandName],[message resultCode], [message message]);
 }
 
-#pragma mark - Notification
+- (void)addFPSLabel {
+    _fpsLabel = [YYFPSLabel new];
+    _fpsLabel.frame = CGRectMake(35, 35, 50, 30);
+    [_fpsLabel sizeToFit];
+    [self.window addSubview:_fpsLabel];
+}
 
+
+#pragma mark - Notification
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
+    PhotonLog(@"获取到deviceToken --"); //SDK内部hook，业务层无需配置
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"cdscds" message:@"vxvsd" delegate:self cancelButtonTitle:@"" otherButtonTitles:@"ok", nil];
+    [alert show];
+    
+}
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     PhotonLog(@"获取到deviceToken -- %@", deviceToken); //SDK内部hook，业务层无需配置
 }
@@ -70,11 +95,14 @@
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
+     [[NSUserDefaults standardUserDefaults] setValue:[@([[NSDate date] timeIntervalSince1970]) stringValue] forKey:@"timeStamp_pushqq"];
     if ([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
         NSDictionary *dict = response.notification.request.content.userInfo;
         NSLog(@"%@",dict);
     }
     completionHandler();
+}
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler __API_AVAILABLE(macos(10.14), ios(10.0), watchos(3.0), tvos(10.0)){
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

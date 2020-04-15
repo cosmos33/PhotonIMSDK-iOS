@@ -97,6 +97,16 @@
     return ret;
 }
 
+- (NSString *)removeSpaceAndNewline{
+    
+    NSString *temp = [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    
+    NSString *text = [temp stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    return text;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSString*)md5Hash {
     return [[self dataUsingEncoding:NSUTF8StringEncoding] md5Hash];
@@ -310,5 +320,88 @@
         [attributeString replaceCharactersInRange:range withAttributedString:imageArray[i][@"image"]];
     }
     return attributeString;
+}
+
+- (NSAttributedString *)toAttributedString;
+{
+    __block NSMutableString *text = [NSMutableString string];
+        __block NSMutableArray *ranges = [NSMutableArray array];
+        if ([self isNotEmpty]) {
+            NSString *tempText = [self stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+            NSArray *texts = [tempText componentsSeparatedByString:@"<a>"];
+            if (texts && texts.count) {
+                __block NSInteger subLength = 0;
+                [texts enumerateObjectsUsingBlock:^(NSString * _Nonnull str, NSUInteger idx, BOOL * _Nonnull stop) {
+                    NSArray *sustrs = [str componentsSeparatedByString:@"</a>"];
+                    if (sustrs.count == 1) {
+                        [text appendString:sustrs[0]];
+                    } else if (sustrs.count == 2) {
+                        NSRange range = NSMakeRange(text.length, ((NSString *)sustrs[0]).length);
+                        if (ranges.count == 0 && text.length > 12) {
+                            subLength = text.length - 12;
+                        }
+                        if (subLength) {
+                            range = NSMakeRange(range.location-subLength+1, range.length);
+                        }
+                        [ranges addObject:[NSValue valueWithRange:range]];
+                        [text appendFormat:@"%@%@",sustrs[0],sustrs[1]];
+                    }
+                }];
+                if (subLength) {
+                    text = (id)[NSString stringWithFormat:@"…%@",[text substringFromIndex:subLength]];
+                }
+            }
+        }
+    if (ranges.count > 0) {
+        NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:text];
+        for (NSValue *tempRang in ranges) {
+            [attributeString setAttributes:@{NSForegroundColorAttributeName:[UIColor greenColor]} range:[tempRang rangeValue]];
+        }
+        return [attributeString copy];
+    }else{
+        return nil;
+    }
+       
+}
+
+- (NSAttributedString *)toAttributedString:(NSString *)token {
+    __block NSMutableString *text = [NSMutableString string];
+    __block NSMutableArray *ranges = [NSMutableArray array];
+    if ([self isNotEmpty]) {
+        NSString *tempText = [self stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        NSArray *texts = [tempText componentsSeparatedByString:@"<a>"];
+        if (texts && texts.count) {
+            __block NSInteger subLength = 0;
+            [texts enumerateObjectsUsingBlock:^(NSString * _Nonnull str, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSArray *sustrs = [str componentsSeparatedByString:@"</a>"];
+                if (sustrs.count == 1) {
+                    [text appendString:sustrs[0]];
+                } else if (sustrs.count == 2) {
+                    NSRange range = NSMakeRange(text.length, ((NSString *)sustrs[0]).length);
+                    if (ranges.count == 0 && text.length > 12) {
+                        subLength = text.length - 12;
+                    }
+                    char a = [[sustrs[0] lowercaseString] characterAtIndex:0];
+                    char b = [token characterAtIndex:0];
+                    if ( a == b && range.length > token.length) {
+                        range = NSMakeRange(range.location, token.length);
+                    }
+                    if (subLength) {
+                        range = NSMakeRange(range.location-subLength+1, range.length);
+                    }
+                    [ranges addObject:[NSValue valueWithRange:range]];
+                    [text appendFormat:@"%@%@",sustrs[0],sustrs[1]];
+                }
+            }];
+            if (subLength) {
+                text = (id)[NSString stringWithFormat:@"…%@",[text substringFromIndex:subLength]];
+            }
+        }
+    }
+    NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:self];
+    for (NSValue *tempRang in ranges) {
+        [attributeString setAttributes:@{NSForegroundColorAttributeName:[UIColor greenColor]} range:[tempRang rangeValue]];
+    }
+    return [attributeString copy];
 }
 @end

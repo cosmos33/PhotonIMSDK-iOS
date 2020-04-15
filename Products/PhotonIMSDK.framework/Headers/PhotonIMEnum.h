@@ -48,6 +48,10 @@ typedef NS_ENUM(NSInteger, PhotonIMLoginStatus) {
  - PhotonIMLoginFailedTypeAbnormal: auth异常，重试（405）使用已有数据重新连接一次
  - PhotonIMLoginFailedTypeKick: 当前用户在其他ap登录，踢掉当前连接（409）被踢掉，回到登录界面
  - PhotonIMLoginFailedTypeReConnect: 重连，让当前用户在其他ap重新连接(410) // 内部处理，使用返回的ap在内部处理连接
+ 
+ - PhotonIMLoginFailedTypeAppIDEmpty: APPID为空，请检查在调用login之前是否调用了- (void)registerIMClientWithAppid:方法
+ - PhotonIMLoginFailedTypeUerIDEmpty: UerID为空，请检查在调用login之前是否调用了- (void)bindCurrentUserId:方法
+ - PhotonIMLoginFailedTypeTokenEmpty: Token为空
  */
 typedef NS_ENUM(NSInteger, PhotonIMLoginFailedType) {
     PhotonIMLoginFailedTypeUnknow = 0,
@@ -57,6 +61,9 @@ typedef NS_ENUM(NSInteger, PhotonIMLoginFailedType) {
     PhotonIMLoginFailedTypeAbnormal,
     PhotonIMLoginFailedTypeKick,
     PhotonIMLoginFailedTypeReConnect,
+    PhotonIMLoginFailedTypeAppIDEmpty,
+    PhotonIMLoginFailedTypeUerIDEmpty,
+    PhotonIMLoginFailedTypeTokenEmpty,
 };
 
 
@@ -96,19 +103,12 @@ typedef NS_ENUM(NSInteger,PhotonIMDBMode) {
  - PhotonIMChatTypeSingle: 单聊类型
  - PhotonIMChatTypeGroup: 群聊类型
  - PhotonIMChatTypeCustom: 自定义类型
- 
- - PhotonIMChatTypeSingleWithDraw: 单聊撤回类型
- - PhotonIMChatTypeGroupWithDraw: 群聊撤回类型
- - PhotonIMMessageTypeRead: 已读类型
  */
 typedef NS_ENUM(NSInteger,PhotonIMChatType){
     PhotonIMChatTypeSingle = 1,
     PhotonIMChatTypeGroup,
     PhotonIMChatTypeCustom,
-    
-    PhotonIMChatTypeSingleWithDraw = 66,
-    PhotonIMChatTypeGroupWithDraw = 67,
-    PhotonIMChatTypeRead = 68
+
 };
 
 /**
@@ -120,6 +120,8 @@ typedef NS_ENUM(NSInteger,PhotonIMChatType){
  - PhotonIMMessageTypeImage: 图片
  - PhotonIMMessageTypeAudio: 语音
  - PhotonIMMessageTypeVideo: 视频
+ - PhotonIMMessageTypeFile: 文件信息
+ - PhotonIMMessageTypeLocation: 位置信息
  */
 typedef NS_ENUM(NSInteger,PhotonIMMessageType) {
     PhotonIMMessageTypeUnknow = 0,
@@ -128,6 +130,8 @@ typedef NS_ENUM(NSInteger,PhotonIMMessageType) {
     PhotonIMMessageTypeImage = 3,
     PhotonIMMessageTypeAudio = 4,
     PhotonIMMessageTypeVideo = 5,
+    PhotonIMMessageTypeFile = 6,
+    PhotonIMMessageTypeLocation = 7,
 
 };
 
@@ -181,6 +185,43 @@ typedef NS_ENUM(NSInteger, PhotonIMNetworkType) {
     PhotonIMNetworkTypeWIFI    = 1,
     PhotonIMNetworkType2G      = 2,
     PhotonIMNetworkType3G      = 3,
-    PhotonIMNetworkType4g      = 4,
+    PhotonIMNetworkType4G      = 4,
+};
+
+/**
+会话中的at类型
+
+- PhotonIMConversationAtTypeNoAt: 会话不包含at
+- PhotonIMConversationAtTypeAtMe: 会话中有at，非全部，包含我
+- PhotonIMConversationTypeAtAll: 会话处于at所有群成员
+*/
+typedef NS_ENUM(NSInteger, PhotonIMConversationAtType) {
+    PhotonIMConversationAtTypeNoAt = 0,
+    PhotonIMConversationAtTypeAtMe = 1,
+    PhotonIMConversationTypeAtAll = 2,
+};
+
+/**
+消息中的at类型
+
+- PhotonIMAtTypeNoAt: 非at消息
+- PhotonIMAtTypeNotAtAll: 消息中包含at接收方，但不是at全部
+- PhotonIMAtTypeAtAll: 消息为at所有人
+*/
+typedef NS_ENUM(NSInteger, PhotonIMAtType) {
+    PhotonIMAtTypeNoAt = 0,
+    PhotonIMAtTypeNotAtAll = 1,
+    PhotonIMAtTypeAtAll = 2,
+};
+
+typedef NS_ENUM(NSInteger, PhotonIMForbidenAutoResendType){
+    PhotonIMForbidenAutoResendTypeNO = 0,
+    PhotonIMForbidenAutoResendTypeLogin = 2,
+    PhotonIMForbidenAutoResendTypeColdStart = 3,
+};
+
+typedef NS_ENUM(NSInteger, PhotonIMServerType){
+    PhotonIMServerTypeInland = 0,
+    PhotonIMServerTypeOverseas = 1,
 };
 #endif /* PhotonIMEnum_h */

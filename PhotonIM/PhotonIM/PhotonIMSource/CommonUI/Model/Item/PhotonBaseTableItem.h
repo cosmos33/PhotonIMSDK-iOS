@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  持有的对象，业务层转递
  */
-@property (nonatomic, strong, nullable) id userInfo;
+@property (atomic, strong, nullable) id userInfo;
 
 /**
  显示内容的大小

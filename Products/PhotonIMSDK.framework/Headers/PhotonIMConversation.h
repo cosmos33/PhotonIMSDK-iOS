@@ -24,6 +24,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) PhotonIMChatType chatType;
 
 /**
+ 会话创建时的时间戳
+ */
+@property(nonatomic, assign) uint64_t createTimeStamp;
+
+/**
  会话最近一次操作的时间戳
  */
 @property(nonatomic, assign) uint64_t lastTimeStamp;
@@ -110,6 +115,16 @@ NS_ASSUME_NONNULL_BEGIN
  会话是否设置置顶 默认值为NO（不指定）
  */
 @property(nonatomic, assign) BOOL sticky;
+
+
+
+/**
+ 2.0及以上版本支持此功能
+PhotonIMConversationAtTypeNoAt,//会话不包含at
+PhotonIMConversationAtTypeAtMe,//会话处于at中，非全部，包含我
+PhotonIMConversationTypeAtAl,//会话处于at所有群成员
+ */
+@property(nonatomic, assign)PhotonIMConversationAtType atType;
 
 /**
  初始化方法

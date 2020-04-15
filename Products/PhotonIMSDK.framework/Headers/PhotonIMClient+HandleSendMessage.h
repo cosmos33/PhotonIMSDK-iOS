@@ -44,10 +44,15 @@ NS_ASSUME_NONNULL_BEGIN
  群组中发送消息的撤回
  
  @param MsgID 撤回消息的id
+ @param originMsgTime 撤回消息的携带的时间戳
  @param fromid 撤回者的id，即消息发送者的id（即自己）
  @param toid 群组的id
  */
-- (void)sendGroupWithDrawMessage:(NSString *)MsgID fromid:(NSString *)fromid toid:(NSString *)toid completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
+- (void)sendGroupWithDrawMessage:(NSString *)MsgID
+                   originMsgTime:(int64_t)originMsgTime
+                          fromid:(NSString *)fromid
+                            toid:(NSString *)toid
+                      completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
 
 /**
  已读消息
@@ -59,6 +64,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)sendReadMessage:(NSArray<NSString *> *)readMsgIDs fromid:(NSString *)fromid toid:(NSString *)toid completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
 
 
+/**
+已读消息
+@param chatType 删除这批消息的所属的会话类型
+@param chatWith 删除这批消息的所属的会话id
+@param delMsgIds 删除消息的消息id的集合
+@param completion 删除操作的回调
+*/
+- (void)sendDeleteMessageWithChatType:(PhotonIMChatType)chatType
+                     chatWith:(NSString *)chatWith
+                    delMsgIds:(NSArray<NSString *> *)delMsgIds
+                   completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
 /**
  发送推送通知icon上展示的角标
 

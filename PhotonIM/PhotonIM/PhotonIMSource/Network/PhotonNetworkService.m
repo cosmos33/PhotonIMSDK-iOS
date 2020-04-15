@@ -28,9 +28,9 @@
     if ([[PhotonUtil getCookie] isNotEmpty]) {
         [_requestHeaders setValue:[PhotonUtil getCookie] forKey:@"Cookie"];
     }
-    [_requestHeaders setValue:@"cosmos-im-demo.immomo.com" forKey:@"host"];
-    [_requestHeaders setValue:@"cosmos-im-demo.immomo.com" forKey:@"HOST"];
-    [_requestHeaders setValue:@"cosmos-im-demo.immomo.com" forKey:@"Host"];
+    if ([[PhotonUtil getAppid] isNotEmpty]) {
+        [_requestHeaders setValue:[PhotonUtil getAppid] forKey:@"appId"];
+    }
     return _requestHeaders;
 }
 - (void)setRequestHeader:(NSString *)value key:(NSString *)key{
@@ -52,7 +52,9 @@
     [request setRequestHeaders:instance.requestHeaders];
     __weak PhotonNetworkRequest *pRequest = request;
     [request setCompletionBlock:^{
-        NSDictionary *dict = [instance getResponseJsonResult:pRequest];
+        __strong PhotonNetworkRequest *strongRequest = pRequest;
+        [instance.requestArray removeObject:strongRequest];
+        NSDictionary *dict = [instance getResponseJsonResult:strongRequest];
         if (!dict) {
             failure(nil);
             return;
@@ -239,6 +241,7 @@
 
 - (void)uploadRequestMethodWithMutiFile:(NSString *)queryString
                                paramter:(nonnull NSDictionary *)paramter
+                                 header:(nonnull NSDictionary *)header
                               fromFiles:(NSArray *)fileItems
                                progress:(void(^)(NSProgress *))progress
                              completion:(void (^)(NSDictionary *))completion
@@ -248,7 +251,8 @@
     request.delegate = self;
     request.requestMethod = PhotonRequesUpLoadMultiFile;
     self.uploadRequest = request;
-    [request setRequestHeaders:self.requestHeaders];
+    [request.requestHeaders addEntriesFromDictionary:header];
+    [request.requestHeaders  addEntriesFromDictionary:self.requestHeaders];
     [request.mutifileItems addObjectsFromArray:fileItems];
     __weak typeof(self)instance = self;
     __weak PhotonNetworkRequest *pRequest = request;

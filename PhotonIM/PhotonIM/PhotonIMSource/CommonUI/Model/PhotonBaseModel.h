@@ -22,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong,nullable) PhotonIMThreadSafeArray *items;
 @property(nonatomic, weak) id <PhotonBaseModelDelegate> delegate;
 
-
 // 分页的加载的使用
 @property(nonatomic, assign) NSInteger pageSize;
 @property(nonatomic, assign) NSInteger pageNumber;
@@ -34,6 +33,11 @@ NS_ASSUME_NONNULL_BEGIN
           failure:(void (^)(PhotonErrorDescription * _Nullable))failure;
 
 - (void)wrappResponseddDict:(NSDictionary *)dict;
+
+- (NSArray *)insertItem:(id)item;
+
+
+
 @end
 
 NS_ASSUME_NONNULL_END

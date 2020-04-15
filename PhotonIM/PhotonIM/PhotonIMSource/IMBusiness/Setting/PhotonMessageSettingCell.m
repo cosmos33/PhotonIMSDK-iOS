@@ -11,7 +11,7 @@
 @interface PhotonMessageSettingCell()
 @property (nonatomic,strong,nullable)UILabel *titleLabel;
 @property (nonatomic, strong,nullable)UISwitch *settingSwitch;
-
+@property(nonatomic, copy, nullable)UIImageView *icon;
 @property (nonatomic,strong,nullable)UIButton *btn;
 @end
 @implementation PhotonMessageSettingCell
@@ -21,6 +21,7 @@
         self.contentView.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:self.titleLabel];
         [self.contentView addSubview:self.settingSwitch];
+        [self.contentView addSubview:self.icon];
         
     }
     return self;
@@ -32,18 +33,32 @@
     self.titleLabel.text = item.settingName;
 
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).offset(20);
+        make.left.mas_equalTo(self.contentView).offset(10);
         make.centerY.mas_equalTo(self.contentView);
         make.width.mas_equalTo(100);
         make.height.mas_equalTo(40);
     }];
-    self.settingSwitch.on = item.open;
-    [self.settingSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.contentView).offset(-13);
-        make.centerY.mas_equalTo(self.contentView);
-        make.width.mas_equalTo(50);
-        make.height.mas_equalTo(28);
-    }];
+    if (item.showSwitch) {
+         self.icon.hidden = YES;
+        self.settingSwitch.on = item.open;
+        [self.settingSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.contentView).offset(-10);
+            make.centerY.mas_equalTo(self.contentView);
+            make.width.mas_equalTo(50);
+            make.height.mas_equalTo(28);
+        }];
+    }else{
+        self.settingSwitch.hidden = YES;
+        [self.icon setImage:[UIImage imageNamed:item.icon]];
+        [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.contentView).mas_offset(-10);
+            make.centerY.mas_equalTo(self.contentView);
+            make.width.mas_equalTo(22);
+        }];
+    }
+    
+    
+  
     
 }
 
@@ -58,6 +73,15 @@
     return _titleLabel;
 }
 
+- (UIImageView *)icon{
+    if (!_icon) {
+        _icon = [[UIImageView alloc] init];
+        _icon.contentMode = UIViewContentModeScaleAspectFit;
+        _icon.backgroundColor = [UIColor clearColor];
+        _icon.userInteractionEnabled = NO;
+    }
+    return _icon;
+}
 
 - (UISwitch *)settingSwitch{
     if (!_settingSwitch) {

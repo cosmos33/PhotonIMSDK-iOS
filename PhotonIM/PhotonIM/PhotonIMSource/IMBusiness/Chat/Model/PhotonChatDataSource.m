@@ -9,17 +9,20 @@
 #import "PhotonChatDataSource.h"
 #import "PhotonMessageCenter.h"
 
-#import "PhotonTextMessageChatItem.h"
-#import "PhotonTextMessageChatCell.h"
+#import "PhotonChatTextMessageItem.h"
+#import "PhotonChatTextMessageCell.h"
 
-#import "PhotonImageMessageChatItem.h"
-#import "PhotonImageMessageChatCell.h"
+#import "PhotonChatImageMessageItem.h"
+#import "PhotonChatImageMessageCell.h"
 
-#import "PhotonVoiceMessageChatItem.h"
-#import "PhotonVoiceMessageChatCell.h"
+#import "PhotonChatVoiceMessageItem.h"
+#import "PhotonChatVoiceMessageCell.h"
 
 #import "PhotonChatNoticItem.h"
 #import "PhotonChatNoticCell.h"
+
+#import "PhotonChatLocationItem.h"
+#import "PhotonChatLocationCell.h"
 @interface PhotonChatDataSource()
 @property (nonatomic, strong, nullable)PhotonIMThreadSafeArray *readMsgIdscCache;
 @property (nonatomic, strong, nullable)PhotonIMTimer   *timer;
@@ -34,14 +37,16 @@
     return self;
 }
 - (Class)tableView:(UITableView *)tableView cellClassForObject:(id)object{
-    if ([object isKindOfClass:[PhotonTextMessageChatItem class]]) {
-        return [PhotonTextMessageChatCell class];
-    }else if([object isKindOfClass:[PhotonImageMessageChatItem class]]){
-        return [PhotonImageMessageChatCell class];
-    }else if ([object isKindOfClass:[PhotonVoiceMessageChatItem class]]){
-        return [PhotonVoiceMessageChatCell class];
+    if ([object isKindOfClass:[PhotonChatTextMessageItem class]]) {
+        return [PhotonChatTextMessageCell class];
+    }else if([object isKindOfClass:[PhotonChatImageMessageItem class]]){
+        return [PhotonChatImageMessageCell class];
+    }else if ([object isKindOfClass:[PhotonChatVoiceMessageItem class]]){
+        return [PhotonChatVoiceMessageCell class];
     }else if ([object isKindOfClass:[PhotonChatNoticItem class]]){
         return [PhotonChatNoticCell class];
+    }else if ([object isKindOfClass:[PhotonChatLocationItem class]]){
+        return [PhotonChatLocationCell class];
     }
      return [super tableView:tableView cellClassForObject:object];
 }
@@ -50,14 +55,14 @@
 - (void)tableView:(UITableView *)tableView cell:(UITableViewCell *)cell willAppearAtIndexPath:(NSIndexPath *)indexPath{
     [super tableView:tableView cell:cell willAppearAtIndexPath:indexPath];
     id object = [self.items objectAtIndex:indexPath.row];
-    if ([object isKindOfClass:[PhotonBaseChatItem  class]]) {
-        PhotonBaseChatItem *item = (PhotonBaseChatItem *)object;
+    if ([object isKindOfClass:[PhotonChatBaseItem  class]]) {
+        PhotonChatBaseItem *item = (PhotonChatBaseItem *)object;
         
         PhotonIMMessage *message = (PhotonIMMessage *)item.userInfo;
         if (item.fromType == PhotonChatMessageFromSelf || !message) {
             return;
         }
-        if (item.fromType != PhotonChatMessageFromSelf && message.messageStatus != PhotonIMMessageStatusRecvRead) {
+        if (item.fromType != PhotonChatMessageFromSelf && message.messageStatus != PhotonIMMessageStatusRecvRead && message.chatType == PhotonIMChatTypeSingle) {
             NSString *msgID = [message messageID];
             // 状态设置为已读
             message.messageStatus = PhotonIMMessageStatusRecvRead;

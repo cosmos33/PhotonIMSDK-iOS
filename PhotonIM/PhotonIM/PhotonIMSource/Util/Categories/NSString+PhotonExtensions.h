@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString *)urlDecoded;
 - (NSString *)encoded;
 - (NSString *)trim;
+- (NSString *)removeSpaceAndNewline;
 
 
 /**
@@ -58,6 +59,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString*)stringByAddingURLEncodedQueryDictionary:(NSDictionary*)query;
 
 - (NSAttributedString *)toMessageString;
+
+- (NSAttributedString *)toAttributedString;
+
+- (NSAttributedString *)toAttributedString:(NSString *)token;
 
 // 判断字符是否为nil
 - (BOOL)isNotEmpty;

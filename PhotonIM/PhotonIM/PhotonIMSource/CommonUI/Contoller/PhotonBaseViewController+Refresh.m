@@ -8,8 +8,7 @@
 
 #import "PhotonBaseViewController+Refresh.h"
 #import <MJRefresh/MJRefresh.h>
-@interface PhotonBaseViewController(Refresh)
-
+@interface PhotonBaseViewController()
 @end
 
 @implementation PhotonBaseViewController(Refresh)
@@ -18,7 +17,7 @@
     __weak typeof(self)weakSelf = self;
     MJRefreshNormalHeader *header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         // 加载刷新操作
-        [weakSelf loadDataItems];
+        [weakSelf loadPreDataItems];
     }];
     self.tableView.mj_header.automaticallyChangeAlpha = YES;
     [self.tableView setMj_header:header];
@@ -42,7 +41,7 @@
     __weak typeof(self)weakSelf = self;
     MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
         //加载更多操作
-        [weakSelf loadDataItems];
+        [weakSelf loadMoreDataItems];
     }];
     [footer setTitle:@"正在加载..." forState:MJRefreshStateRefreshing];
     [footer setTitle:@"没有更多数据了" forState:MJRefreshStateNoMoreData];
