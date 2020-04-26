@@ -141,7 +141,7 @@
     }
     
     if (conversations.count) {
-        [[PhotonIMClient sharedClient] saveConversationBatch:conversations];
+//        [[PhotonIMClient sharedClient] saveConversationBatch:conversations];
         self.conversations = [conversations copy];
         if(self.loadConverationMessage){
             [self loadConversationMessage];

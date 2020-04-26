@@ -523,7 +523,7 @@ static PhotonMessageCenter *center = nil;
 
 #pragma mark ---  数据操作相关 -----
 - (void)insertOrUpdateMessage:(PhotonIMMessage *)message{
-    [self.imClient insertOrUpdateMessage:message updateConversion:YES];
+    [self.imClient saveOrUpdateMessage:message];
 }
 - (void)deleteMessage:(PhotonIMMessage *)message{
     [self.imClient deleteMessage:message];

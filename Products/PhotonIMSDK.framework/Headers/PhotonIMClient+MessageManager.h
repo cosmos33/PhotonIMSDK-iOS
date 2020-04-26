@@ -28,23 +28,39 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  存储或者更新数据 如果数据不存在，则插入一条数据，数据存在则更新
- @param update 是否同时更新会话中的最后一条消息
- @param message <#message description#>
+@param message 消息对象
  */
-- (void)insertOrUpdateMessage:(PhotonIMMessage *)message
-             updateConversion:(BOOL)update;
-
+- (void)saveOrUpdateMessage:(PhotonIMMessage *)message;
 
 /**
- 批量保存消息到数据库
+ 存储或者更新数据到数据库 如果数据不存在，则插入一条数据，数据存在则更新
+@param message 消息对象
+@param update 是否同时更新会话中的最后一条消息
+ */
+- (void)insertOrUpdateMessage:(PhotonIMMessage *)message
+             updateConversion:(BOOL)update DEPRECATED_MSG_ATTRIBUTE("Please use 'saveOrUpdateMessage:'");
+
+/**
+ 批量保存消息到数据库,如果数据存在于数据库中，则数据不重复保存
 
  @param chatType 查找的会话类型
- @param chatWith 会话中对方的id 群组为群组id
+ @param chatWith 会话中对方的id
  @param messageList 保存的消息列表，如果其中的消息已在表中，则不保存
  */
 - (void)saveMessageBatch:(PhotonIMChatType)chatType
                 chatWith:(NSString *)chatWith
              messageList:(NSArray<PhotonIMMessage *>*)messageList;
+
+/**
+批量保存消息到数据库,如果数据不存在，则插入操作，数据存在则更新
+
+@param chatType 查找的会话类型
+@param chatWith 会话中对方的id
+@param messageList 保存的消息列表，如果其中的消息已在表中，则不保存
+*/
+- (void)saveOrUpdateMessageBatch:(PhotonIMChatType)chatType
+                        chatWith:(NSString *)chatWith
+                     messageList:(NSArray<PhotonIMMessage *> *)messageList;
 
 /**
  更新消息状态
@@ -101,7 +117,6 @@ NS_ASSUME_NONNULL_BEGIN
  @param message <#message description#>
  */
 - (void)updateMessageCustom:(PhotonIMMessage *)message;
-
 
 /**
  删除消息
@@ -278,12 +293,23 @@ NS_ASSUME_NONNULL_BEGIN
                                                 NSError * _Nullable error))result;
 
 
+/// 全文搜索（所有会话消息）
+/// @param matchQuery 搜索关键词
+/// @param startIdentifier 开始标签，比如 @"<a>"
+/// @param andIdentifier 结束标签，比如 @"</a>"
+/// @param maxCharacterLenth 显示的最大字符数
 
 - (NSArray<PhotonIMMessage *> *)searchMessagesWithMatchQuery:(NSString *)matchQuery
                                            startIdentifier:(NSString *)startIdentifier
                                              andIdentifier:(NSString *)andIdentifier maxCharacterLenth:(NSInteger)maxCharacterLenth;
 
-
+/// 全文搜索 （不支持支持分页）
+/// @param chatType 会话类型
+/// @param chatWith 会话中对方的id
+/// @param startIdentifier 开始标签，比如 @"<a>"
+/// @param andIdentifier 结束标签，比如 @"</a>"
+/// @param maxCharacterLenth 显示的最大字符数
+/// @param matchQuery 搜索关键词
 - (NSArray<PhotonIMMessage *> *)searchMessagesWithChatType:(PhotonIMChatType)chatType
                                                 chatWith:(NSString *)chatWith
                                          startIdentifier:(NSString *)startIdentifier
@@ -291,6 +317,16 @@ NS_ASSUME_NONNULL_BEGIN
                                        maxCharacterLenth:(NSInteger)maxCharacterLenth
                                               matchQuery:(NSString *)matchQuery;
 
+
+/// 全文搜索 （支持分页）
+/// @param chatType 会话类型
+/// @param chatWith 会话中对方的id
+/// @param startIdentifier 开始标签，比如 @"<a>"
+/// @param andIdentifier 结束标签，比如 @"</a>"
+/// @param maxCharacterLenth 显示的最大字符数
+/// @param matchQuery 搜索关键词
+/// @param anchor 锚点
+/// @param pageSize 每页显示条数
 - (NSArray<PhotonIMMessage *> *)searchMessagesWithChatType:(PhotonIMChatType)chatType
                                                   chatWith:(NSString *)chatWith
                                            startIdentifier:(NSString *)startIdentifier

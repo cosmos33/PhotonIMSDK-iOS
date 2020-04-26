@@ -208,31 +208,31 @@ NS_ASSUME_NONNULL_BEGIN
                                       arg:(int)arg;
 
 /**
- 判断会话是否存在
+给会话打标签
  
  @param chatType 会话类型
  @param chatWith 会话中对方的id 群组为群组id
- @param arg 会话打标记使用的扩展字段
+ @param arg 会话打标记使用的扩展字段arg1
  */
 - (void)updateConversationWithCustomArg1:(PhotonIMChatType)chatType
                                 chatWith:(NSString *)chatWith
                                      arg:(int)arg;
 
 /**
- 判断会话是否存在
+给会话打标签
  
  @param chatType 会话类型
  @param chatWith 会话中对方的id 群组为群组id
- @param arg 会话打标记使用的扩展字段
+ @param arg 会话打标记使用的扩展字段arg2
  */
 - (void)updateConversationWithCustomArg2:(PhotonIMChatType)chatType
                                 chatWith:(NSString *)chatWith
                                      arg:(int)arg;
 
 /**
- 判断会话是否存在
+ 根据自定义参数查找会话
  
- @param arg 根据会话打的标记查询会话
+ @param arg 会话打标记使用的扩展字段arg1
  @param asc 查询出的会话是否按时间降序排序
  */
 - (NSArray<PhotonIMConversation *> *)findConversationListWithCustomArg1:(int)arg
@@ -240,9 +240,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- 判断会话是否存在
+根据自定义参数查找会话
  
- @param arg 根据会话打的标记查询会话
+ @param arg 会话打标记使用的扩展字段arg2
  @param asc 查询出的会话是否按时间降序排序
  */
 - (NSArray<PhotonIMConversation *> *)findConversationListWithCustomArg2:(int)arg
@@ -264,7 +264,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置会话中的消息为未读状态
 - (void)setConversationUnRead:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
 
-/// 设置会话中的消息为未读状态
+/// 设置会话中的消息为已读状态
 - (void)setConversationRead:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
 
 
