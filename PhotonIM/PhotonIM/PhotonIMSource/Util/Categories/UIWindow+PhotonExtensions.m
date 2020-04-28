@@ -10,6 +10,7 @@
 #import <objc/runtime.h>
 #import <DatabaseVisual/DatabaseManager.h>
 #import <PhotonIMSDK/PhotonIMSDK.h>
+#import "PAirSandbox.h"
 @implementation UIWindow (PhotonExtensions)
 
 void __Method_Swizzle__(Class cls, SEL origSel_, SEL altSel_)
@@ -31,6 +32,7 @@ void __Method_Swizzle__(Class cls, SEL origSel_, SEL altSel_)
 {
     if (motion == UIEventSubtypeMotionShake)
     {
+         [[PAirSandbox sharedInstance] showSandboxBrowserOnWindow];
 //        [DatabaseManager sharedInstance].dbDocumentPath = [[[PhotonIMClient sharedClient] getDBPath] stringByDeletingLastPathComponent];
 //        [[DatabaseManager sharedInstance] showTables];
     }

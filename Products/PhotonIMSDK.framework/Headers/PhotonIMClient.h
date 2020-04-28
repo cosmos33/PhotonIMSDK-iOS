@@ -121,6 +121,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)runInPhotonIMDBQueue:(dispatch_block_t)block;
 
 
+/// 获取数据库的存储路径
+- (NSString *)getDBPath;
+/// 此方法可以设置是否使im在后台一直处于连接中，一定要谨慎使用。
+/// 在确保app进到后台一直保活的前提下设置keep为YES。处于非保活下设置keep为NO
+/// 使用场景一般是后台播放音频，后台定位等场景。进到此场景调用设置keep为YES，退回此场景设置Keep为NO.
+/// 举例：比如播放音频开启了后台权限。在音频play时i调用设置keep为YES。音频stop时设置keep为NO。
+/// @param keep 默认是NO,因切后台在不开启后台运行模式的情况下app休眠的问题，im默认进到后台会断开处理。
+- (void)keepConnectedOnBackground:(BOOL)keep;
+
 @end
 
 NS_ASSUME_NONNULL_END

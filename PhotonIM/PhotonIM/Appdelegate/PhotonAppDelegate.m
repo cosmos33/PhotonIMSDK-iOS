@@ -96,7 +96,6 @@
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
-     [[NSUserDefaults standardUserDefaults] setValue:[@([[NSDate date] timeIntervalSince1970]) stringValue] forKey:@"timeStamp_pushqq"];
     if ([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
         NSDictionary *dict = response.notification.request.content.userInfo;
         NSLog(@"%@",dict);

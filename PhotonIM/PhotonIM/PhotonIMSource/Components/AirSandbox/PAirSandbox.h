@@ -14,5 +14,6 @@
 
 - (void)enableSwipe;
 - (void)showSandboxBrowser;
+- (void)showSandboxBrowserOnWindow;
 
 @end

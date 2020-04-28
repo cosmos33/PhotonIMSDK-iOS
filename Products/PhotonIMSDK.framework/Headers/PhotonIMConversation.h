@@ -24,6 +24,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) PhotonIMChatType chatType;
 
 /**
+ 会话创建时的时间戳
+ */
+@property(nonatomic, assign) uint64_t createTimeStamp;
+
+/**
  会话最近一次操作的时间戳
  */
 @property(nonatomic, assign) uint64_t lastTimeStamp;

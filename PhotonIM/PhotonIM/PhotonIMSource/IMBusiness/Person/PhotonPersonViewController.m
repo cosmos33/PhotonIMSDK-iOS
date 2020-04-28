@@ -175,8 +175,8 @@
             }
             break;
             case PhotonPersonItemTypeDB:{
-//                [DatabaseManager sharedInstance].dbDocumentPath = [[[PhotonIMClient sharedClient] getDBPath] stringByDeletingLastPathComponent];
-//                [[DatabaseManager sharedInstance] showTables];
+                [DatabaseManager sharedInstance].dbDocumentPath = [[[PhotonIMClient sharedClient] getDBPath] stringByDeletingLastPathComponent];
+                [[DatabaseManager sharedInstance] showTables];
             }
             break;
             default:

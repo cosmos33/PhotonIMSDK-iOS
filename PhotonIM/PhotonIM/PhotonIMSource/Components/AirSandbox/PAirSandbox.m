@@ -10,8 +10,9 @@
 #import <UIKit/UIKit.h>
 #import "PhotonIMSwift-Swift.h"
 #import "PhotonBaseViewController.h"
+#import <DatabaseVisual/DatabaseManager.h>
 #define ASThemeColor [UIColor colorWithWhite:0.2 alpha:1.0]
-#define ASWindowPadding 20
+#define ASWindowPadding 0
 
 #pragma mark- ASFileItem
 
@@ -19,6 +20,7 @@ typedef enum : NSUInteger {
     ASFileItemUp,
     ASFileItemDirectory,
     ASFileItemFile,
+    ASFileItemDB,
 } ASFileItemType;
 
 @interface ASFileItem : NSObject
@@ -74,6 +76,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) UIButton*                    btnClose;
 //@property (nonatomic, strong) NSArray*                     items;
 @property (nonatomic, copy) NSString*                      rootPath;
+@property (nonatomic, assign) BOOL                     pushCon;
 @end
 
 @implementation ASViewController
@@ -223,7 +226,13 @@ typedef enum : NSUInteger {
         [self sharePath:item.path];
     }
     else if(item.type == ASFileItemDirectory) {
-        [self loadPath:item.path];
+        if ([item.name isEqualToString:@"📁 DB"]) {
+            [DatabaseManager sharedInstance].dbDocumentPath = item.path;
+            [[DatabaseManager sharedInstance] showTables];
+        }else{
+             [self loadPath:item.path];
+        }
+       
     }
 }
 
@@ -253,7 +262,11 @@ typedef enum : NSUInteger {
     FileExplorerViewController *fileExpore  = [[FileExplorerViewController alloc]  initWithDirectoryURL:[NSURL fileURLWithPath:path] title:path.lastPathComponent compeltion:^{
         self.view.hidden = NO;
     }];
-    [[[self getCurrentVC] navigationController] pushViewController:fileExpore animated:YES];
+    if (self.pushCon) {
+        [[[self getCurrentVC] navigationController] pushViewController:fileExpore animated:YES];
+    }else{
+         [self presentViewController:fileExpore animated:YES completion:nil];
+    }
 }
 
 - (UIViewController *)getCurrentVC
@@ -314,27 +327,33 @@ typedef enum : NSUInteger {
 
 - (void)onSwipeDetected:(UISwipeGestureRecognizer*)gs
 {
+   
     [self showSandboxBrowser];
 }
 
 - (void)showSandboxBrowser {
     _ctrl = [ASViewController new];
+    _ctrl.pushCon = YES;
     [[[_ctrl getCurrentVC]navigationController] pushViewController:_ctrl animated:YES];
-//    if (_window == nil) {
-//        _window = [UIWindow new];
-//        CGRect keyFrame = [UIScreen mainScreen].bounds;
-//        keyFrame.origin.y += 64;
-//        keyFrame.size.height -= 64;
-//        _window.frame = CGRectInset(keyFrame, ASWindowPadding, ASWindowPadding);
-//        _window.backgroundColor = [UIColor whiteColor];
-//        _window.layer.borderColor = ASThemeColor.CGColor;
-//        _window.layer.borderWidth = 2.0;
-//        _window.windowLevel = UIWindowLevelStatusBar;
-//
-//        _ctrl = [ASViewController new];
-//        _window.rootViewController = _ctrl;
-//    }
-//    _window.hidden = false;
+}
+
+- (void)showSandboxBrowserOnWindow {
+    if (_window == nil) {
+        _window = [UIWindow new];
+        CGRect keyFrame = [UIScreen mainScreen].bounds;
+        keyFrame.origin.y += 44;
+        keyFrame.size.height -= 44;
+        _window.frame = CGRectInset(keyFrame, ASWindowPadding, ASWindowPadding);
+        _window.backgroundColor = [UIColor whiteColor];
+        _window.layer.borderColor = ASThemeColor.CGColor;
+        _window.layer.borderWidth = 2.0;
+        _window.windowLevel = UIWindowLevelStatusBar;
+
+        _ctrl = [ASViewController new];
+         _ctrl.pushCon = NO;
+        _window.rootViewController = _ctrl;
+    }
+    _window.hidden = false;
 }
 
 @end

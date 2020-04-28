@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param url 图片原图在服务端的地址
 /// @param bigURL 图片大图在服务端的地址
 /// @param thumbURL 图片缩略图在服务端的地址
-/// @param localFileName 图片本地存储的相对路径8
+/// @param localFileName 图片本地存储的相对路径
 /// @param whRatio 图片宽高比
 + (PhotonIMImageBody *)imageBodyWithURL:(NSString *)url
                                  bigURL:(nullable NSString *)bigURL

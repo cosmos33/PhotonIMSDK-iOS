@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
  更新会话的免打扰设置
  
  @param chatType 会话类型
- @param chatWith 会话中对方的id
+ @param chatWith 会话中对方的id 群组为群组id
  @param ignoreAlert YES 设置打扰 NO 取消免打扰设置
  */
 - (void)updateConversationIgnoreAlert:(PhotonIMChatType)chatType
@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
  更新会话的置顶的设置
  
  @param chatType 会话类型
- @param chatWith 会话中对方的id
+ @param chatWith 会话中对方的id 群组为群组id
  @param sticky YES 设置置顶 NO 取消置顶
  */
 - (void)updateConversationSticky:(PhotonIMChatType)chatType
@@ -75,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 添加会话的中草稿
 /// @param chatType 会话类型
-/// @param chatWith 会话中对方的id
+/// @param chatWith 会话中对方的id 群组为群组id
 /// @param draft 草稿内容
 - (void)addConversationDraft:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith draft:(nullable NSString *)draft;
 
@@ -88,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 添加会话的中的草稿
 /// @param chatType 会话类型
-/// @param chatWith 会话中对方的id
+/// @param chatWith 会话中对方的id 群组为群组id
 - (void)deleteConversationDraft:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
 
 /**
@@ -102,7 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
  更新会话的额外信息
  
  @param chatType 会话类型
- @param chatWith 会话中对方的id
+ @param chatWith 会话中对方的id 群组为群组id
  @param extra 额外信息
  */
 - (void)updateConversationExtra:(PhotonIMChatType)chatType
@@ -121,7 +121,7 @@ NS_ASSUME_NONNULL_BEGIN
  更新会话的未读数
  
  @param chatType 会话类型
- @param chatWith 会话中对方的id
+ @param chatWith 会话中对方的id 群组为群组id
  @param count 未读数
  */
 - (void)updateConversationUnReadCount:(PhotonIMChatType)chatType
@@ -132,7 +132,7 @@ NS_ASSUME_NONNULL_BEGIN
  清空一个会话的未读数
  
  @param chatType 会话类型
- @param chatWith 会话中对方的id
+ @param chatWith 会话中对方的id 群组为群组id
  */
 - (void)clearConversationUnReadCount:(PhotonIMChatType)chatType
                             chatWith:(NSString *)chatWith;
@@ -150,7 +150,7 @@ NS_ASSUME_NONNULL_BEGIN
  删除会话
 
  @param chatType 会话类型
- @param chatWith 会话中对方的id
+ @param chatWith 会话中对方的id 群组为群组id
  @param clearChatMessage 是否同时清空会话中的消息
  */
 - (void)deleteConversation:(PhotonIMChatType)chatType
@@ -161,7 +161,7 @@ NS_ASSUME_NONNULL_BEGIN
  判断会话是否存在
 
  @param chatType 会话类型
- @param chatWith 会话中对方的id
+ @param chatWith 会话中对方的id 群组为群组id
  @return YES 会话存在 NO 会话不存在
  */
 - (BOOL)isConversationExist:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
@@ -170,7 +170,7 @@ NS_ASSUME_NONNULL_BEGIN
  查找会话
  
  @param chatType 会话类型
- @param chatWith 会话中对方的id
+ @param chatWith 会话中对方的id 群组为群组id
  @return 会话对象
  */
 - (PhotonIMConversation *)findConversation:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
@@ -189,7 +189,7 @@ NS_ASSUME_NONNULL_BEGIN
  判断会话是否存在
  
  @param chatType 会话类型
- @param chatWith 会话中对方的id
+ @param chatWith 会话中对方的id 群组为群组id
  @param arg 自定义消息中arg1参数
  */
 - (void)updateConversationWithLastMsgArg1:(PhotonIMChatType)chatType
@@ -200,7 +200,7 @@ NS_ASSUME_NONNULL_BEGIN
  判断会话是否存在
  
  @param chatType 会话类型
- @param chatWith 会话中对方的id
+ @param chatWith 会话中对方的id 群组为群组id
  @param arg 自定义消息中arg2参数
  */
 - (void)updateConversationWithLastMsgArg2:(PhotonIMChatType)chatType
@@ -208,31 +208,31 @@ NS_ASSUME_NONNULL_BEGIN
                                       arg:(int)arg;
 
 /**
- 判断会话是否存在
+给会话打标签
  
  @param chatType 会话类型
- @param chatWith 会话中对方的id
- @param arg 会话打标记使用的扩展字段
+ @param chatWith 会话中对方的id 群组为群组id
+ @param arg 会话打标记使用的扩展字段arg1
  */
 - (void)updateConversationWithCustomArg1:(PhotonIMChatType)chatType
                                 chatWith:(NSString *)chatWith
                                      arg:(int)arg;
 
 /**
- 判断会话是否存在
+给会话打标签
  
  @param chatType 会话类型
- @param chatWith 会话中对方的id
- @param arg 会话打标记使用的扩展字段
+ @param chatWith 会话中对方的id 群组为群组id
+ @param arg 会话打标记使用的扩展字段arg2
  */
 - (void)updateConversationWithCustomArg2:(PhotonIMChatType)chatType
                                 chatWith:(NSString *)chatWith
                                      arg:(int)arg;
 
 /**
- 判断会话是否存在
+ 根据自定义参数查找会话
  
- @param arg 根据会话打的标记查询会话
+ @param arg 会话打标记使用的扩展字段arg1
  @param asc 查询出的会话是否按时间降序排序
  */
 - (NSArray<PhotonIMConversation *> *)findConversationListWithCustomArg1:(int)arg
@@ -240,9 +240,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- 判断会话是否存在
+根据自定义参数查找会话
  
- @param arg 根据会话打的标记查询会话
+ @param arg 会话打标记使用的扩展字段arg2
  @param asc 查询出的会话是否按时间降序排序
  */
 - (NSArray<PhotonIMConversation *> *)findConversationListWithCustomArg2:(int)arg
@@ -253,7 +253,7 @@ NS_ASSUME_NONNULL_BEGIN
  判断会话是否存在
  
  @param chatType 会话类型
- @param chatWith 会话中对方的id
+ @param chatWith 会话中对方的id 群组为群组id
  @param atType 会话处于at的类型
  */
 - (void)updateConversationAtType:(PhotonIMChatType)chatType
@@ -264,8 +264,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置会话中的消息为未读状态
 - (void)setConversationUnRead:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
 
-/// 设置会话中的消息为未读状态
+/// 设置会话中的消息为已读状态
 - (void)setConversationRead:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
+
+
+/// 获取会话的创建时间
+/// @param chatType 会话类型
+/// @param chatWith 会话中对方的id 群组为群组id
+- (int64_t)findConversationCreateTime:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
 @end
 
 NS_ASSUME_NONNULL_END

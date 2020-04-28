@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable)NSString *fileDisplayName;
 
+
 /**
 文件大小
 */

@@ -16,8 +16,8 @@ target :PhotonIM do
     pod 'MMKV','1.0.22'
     pod 'DatabaseVisual'
     pod 'MMBase-iOS'
-    pod 'PhotonIMSDK',:git => 'https://github.com/zhanghesheng/PhotonIMSDK-iOS.git',:tag => '2.3.0'
+#    pod 'PhotonIMSDK',:git => 'https://github.com/zhanghesheng/PhotonIMSDK-iOS.git',:tag => '2.3.0'
     pod 'PhotonPushSDK','1.0.2'
-#    pod 'PhotonIMSDK','2.2.2'
+    pod 'PhotonIMSDK',:path=>'../'
 
 end

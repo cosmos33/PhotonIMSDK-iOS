@@ -392,7 +392,7 @@
     if (item == nil) {
         return;
     }
-    BOOL server = YES;
+    BOOL server = NO;
     if (server) {
         PhotonWeakSelf(self);
         [[PhotonMessageCenter sharedCenter] deleteMessage:item.userInfo completion:^(BOOL succeed, PhotonIMError * _Nullable error) {

@@ -49,22 +49,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  单人聊天中发送消息的撤回
  
- @param MsgID 撤回消息的id
+ @param msgID 撤回消息的id
  @param fromid 撤回者的id，即消息发送者的id（即自己）
  @param toid 撤回的消息发送对象的id （即对方）
  */
-- (void)sendSingleWithDrawMessage:(NSString *)MsgID fromid:(NSString *)fromid toid:(NSString *)toid completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
+- (void)sendSingleWithDrawMessage:(NSString *)msgID fromid:(NSString *)fromid toid:(NSString *)toid completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
 
 /**
  
  群组中发送消息的撤回
  
- @param MsgID 撤回消息的id
+ @param msgID 撤回消息的id
  @param originMsgTime 撤回消息的携带的时间戳
  @param fromid 撤回者的id，即消息发送者的id（即自己）
  @param toid 群组的id
  */
-- (void)sendGroupWithDrawMessage:(NSString *)MsgID
+- (void)sendGroupWithDrawMessage:(NSString *)msgID
                    originMsgTime:(int64_t)originMsgTime
                           fromid:(NSString *)fromid
                             toid:(NSString *)toid

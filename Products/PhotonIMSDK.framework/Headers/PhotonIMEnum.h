@@ -48,6 +48,10 @@ typedef NS_ENUM(NSInteger, PhotonIMLoginStatus) {
  - PhotonIMLoginFailedTypeAbnormal: auth异常，重试（405）使用已有数据重新连接一次
  - PhotonIMLoginFailedTypeKick: 当前用户在其他ap登录，踢掉当前连接（409）被踢掉，回到登录界面
  - PhotonIMLoginFailedTypeReConnect: 重连，让当前用户在其他ap重新连接(410) // 内部处理，使用返回的ap在内部处理连接
+ 
+ - PhotonIMLoginFailedTypeAppIDEmpty: APPID为空，请检查在调用login之前是否调用了- (void)registerIMClientWithAppid:方法
+ - PhotonIMLoginFailedTypeUerIDEmpty: UerID为空，请检查在调用login之前是否调用了- (void)bindCurrentUserId:方法
+ - PhotonIMLoginFailedTypeTokenEmpty: Token为空
  */
 typedef NS_ENUM(NSInteger, PhotonIMLoginFailedType) {
     PhotonIMLoginFailedTypeUnknow = 0,
@@ -57,6 +61,9 @@ typedef NS_ENUM(NSInteger, PhotonIMLoginFailedType) {
     PhotonIMLoginFailedTypeAbnormal,
     PhotonIMLoginFailedTypeKick,
     PhotonIMLoginFailedTypeReConnect,
+    PhotonIMLoginFailedTypeAppIDEmpty,
+    PhotonIMLoginFailedTypeUerIDEmpty,
+    PhotonIMLoginFailedTypeTokenEmpty,
 };
 
 
@@ -96,19 +103,12 @@ typedef NS_ENUM(NSInteger,PhotonIMDBMode) {
  - PhotonIMChatTypeSingle: 单聊类型
  - PhotonIMChatTypeGroup: 群聊类型
  - PhotonIMChatTypeCustom: 自定义类型
- 
- - PhotonIMChatTypeSingleWithDraw: 单聊撤回类型
- - PhotonIMChatTypeGroupWithDraw: 群聊撤回类型
- - PhotonIMMessageTypeRead: 已读类型
  */
 typedef NS_ENUM(NSInteger,PhotonIMChatType){
     PhotonIMChatTypeSingle = 1,
     PhotonIMChatTypeGroup,
     PhotonIMChatTypeCustom,
-//    
-//    PhotonIMChatTypeSingleWithDraw = 66,
-//    PhotonIMChatTypeGroupWithDraw = 67,
-//    PhotonIMChatTypeRead = 68
+
 };
 
 /**
