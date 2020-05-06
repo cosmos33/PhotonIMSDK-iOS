@@ -140,8 +140,19 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)networkChange:(PhotonIMNetworkStatus)networkStatus;
 
+/*
+ 未发送成功的消息在被重新发送前触发，业务端实现返回枚举值
+ 
+ PhotonIMForbidenAutoResendTypeNO // 允许消息重发，此为默认值
+ PhotonIMForbidenAutoResendTypeLogin // 禁止每次登录成功后消息的重发,
+ PhotonIMForbidenAutoResendTypeColdStart = 3 // 仅在app冷启登录时消息重新发送
+ */
+- (PhotonIMForbidenAutoResendType)messageWillBeAutoResend;
+
+
+@required
 /**
- 重发程序kill时的消息，消息发出后监听此回执
+ 重发程序kill时的消息，消息发出后监听此回执，刷新会话列表页UI展示
  
  @param client client
  @param msgID 消息的id
@@ -154,16 +165,6 @@ NS_ASSUME_NONNULL_BEGIN
         chatType:(PhotonIMChatType)chatType
         chatWith:(NSString * _Nullable)chatWith
         error:( PhotonIMError* _Nullable)error;
-
-
-/*
- 未发送成功的消息在被重新发送前触发，业务端实现返回枚举值
- 
- PhotonIMForbidenAutoResendTypeNO // 允许消息重发，此为默认值
- PhotonIMForbidenAutoResendTypeLogin // 禁止每次登录成功后消息的重发,
- PhotonIMForbidenAutoResendTypeColdStart = 3 // 仅在app冷启登录时消息重新发送
- */
-- (PhotonIMForbidenAutoResendType)messageWillBeAutoResend;
 @end
 #endif /* PhotonIMClientProtocol_h */
 NS_ASSUME_NONNULL_END

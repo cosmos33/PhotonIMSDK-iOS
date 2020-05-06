@@ -100,7 +100,7 @@
 //                }
 //            }] ;
         
-        [imclient loadHistoryMessages:chatType chatWith:chatWith messageTypeList:@[@(PhotonIMMessageTypeImage)] anchorMsgId:weakself.anchorMsgId beginTimeStamp:0 endTime:[[NSDate date] timeIntervalSince1970] * 1000 size:10 reaultBlock:^(NSArray<PhotonIMMessage *> * _Nullable messages, NSString * _Nullable an, BOOL remainHistoryInServer) {
+        [imclient loadHistoryMessages:chatType chatWith:chatWith messageTypeList:@[@(PhotonIMMessageTypeUnknow)] anchorMsgId:weakself.anchorMsgId beginTimeStamp:0 endTime:[[NSDate date] timeIntervalSince1970] * 1000 size:10 reaultBlock:^(NSArray<PhotonIMMessage *> * _Nullable messages, NSString * _Nullable an, BOOL remainHistoryInServer) {
             NSMutableArray *items = [NSMutableArray array];
             weakself.anchorMsgId = [an copy];
             for (PhotonIMMessage *msg in messages) {
