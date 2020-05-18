@@ -38,6 +38,7 @@
     }];
 }
 
+
 - (void)wrappResponseddDict:(NSDictionary *)dict{
     [super wrappResponseddDict:dict];
     NSDictionary *data = [dict objectForKey:@"data"];

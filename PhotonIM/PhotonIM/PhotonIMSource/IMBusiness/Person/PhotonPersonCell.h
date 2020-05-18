@@ -16,6 +16,7 @@ typedef NS_ENUM(NSInteger,PhotonPersonItemType) {
     PhotonPersonItemTypeNick,
     PhotonPersonItemTypeBTN,
     PhotonPersonItemTypeLoadHistorySetting,
+    PhotonPersonItemTypeDocument,
 };
 @interface PhotonPersonItem : PhotonBaseTableItem
 @property (nonatomic, copy, nullable)NSString *key;

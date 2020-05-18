@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failedType 失败的类型
  */
 - (void)imClientLogin:(id)client failedType:(PhotonIMLoginFailedType)failedType;
+
 #pragma mark ======== 拉取消息相关 ===========
 
 /**
@@ -42,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return 是否仅在IM登录后回调执行一次Sync方法 YES 仅一次， NO 每次拉取消息都有回调,默认是NO;
  */
 - (BOOL)imClientSync:(id)client syncStatus:(PhotonIMSyncStatus)status;
+
 
 #pragma mark ======== 接收消息 ===========
 /**

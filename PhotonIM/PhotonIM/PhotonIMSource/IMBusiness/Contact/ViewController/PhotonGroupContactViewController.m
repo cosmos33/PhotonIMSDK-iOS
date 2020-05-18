@@ -57,7 +57,10 @@
     self.dataSource = dataSource;
 }
 
-
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+     [PhotonUtil hiddenLoading];
+}
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
     if ([cell isKindOfClass:[PhotonGroupContactCell class]]) {
         PhotonGroupContactCell *tempCell = (PhotonGroupContactCell *)cell;

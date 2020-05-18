@@ -123,14 +123,6 @@
     // 添加接收消息的监听
     [[PhotonMessageCenter sharedCenter] addObserver:self];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        int i = 0;
-        while (i < 1000) {
-            [NSThread sleepForTimeInterval:2];
-            i ++;
-            NSLog(@"backGroup test %@",@(i));
-        }
-    });
     
     
 }
@@ -172,15 +164,15 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [self.player play];
-    [[PhotonIMClient sharedClient] keepConnectedOnBackground:YES];
+//    [self.player play];
+//    [[PhotonIMClient sharedClient] keepConnectedOnBackground:YES];
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
     [_panelManager dismissKeyboard];
     self.isStop = YES;
-   [self.player stop];
-    [[PhotonIMClient sharedClient] keepConnectedOnBackground:NO];
+//   [self.player stop];
+//    [[PhotonIMClient sharedClient] keepConnectedOnBackground:NO];
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];

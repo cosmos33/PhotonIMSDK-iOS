@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "PhotonIMClientProtocol.h"
+#import "PhotonIMClientConfigProtocol.h"
 #import "PhotonIMMessage.h"
 #import "PhotonIMConversation.h"
 #import "PhotonIMError.h"
@@ -44,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 设置IM服务走海外还是国内,在注册appid之前调用
 */
 - (void)setServerType:(PhotonIMServerType)serverType;
+
+- (void)setIMClientConfig:(id<PhotonIMClientConfigProtocol>)imClientConfig;
 
 #pragma mark ---- 注册IMClient -----
 /**

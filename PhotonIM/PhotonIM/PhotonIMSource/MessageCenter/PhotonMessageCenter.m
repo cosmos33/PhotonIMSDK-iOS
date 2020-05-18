@@ -14,6 +14,7 @@
 #import "PhotonNetworkService.h"
 #import "PhotonCharBar.h"
 #import <PhotonIMSDK/PhotonIMSDK.h>
+#import "PhotonIMClientConfig.h"
 static PhotonMessageCenter *center = nil;
 @interface PhotonMessageCenter()<PhotonIMClientProtocol>
 @property (nonatomic, strong, nullable)PhotonNetworkService *netService;
@@ -49,6 +50,10 @@ static PhotonMessageCenter *center = nil;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppWillEnterForegroundNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
     PhotonIMServerType serverType = [PhotonContent getServerSwitch];
    [[PhotonIMClient sharedClient] setServerType:serverType];
+    
+    PhotonIMClientConfig *imclientConfig = [[PhotonIMClientConfig alloc] init];
+    [[PhotonIMClient sharedClient] setIMClientConfig:imclientConfig];
+    
 //#ifdef DEBUG
     // 是否在写log时开启控制台日志输出，debug模式下建议开启
     [[PhotonIMClient sharedClient] openPhotonIMLog:YES];
