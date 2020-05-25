@@ -15,6 +15,7 @@
 #import "PhotonCharBar.h"
 #import <PhotonIMSDK/PhotonIMSDK.h>
 #import "PhotonIMClientConfig.h"
+#import <MLN/MLNCore.h>
 static PhotonMessageCenter *center = nil;
 @interface PhotonMessageCenter()<PhotonIMClientProtocol>
 @property (nonatomic, strong, nullable)PhotonNetworkService *netService;
@@ -711,13 +712,15 @@ static PhotonMessageCenter *center = nil;
     }
     NSString *token = [[MMKV defaultMMKV] getStringForKey:TOKENKEY defaultValue:@""];
     if ([token isNotEmpty]) {
-         [[PhotonIMClient sharedClient] loginWithToken:token extra:extra];
+         [[PhotonIMClient sharedClient] loginWithToken:@"322" extra:extra];
     }else{
         NSMutableDictionary *paramter = [NSMutableDictionary dictionary];
         [self.netService commonRequestMethod:PhotonRequestMethodPost queryString:PHOTON_TOKEN_PATH paramter:paramter completion:^(NSDictionary * _Nonnull dict) {
             NSString *token = [[dict objectForKey:@"data"] objectForKey:@"token"];
             [[MMKV defaultMMKV] setString:token forKey:TOKENKEY];
             [[PhotonIMClient sharedClient] loginWithToken:token extra:extra];
+            
+           
             PhotonLog(@"[pim] dict = %@",dict);
         } failure:^(PhotonErrorDescription * _Nonnull error) {
             PhotonLog(@"[pim] error = %@",error.errorMessage);
@@ -725,6 +728,8 @@ static PhotonMessageCenter *center = nil;
             [self logout];
         }];
     }
+    
+               
 }
 
 - (PhotonNetworkService *)netService{

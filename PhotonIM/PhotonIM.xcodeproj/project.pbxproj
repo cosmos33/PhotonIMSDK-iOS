@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B600B0242159150F0EA18CB /* libPods-PhotonIM.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 55602FE2F1A0AA08798316AE /* libPods-PhotonIM.a */; };
 		3211BECA24697712005FA455 /* PAirSandbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 3211BEC824697712005FA455 /* PAirSandbox.m */; };
 		321838BF22F84B3F005CCB00 /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 321838BE22F84B3F005CCB00 /* NotificationService.m */; };
 		321838C322F84B3F005CCB00 /* PhotonIMNotificationService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 321838BB22F84B3F005CCB00 /* PhotonIMNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -247,6 +246,7 @@
 		32F94D96233887EC002DF468 /* PhotonGroupContactItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F94D95233887EC002DF468 /* PhotonGroupContactItem.m */; };
 		32F94D99233888A3002DF468 /* PhotonGroupContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F94D98233888A3002DF468 /* PhotonGroupContactCell.m */; };
 		32F94DB02338F092002DF468 /* PhotonGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F94DAF2338F092002DF468 /* PhotonGroup.m */; };
+		D2CC27101EDDCF3BBC0211BD /* libPods-PhotonIM.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3126E6C64AF43F212FD7B4E3 /* libPods-PhotonIM.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -282,6 +282,7 @@
 
 /* Begin PBXFileReference section */
 		006DD1F3F627E43521F03B97 /* Pods-PhotonIM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotonIM.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhotonIM/Pods-PhotonIM.debug.xcconfig"; sourceTree = "<group>"; };
+		3126E6C64AF43F212FD7B4E3 /* libPods-PhotonIM.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PhotonIM.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3211BEC824697712005FA455 /* PAirSandbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAirSandbox.m; sourceTree = "<group>"; };
 		3211BEC924697712005FA455 /* PAirSandbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAirSandbox.h; sourceTree = "<group>"; };
 		321838BB22F84B3F005CCB00 /* PhotonIMNotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PhotonIMNotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -357,7 +358,7 @@
 		3226080423D0620C00C9E393 /* PhotonLoadDataSetModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonLoadDataSetModel.m; sourceTree = "<group>"; };
 		3226080623D063CD00C9E393 /* PhotonSettingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonSettingView.h; sourceTree = "<group>"; };
 		3226080723D063CD00C9E393 /* PhotonSettingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonSettingView.m; sourceTree = "<group>"; };
-		32286F8522B9F207009B6881 /* PhotonIM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = PhotonIM.app; path = PhotonIMMerge.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		32286F8522B9F207009B6881 /* PhotonIMMerge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotonIMMerge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		32286F8B22B9F207009B6881 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		32286F8C22B9F207009B6881 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		32286F8F22B9F207009B6881 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -744,7 +745,6 @@
 		32FDC9F822C4BD8400EECD24 /* UIWindow+PhotonExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+PhotonExtensions.m"; sourceTree = "<group>"; };
 		32FDC9FA22C4CCF600EECD24 /* PhotonAccountViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonAccountViewController.h; sourceTree = "<group>"; };
 		32FDC9FB22C4CCF600EECD24 /* PhotonAccountViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonAccountViewController.m; sourceTree = "<group>"; };
-		55602FE2F1A0AA08798316AE /* libPods-PhotonIM.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PhotonIM.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F254C153413A28E07D1CAA4A /* Pods-PhotonIM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotonIM.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhotonIM/Pods-PhotonIM.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -769,7 +769,7 @@
 				32AE413423B4B7E300BCBE5C /* MDAudioKit.framework in Frameworks */,
 				321E45FF22F2E99A00BB9585 /* libc.tbd in Frameworks */,
 				3221CD3822D7656F0029EF0A /* libc++.tbd in Frameworks */,
-				2B600B0242159150F0EA18CB /* libPods-PhotonIM.a in Frameworks */,
+				D2CC27101EDDCF3BBC0211BD /* libPods-PhotonIM.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -956,7 +956,7 @@
 		32286F8622B9F207009B6881 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				32286F8522B9F207009B6881 /* PhotonIM.app */,
+				32286F8522B9F207009B6881 /* PhotonIMMerge.app */,
 				32286F9D22B9F208009B6881 /* PhotonIMUITests.xctest */,
 				321838BB22F84B3F005CCB00 /* PhotonIMNotificationService.appex */,
 			);
@@ -1817,7 +1817,7 @@
 				321E45FC22F2E99A00BB9585 /* libc++abi.tbd */,
 				32ECA8F122E06B6000C9A899 /* libicucore.tbd */,
 				3221CD3722D7656F0029EF0A /* libc++.tbd */,
-				55602FE2F1A0AA08798316AE /* libPods-PhotonIM.a */,
+				3126E6C64AF43F212FD7B4E3 /* libPods-PhotonIM.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1860,7 +1860,7 @@
 			);
 			name = PhotonIM;
 			productName = PhotonIM;
-			productReference = 32286F8522B9F207009B6881 /* PhotonIM.app */;
+			productReference = 32286F8522B9F207009B6881 /* PhotonIMMerge.app */;
 			productType = "com.apple.product-type.application";
 		};
 		32286F9C22B9F208009B6881 /* PhotonIMUITests */ = {
@@ -2453,7 +2453,8 @@
 				CODE_SIGN_ENTITLEMENTS = PhotonIM/PhotonIM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 4BXE593ED8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2491,7 +2492,7 @@
 					"$(PROJECT_DIR)/PhotonIM",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 4.0;
+				MARKETING_VERSION = 4.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2535,7 +2536,8 @@
 				CODE_SIGN_ENTITLEMENTS = PhotonIM/PhotonIM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 4BXE593ED8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2573,7 +2575,7 @@
 					"$(PROJECT_DIR)/PhotonIM",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 4.0;
+				MARKETING_VERSION = 4.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
