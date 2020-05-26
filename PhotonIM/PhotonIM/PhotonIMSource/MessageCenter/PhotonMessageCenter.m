@@ -720,7 +720,7 @@ static PhotonMessageCenter *center = nil;
             [[MMKV defaultMMKV] setString:token forKey:TOKENKEY];
             [[PhotonIMClient sharedClient] loginWithToken:token extra:extra];
             
-           
+           [[PhotonIMClient sharedClient] loginWithToken:token extra:extra];
             PhotonLog(@"[pim] dict = %@",dict);
         } failure:^(PhotonErrorDescription * _Nonnull error) {
             PhotonLog(@"[pim] error = %@",error.errorMessage);

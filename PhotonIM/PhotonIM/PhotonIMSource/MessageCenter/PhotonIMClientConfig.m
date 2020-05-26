@@ -14,6 +14,6 @@
 }
 
 - (NSString *)customAppVersion{
-    return @"2.2.5";
+    return @"2.2.7";
 }
 @end
