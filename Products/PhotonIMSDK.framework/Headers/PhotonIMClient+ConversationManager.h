@@ -183,8 +183,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSArray<PhotonIMConversation *> *)findConversationList:(int)start size:(int)size asc:(BOOL)asc;
 
-
-
+/**
+查找会话
+@param anchor 开始查找的位置，查找小于此锚点对应的排序id的数据，查找结果按降序排列
+@param pageSize 每次查找的条数
+@return 查找到的session列表
+*/
+- (NSArray<PhotonIMConversation *> *)findConversationList:(NSString *)anchor pageSize:(int)pageSize;
 /**
  判断会话是否存在
  

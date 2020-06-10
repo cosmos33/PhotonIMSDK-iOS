@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import <PhotonIMSDK/PhotonIMSDK.h>
+#import <UserNotifications/UserNotifications.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PhotonIMClientConfig : NSObject<PhotonIMClientConfigProtocol>
+@interface PhotonIMClientConfig : NSObject<PhotonIMClientConfigProtocol,UNUserNotificationCenterDelegate,UIApplicationDelegate>
 
 @end
 

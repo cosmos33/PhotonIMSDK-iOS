@@ -70,6 +70,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic,copy, nullable)NSString  *notic;
 
+/**
+ 是否在本地保存此消息，默认值为YES（保存）
+ */
+@property (nonatomic,assign,readonly)BOOL saveMessage;
 
 /**
  是否在服务端保存此消息，默认值为YES（保存）
@@ -93,6 +97,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) int64_t lv;
 
+
+/**
+ 设置在本地数据库不保存此条消息
+ */
+- (void)unSaveMessage;
 
 /**
  设置在服务端数据库不保存此条消息

@@ -114,7 +114,7 @@ typedef NS_ENUM(NSInteger,PhotonIMChatType){
 /**
  消息类型
  
- - PhotonIMMessageTypeUnknow: 位置
+ - PhotonIMMessageTypeUnknow: 未知
  - PhotonIMMessageTypeRaw: 自定义
  - PhotonIMMessageTypeText: 文本消息
  - PhotonIMMessageTypeImage: 图片

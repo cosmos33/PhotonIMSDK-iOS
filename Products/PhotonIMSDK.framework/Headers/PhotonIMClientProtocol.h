@@ -12,6 +12,8 @@
 #import "PhotonIMError.h"
 NS_ASSUME_NONNULL_BEGIN
 @class PhotonIMMessage;
+@class PhotonIMCustomBody;
+/// <#Description#>
 @protocol PhotonIMClientProtocol <NSObject>
 
 @optional
@@ -85,6 +87,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)imClient:(id)client didReceiveCustomMesage:(PhotonIMMessage *)message;
 
 
+
 /**
  收到单人消息撤回消息
  
@@ -108,23 +111,36 @@ NS_ASSUME_NONNULL_BEGIN
  @param client <#client description#>
  @param message <#message description#>
  */
-- (void)imClient:(id)client didReceiveReadMesage:(PhotonIMMessage *)message;
+- (void)imClient:(id)client didReceiveReadMesage:(PhotonIMMessage *)message DEPRECATED_MSG_ATTRIBUTE("Use imClient:didReceiveReadMesage:chatWith:readMsgIDs:userInfo: instead.");
 
-
+/**
+ 收到消息已读的消息。同方法:imClient:didReceiveReadMesage:
+ 
+ @param client   client 对象
+ @param chatType 删除的消息所属的会话类型
+ @param chatWith 删除的消息所属的会话id
+ @param readMsgIDs 对方已读的消息idl列表
+ @userInfo 预留属性字段
+ */
+- (void)imClient:(id)client
+    didReceiveReadMesage:(PhotonIMChatType)chatType
+                chatWith:(NSString *)chatWith
+                readMsgIds:(NSArray<NSString *> *)readMsgIDs
+                userInfo:(nullable id)userInfo;
 /**
  收到消息的删除消息
  
- @param client
+ @param client   client 对象
  @param chatType 删除的消息所属的会话类型
  @param chatWith 删除的消息所属的会话id
- @param delMsgIds 删除消息的msgid
+ @param delMsgIds 对方删除消息的id列表
  @userInfo 预留属性字段
  */
 - (void)imClient:(id)client
                 didReceiveDeleteMesage:(PhotonIMChatType)chatType
                 chatWith:(NSString *)chatWith
                 delMsgIds:(NSArray<NSString *> *)delMsgIds
-                userInfo:(nullable NSDictionary<NSString *,id>  *)userInfo;
+                userInfo:(nullable id)userInfo;
 
 #pragma mark ======== 其他 ===========
 /**

@@ -53,6 +53,7 @@ PhotonAudioRecorderDelegate>
 
 @property (strong, nonatomic) HXPhotoManager *manager;
 
+@property (copy,nonatomic)NSString *contentText;
 @end
 @implementation PhotonChatPanelManager
 - (void)dealloc
@@ -115,12 +116,25 @@ PhotonAudioRecorderDelegate>
                                                                           title:@"位置"
                                                                       imagePath:@"location"];
     
+    PhotonMoreKeyboardItem *chennalSetItem = [PhotonMoreKeyboardItem createByType:PhotonMoreKeyboardItemTypeChennalSet
+                                                                             title:@"通道set消息"
+                                                                         imagePath:@"location"];
+    PhotonMoreKeyboardItem *chennalSyncItem = [PhotonMoreKeyboardItem createByType:PhotonMoreKeyboardItemTypeChennalSync
+                                                                                title:@"通道sync消息"
+                                                                            imagePath:@"location"];
+    PhotonMoreKeyboardItem *unsaveItem = [PhotonMoreKeyboardItem createByType:PhotonMoreKeyboardItemTypemUNSaveMsg
+        title:@"消息不入库"
+    imagePath:@"location"];
+    PhotonMoreKeyboardItem *timeoutMsgItem = [PhotonMoreKeyboardItem createByType:PhotonMoreKeyboardItemTypemMSGTimeOUT
+        title:@"带超时消息"
+    imagePath:@"location"];
+    
     [self.moreKeyboard setDelegate:self];
     [self.moreKeyboard setKeyboardDelegate:self];
     [self.emojiKeyboard setDelegate:self];
     [self.emojiKeyboard setKeyboardDelegate:self];
     
-    [self.moreKeyboard setChatMoreKeyboardItems:[@[imageItem,cameraItem,locationItem] mutableCopy]];
+    [self.moreKeyboard setChatMoreKeyboardItems:[@[imageItem,cameraItem,locationItem,chennalSetItem,chennalSyncItem,timeoutMsgItem,unsaveItem] mutableCopy]];
     [self.emojiKeyboard setChatEmojiKeyboardItems:nil];
     
     [self addMasonry];
@@ -297,9 +311,10 @@ PhotonAudioRecorderDelegate>
     if ([sendText length] == 0) {
         return;
     }
-    if ([self.delegate respondsToSelector:@selector(sendTextMessage:atItems:type:)]) {
+    _contentText = sendText;
+    if ([self.delegate respondsToSelector:@selector(sendTextMessage:atItems:type:msgType:)]) {
         NSArray *infos = [chatBar.atInfos copy];
-        [self.delegate sendTextMessage:text atItems:infos type:chatBar.atType];
+        [self.delegate sendTextMessage:text atItems:infos type:chatBar.atType msgType:0];
         chatBar.atInfos = [@[] copy];
         chatBar.atType = AtTypeNoAt;
     }
@@ -419,28 +434,31 @@ PhotonAudioRecorderDelegate>
 
 #pragma mark ---------- PhotonMoreKeyBoardDelegate -------
 - (void)moreKeyboard:(id)keyboard didSelectedKeyboardItem:(PhotonMoreKeyboardItem *)item{
-    
-    if (item.type == PhotonMoreKeyboardItemTypeLocation){
-        PhotonLocationViewContraller *locationVC = [[PhotonLocationViewContraller alloc]  init];
-        __weak typeof(self)weakSelf = self;
-        [locationVC setSendCompletion:^(CLLocationCoordinate2D aCoordinate, NSString * _Nullable address, NSString * _Nullable detailAddress) {
-            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(sendLocationMessage:detailAddress:locationCoordinate:)]) {
-                [weakSelf.delegate sendLocationMessage:address detailAddress:detailAddress locationCoordinate:aCoordinate];
-            }
-        }];
-        [[self getCurrentVC].navigationController pushViewController:locationVC animated:YES];
-    }else if (item.type == PhotonMoreKeyboardItemTypeVideo){
+    switch (item.type) {
+        case PhotonMoreKeyboardItemTypeLocation:{
+            PhotonLocationViewContraller *locationVC = [[PhotonLocationViewContraller alloc]  init];
+                   __weak typeof(self)weakSelf = self;
+                   [locationVC setSendCompletion:^(CLLocationCoordinate2D aCoordinate, NSString * _Nullable address, NSString * _Nullable detailAddress) {
+                       if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(sendLocationMessage:detailAddress:locationCoordinate:)]) {
+                           [weakSelf.delegate sendLocationMessage:address detailAddress:detailAddress locationCoordinate:aCoordinate];
+                       }
+                   }];
+                   [[self getCurrentVC].navigationController pushViewController:locationVC animated:YES];
+        }
+            
+            break;
+        case PhotonMoreKeyboardItemTypeVideo:{
             if(![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-                [self.view hx_showImageHUDText:@"此设备不支持相机!"];
-                return;
-            }
-            AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-            if (authStatus == AVAuthorizationStatusRestricted || authStatus == AVAuthorizationStatusDenied) {
-                 [self.view hx_showImageHUDText:@"无法使用相机,请在设置-隐私-相机中允许访问相机中设置"];
-                return;
-            }
-        __weak typeof(self)weakSelf = self;
-            [[self getCurrentVC] hx_presentCustomCameraViewControllerWithManager:self.manager done:^(HXPhotoModel *model, HXCustomCameraViewController *viewController) {
+                  [self.view hx_showImageHUDText:@"此设备不支持相机!"];
+                  return;
+              }
+              AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+              if (authStatus == AVAuthorizationStatusRestricted || authStatus == AVAuthorizationStatusDenied) {
+                   [self.view hx_showImageHUDText:@"无法使用相机,请在设置-隐私-相机中允许访问相机中设置"];
+                  return;
+              }
+                __weak typeof(self)weakSelf = self;
+                [[self getCurrentVC] hx_presentCustomCameraViewControllerWithManager:self.manager done:^(HXPhotoModel *model, HXCustomCameraViewController *viewController) {
 
                 [weakSelf compressVideo:model.videoURL completion:^(NSURL * videoURL) {
                      NSString *fileName = [NSString stringWithFormat:@"%.0lf.mp4", [NSDate date].timeIntervalSince1970 * 1000];
@@ -460,60 +478,99 @@ PhotonAudioRecorderDelegate>
                     
                      }
                 }];
-                // sAVURLAsset *avAsset = [[AVURLAsset alloc] initWithURL:model.videoURL options:nil];
-//                [HXPhotoTools exportEditVideoForAVAsset:avAsset timeRange:CMTimeRangeMake(kCMTimeZero,kCMTimePositiveInfinity) presetName:self.manager.configuration.editVideoExportPresetName success:^(NSURL *videoURL) {
-//
-//                    NSString *fileName = [NSString stringWithFormat:@"%.0lf.mp4", [NSDate date].timeIntervalSince1970 * 1000];
-//                    NSString *path = [[PhotonMessageCenter sharedCenter] getVoiceFilePath:weakSelf.identifier fileName:fileName];
-//                    if (![path isNotEmpty]) {
-//                        return;
-//                    }
-//                    NSURL *pathurl = [NSURL fileURLWithPath:path];
-//                    NSError *error;
-//                   BOOL res = [[NSFileManager defaultManager] moveItemAtURL:videoURL toURL:pathurl error:&error];
-//                    if (res) {
-//                        [[NSFileManager defaultManager] removeItemAtURL:model.videoURL error:nil];
-//                        [[NSFileManager defaultManager] removeItemAtURL:videoURL error:nil];
-//                    }
-////                    if (self.delegate && [self.delegate respondsToSelector:@selector(sendVoiceMessage:duraion:)]) {
-////
-////                    }
-//                    NSLog(@"%@",videoURL);
-//                } failed:^(NSError *error) {
-//
-//                }];
             } cancel:^(HXCustomCameraViewController *viewController) {
                 NSSLog(@"取消了");
             }];
-        
-        
-        
-    }else if(item.type == PhotonMoreKeyboardItemTypeImage || item.type == PhotonMoreKeyboardItemTypeCamera){
-        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-        if (item.type == PhotonMoreKeyboardItemTypeCamera) {
-            if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-                [imagePickerController setSourceType:UIImagePickerControllerSourceTypeCamera];
+        }
+         
+         break;
+         case PhotonMoreKeyboardItemTypeImage:
+        case PhotonMoreKeyboardItemTypeCamera:{
+            UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+            if (item.type == PhotonMoreKeyboardItemTypeCamera) {
+                if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+                    [imagePickerController setSourceType:UIImagePickerControllerSourceTypeCamera];
+                }
+                else {
+                    return;
+                }
             }
             else {
+                [imagePickerController setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+            }
+            [imagePickerController setDelegate:self];
+            
+            [[self getCurrentVC] presentViewController:imagePickerController animated:YES completion:nil];
+            
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
+                [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+                    if(status != PHAuthorizationStatusAuthorized){
+                        [imagePickerController dismissViewControllerAnimated:YES completion:nil];
+                    }
+                }];
+            });
+        }
+         
+         break;
+         case PhotonMoreKeyboardItemTypeChennalSet:
+         {
+             NSString *sendText = self.chatBar.textView.text;
+             if ([sendText length] == 0) {
+                 return;
+             }
+             if ([self.delegate respondsToSelector:@selector(sendTextMessage:atItems:type:msgType:)]) {
+                 NSArray *infos = [self.chatBar.atInfos copy];
+                 [self.delegate sendTextMessage:sendText atItems:infos type:self.chatBar.atType msgType:1];
+                 self.chatBar.atInfos = [@[] copy];
+                 self.chatBar.atType = AtTypeNoAt;
+             }
+         }
+         break;
+            
+         case PhotonMoreKeyboardItemTypeChennalSync:{
+             NSString *sendText = self.chatBar.textView.text;
+             if ([sendText length] == 0) {
+                 return;
+             }
+             if ([self.delegate respondsToSelector:@selector(sendTextMessage:atItems:type:msgType:)]) {
+                 NSArray *infos = [self.chatBar.atInfos copy];
+                 [self.delegate sendTextMessage:sendText atItems:infos type:self.chatBar.atType msgType:2];
+                 self.chatBar.atInfos = [@[] copy];
+                 self.chatBar.atType = AtTypeNoAt;
+             }
+         }
+         break;
+        
+        case PhotonMoreKeyboardItemTypemMSGTimeOUT:{
+            NSString *sendText = self.chatBar.textView.text;
+            if ([sendText length] == 0) {
                 return;
             }
+            if ([self.delegate respondsToSelector:@selector(sendTextMessage:atItems:type:msgType:)]) {
+                NSArray *infos = [self.chatBar.atInfos copy];
+                [self.delegate sendTextMessage:sendText atItems:infos type:self.chatBar.atType msgType:3];
+                self.chatBar.atInfos = [@[] copy];
+                self.chatBar.atType = AtTypeNoAt;
+            }
         }
-        else {
-            [imagePickerController setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+         break;
+        case PhotonMoreKeyboardItemTypemUNSaveMsg:{
+            NSString *sendText = self.chatBar.textView.text;
+            if ([sendText length] == 0) {
+                return;
+            }
+            if ([self.delegate respondsToSelector:@selector(sendTextMessage:atItems:type:msgType:)]) {
+                NSArray *infos = [self.chatBar.atInfos copy];
+                [self.delegate sendTextMessage:sendText atItems:infos type:self.chatBar.atType msgType:4];
+                self.chatBar.atInfos = [@[] copy];
+                self.chatBar.atType = AtTypeNoAt;
+            }
         }
-        [imagePickerController setDelegate:self];
-        
-        [[self getCurrentVC] presentViewController:imagePickerController animated:YES completion:nil];
-        
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-                if(status != PHAuthorizationStatusAuthorized){
-                    [imagePickerController dismissViewControllerAnimated:YES completion:nil];
-                }
-            }];
-        });
-       
+        break;
+            
+        default:
+            break;
     }
 }
 

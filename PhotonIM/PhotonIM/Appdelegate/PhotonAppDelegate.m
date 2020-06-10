@@ -9,6 +9,7 @@
 #import "PhotonAppDelegate.h"
 #import <UserNotifications/UserNotifications.h>
 #import <pushsdk/MoPushManager.h>
+#import "PhotonIMClientConfig.h"
 #import "PhotonContent.h"
 #import "PhotonAppLaunchManager.h"
 #import "PhotonMessageCenter.h"
@@ -27,10 +28,12 @@
     
     [self registerPushSDK];
     
-    UNUserNotificationCenter.currentNotificationCenter.delegate = self;
+    PhotonIMClientConfig *config = [[PhotonIMClientConfig alloc] init];
+    [MoPushManager setNotiCenterDelegate:config];
+    UNUserNotificationCenter.currentNotificationCenter.delegate = config;
     [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
         if (settings.authorizationStatus == UNAuthorizationStatusNotDetermined) {
-            [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:UNAuthorizationOptionBadge | UNAuthorizationOptionSound completionHandler:^(BOOL granted, NSError * _Nullable error) {
+            [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound completionHandler:^(BOOL granted, NSError * _Nullable error) {
                 
             }];
         }
@@ -98,7 +101,7 @@
      [[NSUserDefaults standardUserDefaults] setValue:[@([[NSDate date] timeIntervalSince1970]) stringValue] forKey:@"timeStamp_pushqq"];
     if ([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
         NSDictionary *dict = response.notification.request.content.userInfo;
-        NSLog(@"%@",dict);
+        NSLog(@"%@",[dict description]);
     }
     completionHandler();
 }

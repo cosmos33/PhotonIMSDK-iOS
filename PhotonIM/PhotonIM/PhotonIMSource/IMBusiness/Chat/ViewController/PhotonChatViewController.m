@@ -164,15 +164,11 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-//    [self.player play];
-//    [[PhotonIMClient sharedClient] keepConnectedOnBackground:YES];
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
     [_panelManager dismissKeyboard];
     self.isStop = YES;
-//   [self.player stop];
-//    [[PhotonIMClient sharedClient] keepConnectedOnBackground:NO];
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
