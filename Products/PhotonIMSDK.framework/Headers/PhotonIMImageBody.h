@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "PhotonIMBaseBody.h"
 NS_ASSUME_NONNULL_BEGIN
-
+/// 图片消息的消息体，构建此消息体发送图片消息，其对应的消息类型是PhotonIMMessageType::PhotonIMMessageTypeImage
 @interface PhotonIMImageBody : PhotonIMBaseBody
 /**
  服务端缩略图地址
@@ -22,6 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign)CGFloat whRatio;
 
+/// 遍历构造ImageBody
+/// @param url 服务端保存的原图地址
+/// @param thumbURL 服务端保存的缩略图地址
+/// @param localFileName 文件本地存储相对路径
+/// @param whRatio <#whRatio description#>
 + (PhotonIMImageBody *)imageBodyWithURL:(NSString *)url
                             thumbURL:(nullable NSString *)thumbURL
                                localFileName:(nullable NSString *)localFileName

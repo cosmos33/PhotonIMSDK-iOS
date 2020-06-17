@@ -20,6 +20,7 @@ static NSString* APP_ID_INLAND = @"9122fba3a09654f2972c0fde0ad19f96";//;@"280f8e
 static NSString* APP_ID_OVERSEAS = @"326a7a61d5e8f170957f9bf6591a7c9b";
 @interface PhotonContent : NSObject
 + (instancetype)sharedInstance;
+
 + (PhotonAppDelegate *)sharedAppDelegate;
 + (PhotonUser *)currentUser;
 + (PhotonLoadDataSetModel *)currentSettingModel;

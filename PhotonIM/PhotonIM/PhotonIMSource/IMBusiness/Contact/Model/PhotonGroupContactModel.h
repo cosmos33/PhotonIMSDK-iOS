@@ -11,7 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PhotonGroupContactModel : PhotonBaseModel
-- (void)enterGroup:(NSString *)gid finish:(void (^)(NSDictionary * _Nullable))finish failure:(void (^)(PhotonErrorDescription * _Nullable))failure;
+@property(nonatomic,assign)NSInteger type;
+- (void)enter:(NSString *)gid finish:(void (^)(NSDictionary * _Nullable))finish failure:(void (^)(PhotonErrorDescription * _Nullable))failure;
 @end
 
 NS_ASSUME_NONNULL_END

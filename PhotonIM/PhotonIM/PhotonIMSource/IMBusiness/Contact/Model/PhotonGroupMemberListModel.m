@@ -24,7 +24,11 @@
     __weak typeof(self)weakSelf = self;
     [PhotonUtil showLoading:nil];
     NSDictionary *paramter = @{@"gid":self.gid};
-    [self.netService commonRequestMethod:PhotonRequestMethodPost queryString:@"photonimdemo/group/remote/members" paramter:paramter completion:^(NSDictionary * _Nonnull responseDict) {
+    NSString *path = @"photonimdemo/group/remote/members";
+    if (self.isRoom) {
+        path = @"photonimdemo/group/room/members";
+    }
+    [self.netService commonRequestMethod:PhotonRequestMethodPost queryString:path paramter:paramter completion:^(NSDictionary * _Nonnull responseDict) {
         [weakSelf wrappResponseddDict:responseDict];
         if (finish) {
             finish(nil);

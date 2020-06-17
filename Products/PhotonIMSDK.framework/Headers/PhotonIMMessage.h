@@ -10,6 +10,8 @@
 #import "PhotonIMBaseBody.h"
 NS_ASSUME_NONNULL_BEGIN
 
+
+///PhotonIMBaseMessage的子类，管理消息相关的数据
 @interface PhotonIMMessage : PhotonIMBaseMessage
 
 /**

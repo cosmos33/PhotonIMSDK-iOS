@@ -9,20 +9,20 @@
 #import <Foundation/Foundation.h>
 #import "PhotonIMClient.h"
 NS_ASSUME_NONNULL_BEGIN
-
+/// [MessageManager](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMClient.html#//api/name/getAllUnreadCount) 消息的管理，处理消息数据的数据库相关操作;
 @interface PhotonIMClient (MessageManager)
 /**
- 获取消息未读总数
+ 获取所有会话的消息未读的总和
 
- @return <#return value description#>
+ @return 未读数总和
  */
 - (NSInteger)getAllUnreadCount;
 
 /**
  判断消息是否在数据库中存储
 
- @param message <#message description#>
- @return <#return value description#>
+ @param message 消息对象
+ @return YES消息已存储在数据库中，NO消息未存储在数据库中
  */
 - (BOOL)isMessageExist:(PhotonIMMessage *)message;
 
@@ -65,63 +65,63 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  更新消息状态
  使用场景: 只更新数据库中的消息状态时推荐调用
- @param message <#message description#>
+ @param message 消息对象
  */
 - (void)updateMessageStatus:(PhotonIMMessage *)message;
 
 /**
  更新消息状态
  使用场景: 只更新数据库中的消息文本内容时推荐调用
- @param message <#message description#>
+ @param message 消息对象
  */
 - (void)updateMessageContent:(PhotonIMMessage *)message;
 
 /**
  更新消息中多媒体的时长
  使用场景: 只更新数据库中的消息多媒体的时长时推荐调用
- @param message <#message description#>
+ @param message 消息对象
  */
 - (void)updateMessageMediaTime:(PhotonIMMessage *)message;
 
 /**
  更新消息中资源服务端地址
  使用场景: 只更新数据库中的消息资源服务端地址时推荐调用
- @param message <#message description#>
+ @param message 消息对象
  */
 - (void)updateMessageFileUrl:(PhotonIMMessage *)message;
 
 /**
  更新消息中资源本地地址
  使用场景: 只更新数据库中的消息资源本地地址时推荐调用
- @param message <#message description#>
+ @param message 消息对象
  */
 - (void)updateMessageLocalFile:(PhotonIMMessage *)message;
 
 /**
  更新消息中多媒体资源是否播放的状态
  使用场景: 只更新数据库中的消息多媒体资源是否播放的状态时推荐调用
- @param message <#message description#>
+ @param message 消息对象
  */
 - (void)updateMessageLocalMediaPlayed:(PhotonIMMessage *)message;
 
 /**
  更新消息中额外信息
  使用场景: 只更新数据库中的消息额外信息时推荐调用
- @param message <#message description#>
+ @param message 消息对象
  */
 - (void)updateMessageExtra:(PhotonIMMessage *)message;
 
 /**
  更新消息中自定义消息体
  使用场景: 只更新数据库中的消息自定义消息体时推荐调用
- @param message <#message description#>
+ @param message 消息对象
  */
 - (void)updateMessageCustom:(PhotonIMMessage *)message;
 
 /**
  删除消息
  
- @param message <#message description#>
+ @param message 消息对象
  */
 - (void)deleteMessage:(PhotonIMMessage *)message;
 
@@ -192,19 +192,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  按消息的状态查找数据
- 
- @return <#return value description#>
+ @param msgStatus 消息的状态类型
+ @return 返回符合查询条件的消息列表
  */
 - (NSArray<PhotonIMMessage *> *)findMessagesByStatus:(PhotonIMMessageStatus)msgStatus;
 /**
  获取用户数据库中所有正在发送的消息
  
- @return <#return value description#>
+ @return 返回符合查询条件的消息列表
  */
 - (NSArray<PhotonIMMessage *> *)getAllSendingMessages;
 
 /**
-查找指定类型的消息的数量
+@brief 查找指定类型的消息的数量
 
 @param chatType 查找的会话类型
 @param chatWith 会话中对方的id 群组为群组id
@@ -216,7 +216,7 @@ NS_ASSUME_NONNULL_BEGIN
                             messageType:(nullable NSArray<NSNumber *>*)messageTypeList;
 
 /**
-查找指定类型且指定时间内的消息的数量 （注：此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息）
+@brief 查找指定类型且指定时间内的消息的数量 （注：此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息）
 @param chatType 查找的会话类型
 @param chatWith 会话中对方的id 群组为群组id
 @param messageTypeList PhotonIMMessageType的集合
@@ -231,7 +231,7 @@ NS_ASSUME_NONNULL_BEGIN
                                 endTime:(NSTimeInterval)endTime;
 
 /**
-加载会话中的所有消息，支持按锚点向前或向后查找
+@brief 加载会话中的所有消息，支持按锚点向前或向后查找
 
 @param chatType 查找的会话类型
 @param chatWith 会话中对方的id 群组为群组id
@@ -247,7 +247,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                size:(int)size;
 
 /**
- 加载会话中的所有消息，指定按锚点向前查找
+ @brief 加载会话中的所有消息，指定按锚点向前查找
 
  @param chatType 会话类型
  @param chatWith 会话中对方的id 群组为群组id
@@ -264,7 +264,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
-加载会话中指定消息类型的所有消息，支持按锚点向前或向后查找
+@brief 加载会话中指定消息类型的所有消息，支持按锚点向前或向后查找
 
 @param chatType 查找的会话类型
 @param chatWith 会话中对方的id 群组为群组id
@@ -282,7 +282,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                size:(int)size;
 
 /**
- 加载会话中指定消息类型的所有消息，指定按锚点向前查找
+ @brief 加载会话中指定消息类型的所有消息，指定按锚点向前查找
 
  @param chatType 会话类型
  @param chatWith 会话中对方的id 群组为群组id
@@ -299,7 +299,7 @@ NS_ASSUME_NONNULL_BEGIN
                 reaultBlock:(void(^)(NSArray<PhotonIMMessage *> * _Nullable,NSString * _Nullable))result;
 
 
-///  加载指定时间范围的会话消息（仅同步本地数据库）此方法指定查找锚点值之前的数,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息
+/// @brief 加载指定时间范围的会话消息（仅同步本地数据库）此方法指定查找锚点值之前的数,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id 群组为群组id
 /// @param anchor 开始一次查询的锚点 锚点取消息id(msgID)
@@ -315,7 +315,7 @@ NS_ASSUME_NONNULL_BEGIN
                        size:(int)size
                 reaultBlock:(void(^)(NSArray<PhotonIMMessage *> * _Nullable,NSString * _Nullable))result;
 
-///  加载指定时间范围的会话消息（仅同步本地数据库），支持按锚点向前或向后查找,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息。可按锚点拉取新旧消息
+/// @brief 加载指定时间范围的会话消息（仅同步本地数据库），支持按锚点向前或向后查找,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息。可按锚点拉取新旧消息
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id 群组为群组id
 /// @param anchor 开始一次查询的锚点 锚点取消息id(msgID)
@@ -333,7 +333,7 @@ NS_ASSUME_NONNULL_BEGIN
                        size:(int)size;
 
 
-///   加载指定消息类型和指定时间范围的会话消息（仅同步本地数据库）此方法指定查找锚点值之前的数据,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息
+/// @brief  加载指定消息类型和指定时间范围的会话消息（仅同步本地数据库）此方法指定查找锚点值之前的数据,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id 群组为群组id
 /// @param messageTypeList PhotonIMMessageType的集合
@@ -352,7 +352,7 @@ NS_ASSUME_NONNULL_BEGIN
                 reaultBlock:(void(^)(NSArray<PhotonIMMessage *> * _Nullable,NSString * _Nullable))result;
 
 
-///  加载指定消息类型和指定时间范围的会话消息（仅同步本地数据库），支持按锚点向前或向后查找,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息，可按锚点拉取新旧消息
+/// @brief 加载指定消息类型和指定时间范围的会话消息（仅同步本地数据库），支持按锚点向前或向后查找,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息，可按锚点拉取新旧消息
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id 群组为群组id
 /// @param messageTypeList PhotonIMMessageType的集合
@@ -372,7 +372,7 @@ NS_ASSUME_NONNULL_BEGIN
                        size:(int)size;
 
 /**
- 同步服务端上的历史数据
+ @brief 同步服务端上的历史数据
 
  @param chatType 会话类型
  @param chatWith 会话中对方的id
@@ -389,7 +389,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- 同步服务端上的历史数据
+ @brief 同步服务端上的历史数据
 
  @param chatType 会话类型
  @param chatWith 会话中对方的id
@@ -402,7 +402,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)syncHistoryMessagesFromServer:(PhotonIMChatType)chatType
                              chatWith:(NSString *)chatWith
                                anchor:(nullable NSString *)anchor
-                                 size:(int)size beginTimeStamp:(int64_t)beginTimeStamp
+                                 size:(int)size
+                       beginTimeStamp:(int64_t)beginTimeStamp
                          endTimeStamp:(int64_t)endTimeStamp
                           reaultBlock:(void (^)(NSArray<PhotonIMMessage *> * _Nullable messageList,
                                                 NSString * _Nullable anchor,
@@ -410,7 +411,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                 NSError * _Nullable error))result;
 
 
-/// 全文搜索（所有会话消息）
+/// @brief 全文搜索（所有会话消息）
 /// @param matchQuery 搜索关键词
 /// @param startIdentifier 开始标签，比如 @"<a>"
 /// @param andIdentifier 结束标签，比如 @"</a>"
@@ -420,7 +421,7 @@ NS_ASSUME_NONNULL_BEGIN
                                            startIdentifier:(NSString *)startIdentifier
                                              andIdentifier:(NSString *)andIdentifier maxCharacterLenth:(NSInteger)maxCharacterLenth;
 
-/// 全文搜索 （不支持支持分页）
+/// @brief 全文搜索 （不支持支持分页）
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id
 /// @param startIdentifier 开始标签，比如 @"<a>"
@@ -435,7 +436,7 @@ NS_ASSUME_NONNULL_BEGIN
                                               matchQuery:(NSString *)matchQuery;
 
 
-/// 全文搜索 （支持分页）
+/// @brief 全文搜索 （支持分页）
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id
 /// @param startIdentifier 开始标签，比如 @"<a>"

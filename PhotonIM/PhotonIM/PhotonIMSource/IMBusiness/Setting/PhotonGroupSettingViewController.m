@@ -73,9 +73,16 @@ typedef void(^Compention)(BOOL deleteMsg);
             gid_ = self.conversation.chatWith;
         }
         if (gid_) {
-            [[PhotonContent currentUser] loadMembersFormGroup:gid_ completion:^(BOOL success) {
-                [weakself p_loadDataItems];
-            }];
+            if(self.conversation.chatType == PhotonIMChatTypeGroup){
+                [[PhotonContent currentUser] loadMembersFormGroup:gid_ completion:^(BOOL success) {
+                    [weakself p_loadDataItems];
+                }];
+            }else if (self.conversation.chatType == PhotonIMChatTypeRoom){
+                [[PhotonContent currentUser] loadMembersFormRoom:gid_ completion:^(BOOL success) {
+                                   [weakself p_loadDataItems];
+                }];
+            }
+            
         }
     }];
 }
@@ -192,6 +199,7 @@ typedef void(^Compention)(BOOL deleteMsg);
     
     if(gotoMember){
         PhotonGroupMemberListViewController *memberCtl = [[PhotonGroupMemberListViewController alloc] initWithGid:self.conversation.chatWith];
+        memberCtl.isRoom = self.conversation.chatType = PhotonIMChatTypeRoom;
         [self.navigationController pushViewController:memberCtl animated:YES];
     }
 }

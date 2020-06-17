@@ -60,6 +60,10 @@
         _panelManager.delegate = self;
         
         _dataDispatchSource = [MFDispatchSource sourceWithDelegate:self type:refreshType_Data dataQueue:dispatch_queue_create("com.cosmos.PhotonIM.chatdata", DISPATCH_QUEUE_SERIAL)];
+        
+        
+        // 添加接收消息的监听
+        [[PhotonMessageCenter sharedCenter] addObserver:self];
     }
     return self;
 }
@@ -71,6 +75,10 @@
              [(PhotonChatModel *)self.model setAnchorMsgId:_conversation.lastMsgId];
         }
          [(PhotonChatModel *)self.model setLoadFtsData:_loadFtsRet];
+        
+        
+        // 添加接收消息的监听
+        [[PhotonMessageCenter sharedCenter] addObserver:self];
     }
     return self;
 }
@@ -96,6 +104,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if(self.conversation.chatType == PhotonIMChatTypeRoom){
+        if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+            self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+        }
+    }
     _authSucceedCount = 0;
     _authFaileddCount = 0;
     [self addRightBarItem];
@@ -119,9 +133,9 @@
     [self.tableView addGestureRecognizer:tap];
     
     [self startLoadData];
+
     
-    // 添加接收消息的监听
-    [[PhotonMessageCenter sharedCenter] addObserver:self];
+    
     
     
     
@@ -147,13 +161,34 @@
             
         }];
         [self.navigationController pushViewController:msgSetting animated:YES];
-    }else if (self.conversation.chatType == PhotonIMChatTypeGroup){
+    }else if (self.conversation.chatType == PhotonIMChatTypeGroup || self.conversation.chatType == PhotonIMChatTypeRoom){
         PhotonGroupSettingViewController *msgSetting = [[PhotonGroupSettingViewController alloc] initWithGroupID:self.conversation compeltion:^(BOOL deleteMsg) {
             if (deleteMsg) {
                  [weakself clearLoadData];
             }
         }];
         [self.navigationController pushViewController:msgSetting animated:YES];
+    }
+}
+- (void)pop{
+    if (self.conversation.chatType == PhotonIMChatTypeRoom){
+        [(PhotonChatModel *)self.model quit:self.conversation.chatWith finish:^(NSDictionary * _Nullable dict) {
+            PhotonUser *user = [PhotonContent userDetailInfo];
+            NSData *data = [[NSString stringWithFormat:@"%@退出房间",user.nickName] dataUsingEncoding:NSUTF8StringEncoding];
+             PhotonIMMessage *message = [PhotonIMMessage commonMessageWithFrid:user.userID toid:self.conversation.chatWith messageType:PhotonIMMessageTypeRaw chatType:PhotonIMChatTypeRoom];
+            PhotonIMCustomBody *body = [PhotonIMCustomBody customBodyWithArg1:1 arg2:2 customData:data];
+            [message setMesageBody:body];
+            [[PhotonIMClient sharedClient] sendMessage:message timeout:15 completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+            }];
+            [[PhotonIMClient sharedClient] sendQuitRoomWithId:self.conversation.chatWith timeout:15 completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+            }];
+             [self.navigationController popViewControllerAnimated:YES];
+        } failure:^(PhotonErrorDescription * _Nullable error) {
+            [PhotonUtil showErrorHint:@"退出房间失败"];
+        }];
+       
+    }else{
+         [self.navigationController popViewControllerAnimated:YES];
     }
    
 }
@@ -164,6 +199,11 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    if(self.conversation.chatType == PhotonIMChatTypeRoom){
+        [self.player play];
+        [[PhotonIMClient sharedClient] keepConnectedOnBackground:YES];
+    }
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -176,6 +216,14 @@
     
     //清空未读数
      [[PhotonMessageCenter sharedCenter] clearConversationUnReadCount:self.conversation];
+    
+    if(self.conversation.chatType == PhotonIMChatTypeRoom){
+        if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+            self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+        }
+        [self.player stop];
+        [[PhotonIMClient sharedClient] keepConnectedOnBackground:NO];
+    }
 }
 // 加载数据
 - (void)loadPreDataItems{
@@ -286,6 +334,10 @@
     BOOL change = NO;
     switch (loginstatus) {
         case PhotonIMLoginStatusLoginSucceed:
+            if (self.conversation.chatType == PhotonIMChatTypeRoom) {
+                   [[PhotonIMClient sharedClient] sendJoinRoomWithId:self.conversation.chatWith timeout:15 completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+                   }];
+            }
             self.authSucceedCount ++;
             change = YES;
             break;
@@ -337,10 +389,13 @@
         NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"025b_525d_040c_51958d1f13e76f9787173fe94bdca8fc" withExtension:@"mp3"];
         AVAudioPlayer *audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:nil];
         audioPlayer.numberOfLoops = -1;
+        audioPlayer.volume = 0;
         _player = audioPlayer;
     }
     return _player;
 }
+
+
 
 @end
 #pragma clang diagnostic pop

@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PhotonGroupMemberListViewController : PhotonBaseViewController
+@property(assign,nonatomic)BOOL isRoom;
 - (instancetype)initWithGid:(NSString *)gid;
 @end
 

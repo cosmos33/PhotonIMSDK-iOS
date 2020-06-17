@@ -23,6 +23,10 @@
     [self wrapperMessage:message];
 }
 
+- (void)imClient:(id)client didReceiveRoomMesage:(PhotonIMMessage *)message{
+     [self wrapperMessage:message];
+}
+
 /**
  二人聊天消息的撤回
 
@@ -36,6 +40,7 @@
 - (void)imClient:(id)client didReceiveGroupWithDrawMesage:(PhotonIMMessage *)message{
      [self wrapperWithdrawMessage:message];
 }
+
 
 
 /**
@@ -90,6 +95,8 @@
          [self reloadData];
     }
 }
+
+
 
 
 // 消息已读的处理

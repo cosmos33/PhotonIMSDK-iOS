@@ -155,6 +155,14 @@
 		324FE2BD233C5CE900F996D0 /* PhotonAtMemberListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 324FE2BC233C5CE900F996D0 /* PhotonAtMemberListViewController.m */; };
 		324FE2C0233C5D5E00F996D0 /* PhotonGroupMemberListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 324FE2BF233C5D5E00F996D0 /* PhotonGroupMemberListViewController.m */; };
 		3259F3FF23C88B9300701C3F /* PhotonChatSearchReultTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3259F3FE23C88B9300701C3F /* PhotonChatSearchReultTableViewController.m */; };
+		326D1E062491001C0038AC08 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 326D1E052491001C0038AC08 /* Security.framework */; };
+		326D1E082491002E0038AC08 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 326D1E072491002E0038AC08 /* CoreTelephony.framework */; };
+		326D1E0A2491003E0038AC08 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 326D1E092491003E0038AC08 /* SystemConfiguration.framework */; };
+		326D1E0C249100450038AC08 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 326D1E0B249100450038AC08 /* AdSupport.framework */; };
+		326D1E0D249100530038AC08 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 32ECA8F122E06B6000C9A899 /* libicucore.tbd */; };
+		326D1E0F2491005D0038AC08 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 326D1E0E2491005D0038AC08 /* libsqlite3.tbd */; };
+		326D1E11249100750038AC08 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 326D1E10249100750038AC08 /* JavaScriptCore.framework */; };
+		326D1E132491007C0038AC08 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 326D1E122491007C0038AC08 /* WebKit.framework */; };
 		3272587422F140D000842026 /* PhotonSingleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3272587322F140D000842026 /* PhotonSingleSettingViewController.m */; };
 		3272587722F1433500842026 /* PhotonMessageSettingItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3272587622F1433500842026 /* PhotonMessageSettingItem.m */; };
 		3272587A22F1437100842026 /* PhotonMessageSettingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3272587922F1437100842026 /* PhotonMessageSettingCell.m */; };
@@ -524,6 +532,13 @@
 		324FE2BF233C5D5E00F996D0 /* PhotonGroupMemberListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonGroupMemberListViewController.m; sourceTree = "<group>"; };
 		3259F3FD23C88B9300701C3F /* PhotonChatSearchReultTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonChatSearchReultTableViewController.h; sourceTree = "<group>"; };
 		3259F3FE23C88B9300701C3F /* PhotonChatSearchReultTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonChatSearchReultTableViewController.m; sourceTree = "<group>"; };
+		326D1E052491001C0038AC08 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		326D1E072491002E0038AC08 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		326D1E092491003E0038AC08 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		326D1E0B249100450038AC08 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		326D1E0E2491005D0038AC08 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		326D1E10249100750038AC08 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		326D1E122491007C0038AC08 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		3270BBFC22C5BA8D004CAA00 /* NSObject+PhotonExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+PhotonExtensions.h"; sourceTree = "<group>"; };
 		3270BBFD22C5BA8D004CAA00 /* NSObject+PhotonExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PhotonExtensions.m"; sourceTree = "<group>"; };
 		3270BC0622C5F5AD004CAA00 /* PhotonNotifycationConstant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonNotifycationConstant.h; sourceTree = "<group>"; };
@@ -761,10 +776,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				326D1E132491007C0038AC08 /* WebKit.framework in Frameworks */,
+				326D1E11249100750038AC08 /* JavaScriptCore.framework in Frameworks */,
+				32740A4F23C8290B0089F318 /* CoreLocation.framework in Frameworks */,
+				326D1E0F2491005D0038AC08 /* libsqlite3.tbd in Frameworks */,
+				326D1E0D249100530038AC08 /* libicucore.tbd in Frameworks */,
+				326D1E0C249100450038AC08 /* AdSupport.framework in Frameworks */,
+				326D1E0A2491003E0038AC08 /* SystemConfiguration.framework in Frameworks */,
+				326D1E082491002E0038AC08 /* CoreTelephony.framework in Frameworks */,
+				326D1E062491001C0038AC08 /* Security.framework in Frameworks */,
 				32C5575E23CDD936007F06CE /* PhotosUI.framework in Frameworks */,
 				32C5575F23CDD936007F06CE /* Photos.framework in Frameworks */,
 				32740A5123C829110089F318 /* MapKit.framework in Frameworks */,
-				32740A4F23C8290B0089F318 /* CoreLocation.framework in Frameworks */,
 				321E45FE22F2E99A00BB9585 /* libc++abi.tbd in Frameworks */,
 				32AE413423B4B7E300BCBE5C /* MDAudioKit.framework in Frameworks */,
 				321E45FF22F2E99A00BB9585 /* libc.tbd in Frameworks */,
@@ -1806,6 +1829,13 @@
 		F643BDE099CB9A2C77E9CC5E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				326D1E122491007C0038AC08 /* WebKit.framework */,
+				326D1E10249100750038AC08 /* JavaScriptCore.framework */,
+				326D1E0E2491005D0038AC08 /* libsqlite3.tbd */,
+				326D1E0B249100450038AC08 /* AdSupport.framework */,
+				326D1E092491003E0038AC08 /* SystemConfiguration.framework */,
+				326D1E072491002E0038AC08 /* CoreTelephony.framework */,
+				326D1E052491001C0038AC08 /* Security.framework */,
 				32C5575D23CDD936007F06CE /* Photos.framework */,
 				32C5575C23CDD936007F06CE /* PhotosUI.framework */,
 				32740A5023C829110089F318 /* MapKit.framework */,

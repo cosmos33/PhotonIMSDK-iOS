@@ -42,8 +42,15 @@
     groupItem.contactName = @"附近的群组";
     groupItem.contactIcon = @"right_arrow";
     
+    PhotonBaseContactItem *roomItem = [[PhotonBaseContactItem alloc] init];
+    roomItem.contactID = @"3";
+    roomItem.contactAvatar = @"default_head";
+    roomItem.contactName = @"附近的房间";
+    roomItem.contactIcon = @"right_arrow";
+    
     [self.items addObject:singleItem];
     [self.items addObject:groupItem];
+    [self.items addObject:roomItem];
     
     PhotonContacDataSource *dataSource = [[PhotonContacDataSource alloc] initWithItems:self.items];
     self.dataSource = dataSource;
@@ -60,8 +67,8 @@
              [singleCtl setHidesBottomBarWhenPushed:YES];
             [self.navigationController pushViewController:singleCtl animated:YES];
         }
-        if (type == 2) {
-            PhotonGroupContactViewController *groupCtl = [[PhotonGroupContactViewController alloc] init];
+        if (type == 2 || type == 3) {
+            PhotonGroupContactViewController *groupCtl = [[PhotonGroupContactViewController alloc] initWithType:type];
             [groupCtl setHidesBottomBarWhenPushed:YES];
             [self.navigationController pushViewController:groupCtl animated:YES];
         }

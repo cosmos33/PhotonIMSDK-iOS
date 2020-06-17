@@ -19,8 +19,8 @@
 @implementation PhotonConversationModel
 - (void)loadItems:(nullable NSDictionary *)params finish:(void (^)(NSDictionary * _Nullable))finish failure:(void (^)(PhotonErrorDescription * _Nullable))failure{
     PhotonWeakSelf(self);
-        [super loadItems:params finish:finish failure:failure];
-        NSArray<PhotonIMConversation *> *conversations = [[PhotonIMClient sharedClient] findConversationList:0 size:200 asc:NO];
+    [super loadItems:params finish:finish failure:failure];
+    NSArray<PhotonIMConversation *> *conversations = [[PhotonIMClient sharedClient] findConversationList:@"" pageSize:100];
         [weakself.items removeAllObjects];
         if (conversations.count > 0) {
             NSMutableArray *chatWiths = [NSMutableArray array];

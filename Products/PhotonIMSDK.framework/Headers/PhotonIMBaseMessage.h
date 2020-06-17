@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "PhotonIMEnum.h"
 NS_ASSUME_NONNULL_BEGIN
+
+/// 消息相关的基类
 @interface PhotonIMBaseMessage : NSObject
 
 /**
@@ -17,7 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *messageID;
 
 /**
- 对方id SDK内部处理，上行消息业务端非必需设置
+ 消息的fr to中不等于im当前连接登录用户id的一方，二人聊天为对方id，群聊指的是群组id。房间为房间id
+ 上行消息业务端非必需设置。
  */
 @property(nonatomic, copy, nullable)NSString *chatWith;
 
@@ -27,11 +30,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) int64_t timeStamp;
 
 /**
- 发送者，必需
+ 发送方id，必需
  */
 @property(nonatomic, copy, nullable) NSString *fr;
 /**
- 接收者，必需
+ 接收方id，必需
  */
 @property(nonatomic, copy, nullable) NSString *to;
 

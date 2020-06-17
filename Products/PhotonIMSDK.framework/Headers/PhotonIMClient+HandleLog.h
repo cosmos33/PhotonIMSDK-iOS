@@ -10,6 +10,7 @@
 #import "PhotonIMClient.h"
 NS_ASSUME_NONNULL_BEGIN
 
+/// debug模式的下的日志操作
 @interface PhotonIMClient(HandleLog)
 
 /**
@@ -22,7 +23,7 @@ IMLog 日志处理，调用此方法，会把日志写到本地，不调用此�
 /**
  获取mdlog的存储路径
 
- @return <#return value description#>
+ @return 获取imlog存储的路径
  */
 - (NSString *)imlogPath;
 @end

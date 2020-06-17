@@ -14,6 +14,7 @@
 #import "PhotonAppLaunchManager.h"
 #import "PhotonMessageCenter.h"
 #import "YYFPSLabel.h"
+#import "Growing.h"
 @interface PhotonAppDelegate ()<UNUserNotificationCenterDelegate>
 
 @property (nonatomic, strong) YYFPSLabel *fpsLabel;
@@ -25,7 +26,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     [[PhotonMessageCenter sharedCenter] initPhtonIMSDK];
-    
+    [Growing startWithAccountId:@"98874232e8f917cc"];
+    [Growing setEnableLog:YES];
     [self registerPushSDK];
     
     PhotonIMClientConfig *config = [[PhotonIMClientConfig alloc] init];
@@ -76,7 +78,7 @@
 
 - (void)addFPSLabel {
     _fpsLabel = [YYFPSLabel new];
-    _fpsLabel.frame = CGRectMake(35, 35, 50, 30);
+    _fpsLabel.frame = CGRectMake(135, 35, 50, 30);
     [_fpsLabel sizeToFit];
     [self.window addSubview:_fpsLabel];
 }
@@ -132,6 +134,14 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options{
+    if ([Growing handleUrl:url]) // 请务必确保该函数被调用
+       {
+           return YES;
+       }
+       return NO;
 }
 
 

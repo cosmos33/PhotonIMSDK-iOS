@@ -165,6 +165,12 @@ static PhotonMessageCenter *center = nil;
     [message setMesageBody:body];
     item.userInfo = message;
     self.timeOut = 0;
+    if(conversation.chatType == PhotonIMChatTypeRoom){
+        self.timeOut = 10;
+        [self _sendMessage:message timeout:self.timeOut completion:completion];
+        return;
+    }
+    
     if (type == 0 || type== 4) {
          self.timeOut = 0;
          [self _sendMessage:message timeout:self.timeOut completion:completion];
@@ -190,7 +196,7 @@ static PhotonMessageCenter *center = nil;
 }
 
 - (void)sendTex:(NSString *)text conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion{
-    
+    self.timeOut = 0;
     // 文本消息，直接构建文本消息对象发送
     PhotonIMMessage *message = [PhotonIMMessage commonMessageWithFrid:[PhotonContent currentUser].userID toid:conversation.chatWith messageType:PhotonIMMessageTypeText chatType:conversation.chatType];
     NSMutableArray *uids = [[NSMutableArray alloc] init];
@@ -251,7 +257,7 @@ static PhotonMessageCenter *center = nil;
     PhotonIMLocationBody *locationBody = [PhotonIMLocationBody locationBodyWithCoordinateSystem:CoordinateSystem_BD09 address:item.address detailedAddress:item.detailAddress lng:item.locationCoordinate.longitude lat:item.locationCoordinate.latitude];
     [message setMesageBody:locationBody];
     item.userInfo = message;
-    [self _sendMessage:message timeout:self.timeOut completion:completion];
+    [self _sendMessage:message timeout:0 completion:completion];
 }
 
 
@@ -312,7 +318,7 @@ static PhotonMessageCenter *center = nil;
         if (completion) {
             completion(YES,nil);
         }
-        [self _sendMessage:message timeout:self.timeOut completion:completion];
+        [self _sendMessage:message timeout:0 completion:completion];
     }else{
         message.messageStatus = PhotonIMMessageStatusFailed;
         [self insertOrUpdateMessage:message];
@@ -384,7 +390,7 @@ static PhotonMessageCenter *center = nil;
     if(message.messageType == PhotonIMMessageTypeImage || message.messageType == PhotonIMMessageTypeAudio){
         PhotonIMBaseBody *body = message.messageBody;
         if ([body.url isNotEmpty]) {// 文件上传完成，直接发送
-            [self _sendMessage:message timeout:self.timeOut completion:completion];
+            [self _sendMessage:message timeout:0 completion:completion];
         }else{// 文件上传未完成，先上再发送
             if (message.messageType == PhotonIMMessageTypeImage) {
                 [self p_sendImageMessage:message completion:completion];
@@ -397,44 +403,6 @@ static PhotonMessageCenter *center = nil;
     }
 }
 
-// 重新发送未发送完成的消息
-- (void)reSendAllSendingMessages{
-    if(self.messages){
-        __weak typeof(self)weakSelf = self;
-        NSArray<PhotonIMMessage *> *messages = [self.messages copy];
-        for(PhotonIMMessage *message in messages){
-            message.timeStamp = [[NSDate date] timeIntervalSince1970] * 1000.0;
-            if(message.messageType == PhotonIMMessageTypeImage || message.messageType == PhotonIMMessageTypeAudio){
-                PhotonIMBaseBody *body = message.messageBody;
-                if ([body.url isNotEmpty]) {// 文件上传完成，直接发送
-                    [self _sendMessage:message timeout:self.timeOut completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
-                        if (succeed) {
-                             [weakSelf.messages removeObject:message];
-                        }
-                       
-                    }];
-                }else{// 文件上传未完成，先上再发送
-                    if (message.messageType == PhotonIMMessageTypeImage) {
-                        [self p_sendImageMessage:message completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
-                            if (succeed) {
-                                [weakSelf.messages removeObject:message];
-                            }
-                        }];
-                    }else if (message.messageType == PhotonIMMessageTypeAudio){
-                        [self p_sendVoiceMessage:message completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
-                            if (succeed) {
-                                [weakSelf.messages removeObject:message];
-                            }
-                        }];
-                    }
-                }
-            }else if(message.messageType == PhotonIMMessageTypeText){//文本直接发送
-                [self _sendMessage:message timeout:self.timeOut completion:nil];
-            }
-        }
-    }
-   
-}
 
 // 发送已读消息
 - (void)sendReadMessage:(NSArray<NSString *> *)readMsgIDs conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion{
@@ -492,9 +460,9 @@ static PhotonMessageCenter *center = nil;
 
 - (void)_sendMessage:(nullable PhotonIMMessage *)message timeout:(NSTimeInterval)timeout completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion{
     PhotonWeakSelf(self);
-    BOOL isTimeOut = self.timeOut > 0;
+    BOOL isTimeOut = timeout > 0;
     if (isTimeOut) {
-        [[PhotonIMClient sharedClient] sendMessage:message timeout:self.timeOut completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+        [[PhotonIMClient sharedClient] sendMessage:message timeout:timeout completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
             [PhotonUtil runMainThread:^{
                 if (!succeed && error.code >= 1000) {
                     message.notic = error.em;
@@ -710,9 +678,6 @@ static PhotonMessageCenter *center = nil;
     return res;
 }
 
-//- (void)imClient:(id)client didReceiveCustomMesage:(PhotonIMMessage *)message{
-//    [PhotonUtil showInfoHint:@"这是自定义消息"];
-//}
 
 #pragma mark --------- 消息接收相关 ----------------
 
