@@ -170,6 +170,7 @@ static NSString *message_syncing = @"消息(收取中......)";
    
 }
 - (void)conversationChange:(PhotonIMConversationEvent)envent chatType:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith{
+        return;
     __weak typeof(self)weakSelf = self;
     dispatch_async(self.sessionChangeQueue, ^{
         [weakSelf _conversationChange:envent chatType:chatType chatWith:chatWith];

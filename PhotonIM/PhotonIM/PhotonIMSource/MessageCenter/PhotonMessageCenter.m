@@ -15,7 +15,6 @@
 #import "PhotonCharBar.h"
 #import <PhotonIMSDK/PhotonIMSDK.h>
 #import "PhotonIMClientConfig.h"
-#import <MLN/MLNCore.h>
 static PhotonMessageCenter *center = nil;
 @interface PhotonMessageCenter()<PhotonIMClientProtocol>
 @property (nonatomic, strong, nullable)PhotonNetworkService *netService;
@@ -60,8 +59,8 @@ static PhotonMessageCenter *center = nil;
 - (void)initPhtonIMSDK{
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppWillEnterForegroundNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
     PhotonIMServerType serverType = [PhotonContent getServerSwitch];
-   [[PhotonIMClient sharedClient] setServerType:serverType];
-    
+    [[PhotonIMClient sharedClient] setServerType:serverType];
+//    [[PhotonIMClient sharedClient] supportFTS];
     PhotonIMClientConfig *imclientConfig = [[PhotonIMClientConfig alloc] init];
     [[PhotonIMClient sharedClient] setIMClientConfig:imclientConfig];
     
@@ -463,44 +462,44 @@ static PhotonMessageCenter *center = nil;
     BOOL isTimeOut = timeout > 0;
     if (isTimeOut) {
         [[PhotonIMClient sharedClient] sendMessage:message timeout:timeout completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
-            [PhotonUtil runMainThread:^{
-                if (!succeed && error.code >= 1000) {
-                    message.notic = error.em;
-                }
-                if (completion) {
-                    completion(succeed,error);
-                }else{
-                    NSHashTable *_observer = [weakself.observers copy];
-                    for (id<PhotonMessageProtocol> observer in _observer) {
-                        if (observer && [observer respondsToSelector:@selector(sendMessageResultCallBack:)]) {
-                            [observer sendMessageResultCallBack:message];
-                        }
-                    }
-                }
-            }];
+//            [PhotonUtil runMainThread:^{
+//                if (!succeed && error.code >= 1000) {
+//                    message.notic = error.em;
+//                }
+//                if (completion) {
+//                    completion(succeed,error);
+//                }else{
+//                    NSHashTable *_observer = [weakself.observers copy];
+//                    for (id<PhotonMessageProtocol> observer in _observer) {
+//                        if (observer && [observer respondsToSelector:@selector(sendMessageResultCallBack:)]) {
+//                            [observer sendMessageResultCallBack:message];
+//                        }
+//                    }
+//                }
+//            }];
         }];
     }else{
         [[PhotonIMClient sharedClient] sendMessage:message completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
-            [PhotonUtil runMainThread:^{
-                if (!succeed && error.code >= 1000) {
-                    message.notic = error.em;
-                }
-                if (completion) {
-                    completion(succeed,error);
-                }else{
-                    NSHashTable *_observer = [weakself.observers copy];
-                    for (id<PhotonMessageProtocol> observer in _observer) {
-                        if (observer && [observer respondsToSelector:@selector(sendMessageResultCallBack:)]) {
-                            [observer sendMessageResultCallBack:message];
-                        }
-                    }
-                }
-            }];
+//            [PhotonUtil runMainThread:^{
+//                if (!succeed && error.code >= 1000) {
+//                    message.notic = error.em;
+//                }
+//                if (completion) {
+//                    completion(succeed,error);
+//                }else{
+//                    NSHashTable *_observer = [weakself.observers copy];
+//                    for (id<PhotonMessageProtocol> observer in _observer) {
+//                        if (observer && [observer respondsToSelector:@selector(sendMessageResultCallBack:)]) {
+//                            [observer sendMessageResultCallBack:message];
+//                        }
+//                    }
+//                }
+//            }];
         }];
     }
     
 }
-
+ 
 
 - (void)sendAddGrupNoticeMessage:(nullable PhotonIMMessage *)message completion:(nullable CompletionBlock)completion{
     [[PhotonIMClient sharedClient] sendMessage:message completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
@@ -706,6 +705,7 @@ static PhotonMessageCenter *center = nil;
     return YES;
 }
 
+
 - (void)imClient:(id)client sendResultWithMsgID:(NSString *)msgID chatType:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith error:(PhotonIMError *)error{
     NSLog(@"[pim sendResultWithMsgID msgID=%@,chatType=%@,chatWith=%@,errorCode=%@",msgID,@(chatType),chatWith,@(error.code));
 }
@@ -737,6 +737,7 @@ static PhotonMessageCenter *center = nil;
         [self.netService commonRequestMethod:PhotonRequestMethodPost queryString:PHOTON_TOKEN_PATH paramter:paramter completion:^(NSDictionary * _Nonnull dict) {
             NSString *token = [[dict objectForKey:@"data"] objectForKey:@"token"];
             [[MMKV defaultMMKV] setString:token forKey:TOKENKEY];
+            
             [[PhotonIMClient sharedClient] loginWithToken:token extra:extra];
             PhotonLog(@"[pim] dict = %@",dict);
         } failure:^(PhotonErrorDescription * _Nonnull error) {

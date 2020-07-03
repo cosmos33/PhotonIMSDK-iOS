@@ -15,6 +15,7 @@
 #import "PhotonMessageCenter.h"
 #import "YYFPSLabel.h"
 #import "Growing.h"
+#import <Rifle/Rifle.h>
 @interface PhotonAppDelegate ()<UNUserNotificationCenterDelegate>
 
 @property (nonatomic, strong) YYFPSLabel *fpsLabel;
@@ -24,10 +25,10 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
+    [Rifle startWithAppId:APP_ID_INLAND config:nil];
     [[PhotonMessageCenter sharedCenter] initPhtonIMSDK];
     [Growing startWithAccountId:@"98874232e8f917cc"];
-    [Growing setEnableLog:YES];
+//    [Growing setEnableLog:YES];
     [self registerPushSDK];
     
     PhotonIMClientConfig *config = [[PhotonIMClientConfig alloc] init];
@@ -86,7 +87,7 @@
 
 #pragma mark - Notification
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
-    PhotonLog(@"获取到deviceToken --"); //SDK内部hook，业务层无需配置
+    PhotonLog(@"获取到deviceToken --");
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"cdscds" message:@"vxvsd" delegate:self cancelButtonTitle:@"" otherButtonTitles:@"ok", nil];
     [alert show];
     
