@@ -15,7 +15,7 @@
 #import "PhotonMessageCenter.h"
 #import "YYFPSLabel.h"
 #import "Growing.h"
-#import <Rifle/Rifle.h>
+//#import <Rifle/Rifle.h>
 @interface PhotonAppDelegate ()<UNUserNotificationCenterDelegate>
 
 @property (nonatomic, strong) YYFPSLabel *fpsLabel;
@@ -25,7 +25,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [Rifle startWithAppId:APP_ID_INLAND config:nil];
+//    [Rifle startWithAppId:APP_ID_INLAND config:nil];
     [[PhotonMessageCenter sharedCenter] initPhtonIMSDK];
     [Growing startWithAccountId:@"98874232e8f917cc"];
 //    [Growing setEnableLog:YES];

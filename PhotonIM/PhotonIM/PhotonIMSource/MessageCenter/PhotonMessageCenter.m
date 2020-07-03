@@ -60,7 +60,7 @@ static PhotonMessageCenter *center = nil;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppWillEnterForegroundNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
     PhotonIMServerType serverType = [PhotonContent getServerSwitch];
     [[PhotonIMClient sharedClient] setServerType:serverType];
-//    [[PhotonIMClient sharedClient] supportFTS];
+    [[PhotonIMClient sharedClient] supportFTS];
     PhotonIMClientConfig *imclientConfig = [[PhotonIMClientConfig alloc] init];
     [[PhotonIMClient sharedClient] setIMClientConfig:imclientConfig];
     
@@ -462,39 +462,39 @@ static PhotonMessageCenter *center = nil;
     BOOL isTimeOut = timeout > 0;
     if (isTimeOut) {
         [[PhotonIMClient sharedClient] sendMessage:message timeout:timeout completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
-//            [PhotonUtil runMainThread:^{
-//                if (!succeed && error.code >= 1000) {
-//                    message.notic = error.em;
-//                }
-//                if (completion) {
-//                    completion(succeed,error);
-//                }else{
-//                    NSHashTable *_observer = [weakself.observers copy];
-//                    for (id<PhotonMessageProtocol> observer in _observer) {
-//                        if (observer && [observer respondsToSelector:@selector(sendMessageResultCallBack:)]) {
-//                            [observer sendMessageResultCallBack:message];
-//                        }
-//                    }
-//                }
-//            }];
+            [PhotonUtil runMainThread:^{
+                if (!succeed && error.code >= 1000) {
+                    message.notic = error.em;
+                }
+                if (completion) {
+                    completion(succeed,error);
+                }else{
+                    NSHashTable *_observer = [weakself.observers copy];
+                    for (id<PhotonMessageProtocol> observer in _observer) {
+                        if (observer && [observer respondsToSelector:@selector(sendMessageResultCallBack:)]) {
+                            [observer sendMessageResultCallBack:message];
+                        }
+                    }
+                }
+            }];
         }];
     }else{
         [[PhotonIMClient sharedClient] sendMessage:message completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
-//            [PhotonUtil runMainThread:^{
-//                if (!succeed && error.code >= 1000) {
-//                    message.notic = error.em;
-//                }
-//                if (completion) {
-//                    completion(succeed,error);
-//                }else{
-//                    NSHashTable *_observer = [weakself.observers copy];
-//                    for (id<PhotonMessageProtocol> observer in _observer) {
-//                        if (observer && [observer respondsToSelector:@selector(sendMessageResultCallBack:)]) {
-//                            [observer sendMessageResultCallBack:message];
-//                        }
-//                    }
-//                }
-//            }];
+            [PhotonUtil runMainThread:^{
+                if (!succeed && error.code >= 1000) {
+                    message.notic = error.em;
+                }
+                if (completion) {
+                    completion(succeed,error);
+                }else{
+                    NSHashTable *_observer = [weakself.observers copy];
+                    for (id<PhotonMessageProtocol> observer in _observer) {
+                        if (observer && [observer respondsToSelector:@selector(sendMessageResultCallBack:)]) {
+                            [observer sendMessageResultCallBack:message];
+                        }
+                    }
+                }
+            }];
         }];
     }
     
