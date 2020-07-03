@@ -104,7 +104,9 @@
         PhotonLog(@"history session data count: %@",@([lists count]));
         if (lists.count > 0) {
             for (NSDictionary *item in lists) {
-                
+                if ([item isKindOfClass:[NSNull null]]) {
+                    continue;
+                }
                 NSString *chatWith = [[item objectForKey:@"id"] isNil];
                
                 int type = [[[item objectForKey:@"type"] isNil] intValue];

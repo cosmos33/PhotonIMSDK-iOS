@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// [MessageManager](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMClient.html#//api/name/getAllUnreadCount) 消息的管理，处理消息数据的数据库相关操作;
 @interface PhotonIMClient (MessageManager)
 
+
+/// SDK默认不支持全文搜索功能，如果需要开启支持全文搜索功能，需要调用此方法。
 - (void)supportFTS;
 /**
  获取所有会话的消息未读的总和

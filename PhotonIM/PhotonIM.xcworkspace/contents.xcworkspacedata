@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../../photon-im-ios/PhotonIMSDK/PhotonIMSDK.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:PhotonIM.xcodeproj">
    </FileRef>
    <FileRef
