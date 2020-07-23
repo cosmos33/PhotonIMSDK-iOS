@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)NSInteger memberCount;
 @property (nonatomic, copy)NSString *gid;
 @property (nonatomic, assign)BOOL showSelectBtn;
+@property(assign,nonatomic)BOOL isRoom;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -236,6 +236,9 @@ static NSString *message_syncing = @"消息(收取中......)";
     int count = 0;
     for (PhotonConversationItem *item in self.model.items) {
         PhotonIMConversation *conver = [item userInfo];
+        if([conver.chatWith isEqualToString:conversation.chatWith] && conver.chatType == conversation.chatType){
+            return;
+        }
         if(conver.sticky && !conversation.sticky){
             count ++;
         }

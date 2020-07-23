@@ -58,7 +58,7 @@ typedef void(^CompletionBlock) (BOOL succeed, PhotonIMError * _Nullable error);
 //-------- 消息发送相关 -----------
 
 // 发送文本表情消息
-- (void)sendTextMessage:(nullable PhotonChatTextMessageItem *)item  conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion;
+- (void)sendTextMessage:(nullable PhotonChatTextMessageItem *)item conversation:(nullable PhotonIMConversation *)conversation type:(int)type completion:(nullable CompletionBlock)completion;
 
 - (void)sendTex:(NSString *)text conversation:(nullable PhotonIMConversation *)conversation  completion:(nullable CompletionBlock)completion;
 

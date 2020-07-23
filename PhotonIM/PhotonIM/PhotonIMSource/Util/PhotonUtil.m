@@ -145,7 +145,7 @@
 + (void)showErrorHint:(nullable NSString *)hintText
 {
     [self runMainThread:^{
-        [SVProgressHUD setMaximumDismissTimeInterval:1];
+        [SVProgressHUD setMaximumDismissTimeInterval:.3];
         [SVProgressHUD showErrorWithStatus:hintText];
     }];
 }

@@ -85,13 +85,15 @@
         settingItem.value = @"";
         settingItem.type = PhotonPersonItemTypeLoadHistorySetting;
         settingItem .valueColor = [UIColor colorWithHex:0x5D5C6F];
+    
+    
+        PhotonPersonItem *documentItem = [[PhotonPersonItem alloc] init];
+        documentItem.key = @"查看沙盒文件";
+        documentItem.shorArrow = YES;
+        documentItem.value = @"";
+        documentItem.type = PhotonPersonItemTypeDocument;
+        documentItem .valueColor = [UIColor colorWithHex:0x5D5C6F];
        
-         PhotonPersonItem *documentItem = [[PhotonPersonItem alloc] init];
-         documentItem.key = @"查看沙盒文件";
-         documentItem.shorArrow = YES;
-         documentItem.value = @"";
-         documentItem.type = PhotonPersonItemTypeDocument;
-         documentItem .valueColor = [UIColor colorWithHex:0x5D5C6F];
     
          PhotonPersonItem *dbItem = [[PhotonPersonItem alloc] init];
          dbItem.key = @"查看数据库";
@@ -119,7 +121,6 @@
        [self.items addObject:dbItem];
 //    #else
 //    #endif
-       
        
        [self.items addObject:emptyitem];
        

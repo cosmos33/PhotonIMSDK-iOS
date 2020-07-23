@@ -1,5 +1,7 @@
 source 'https://github.com/cocoapods/specs.git'
 source 'https://github.com/cosmos33/MMSpecs'
+source 'https://git.wemomo.com/ios/Specs.git'
+source 'https://git.wemomo.com/base/Specs.git'
 platform :ios, '10.0'
 inhibit_all_warnings!
 
@@ -14,10 +16,15 @@ target :PhotonIM do
     pod 'MBProgressHUD', '1.1.0'
     pod 'FMDB', '2.7.2'
     pod 'MMKV','1.0.22'
-    pod 'DatabaseVisual'
     pod 'MMBase-iOS'
-#    pod 'PhotonIMSDK',:git => 'https://github.com/zhanghesheng/PhotonIMSDK-iOS.git',:tag => '2.3.0'
-    pod 'PhotonPushSDK','1.0.2'
-    pod 'PhotonIMSDK',:path=>'../'
-
+    pod 'DatabaseVisual'
+#    pod 'PhotonPushSDK',:git => 'https://github.com/zhanghesheng/PhotonPushSDK.git',:tag => '1.0.3'
+    pod 'PhotonIMSDK',:git => 'https://github.com/zhanghesheng/PhotonIMSDK-iOS.git',:tag => '2.3.0'
+#    pod 'PhotonIMSDK',:path => '../'
+    pod 'PhotonPushSDK','1.1.0'
+#    pod 'PhotonIMSDK','2.2.10'
+    pod 'GrowingAutoTrackKit'
+    pod 'Rifle'
+#    pod 'PHCronet',:path => '../../cronet-ios-test'
+    pod 'PhotonHTTPDNS',:path => '../../PhotonHTTPDNS-iOS'
 end

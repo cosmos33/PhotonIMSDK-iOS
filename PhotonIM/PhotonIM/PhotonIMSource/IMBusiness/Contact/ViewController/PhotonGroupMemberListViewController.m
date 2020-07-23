@@ -44,7 +44,7 @@
         return;
     }
     ((PhotonGroupMemberListModel *)self.model).gid = self.gid;
-    
+    [(PhotonGroupMemberListModel *)self.model setIsRoom:self.isRoom];
     [self.model loadItems:nil finish:^(NSDictionary * _Nullable dict) {
         [weakself loadData];
     } failure:^(PhotonErrorDescription * _Nullable error) {

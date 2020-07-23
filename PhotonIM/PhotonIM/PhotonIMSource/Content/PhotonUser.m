@@ -159,6 +159,18 @@
     }];
 }
 
+- (void)loadMembersFormRoom:(NSString *)gid completion:(nullable void(^)(BOOL success))completion{
+    NSDictionary *paramter = @{@"gid":gid};
+    __weak typeof(self)weakSelf = self;
+    [self.netService commonRequestMethod:PhotonRequestMethodPost queryString:@"/photonimdemo/room/remote/members" paramter:paramter completion:^(NSDictionary * _Nonnull responseDict) {
+        [weakSelf wrappMemberDict:responseDict gid:gid completion:completion];
+    } failure:^(PhotonErrorDescription * _Nonnull error) {
+        if (completion) {
+            completion(NO);
+        }
+    }];
+}
+
 - (void)wrappMemberDict:(NSDictionary *)dict gid:(NSString  *)gid completion:(nullable void(^)(BOOL success))completion{
     if ([dict[@"ec"] intValue] != 0) {
         if (completion) {

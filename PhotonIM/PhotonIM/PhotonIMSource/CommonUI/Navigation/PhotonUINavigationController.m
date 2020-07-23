@@ -38,9 +38,9 @@
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
     if (viewController.navigationItem.leftBarButtonItem == nil && self.viewControllers.count >= 1) {
         
-        
         UIImage *image = [[UIImage imageNamed:@"nav_back"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        UIBarButtonItem *back = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(pop)];
+        BOOL havePop = [viewController respondsToSelector:@selector(pop)];
+        UIBarButtonItem *back = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:havePop?viewController:self action:@selector(pop)];
         viewController.navigationItem.leftBarButtonItem = back;
     }
     [super pushViewController:viewController animated:animated];

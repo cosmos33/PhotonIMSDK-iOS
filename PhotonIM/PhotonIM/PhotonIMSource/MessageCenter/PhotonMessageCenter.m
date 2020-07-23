@@ -14,6 +14,7 @@
 #import "PhotonNetworkService.h"
 #import "PhotonCharBar.h"
 #import <PhotonIMSDK/PhotonIMSDK.h>
+#import "PhotonIMClientConfig.h"
 static PhotonMessageCenter *center = nil;
 @interface PhotonMessageCenter()<PhotonIMClientProtocol>
 @property (nonatomic, strong, nullable)PhotonNetworkService *netService;
@@ -29,6 +30,8 @@ static PhotonMessageCenter *center = nil;
 @property (nonatomic, strong, nullable)PhotonIMTimer   *timer;
 
 @property (nonatomic, strong,nullable) NSMutableArray<PhotonIMMessage *> *messages;
+
+@property (nonatomic, assign)NSTimeInterval timeOut;
 @end
 
 #define TOKENKEY [NSString stringWithFormat:@"photonim_token_%@",[PhotonContent currentUser].userID]
@@ -38,9 +41,17 @@ static PhotonMessageCenter *center = nil;
     dispatch_once(&onceToken, ^{
         center = [[self alloc] init];
         [[PhotonIMClient sharedClient] addObservers:center];
-       
+        
     });
     return center;
+}
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _timeOut = 0;
+    }
+    return self;
 }
 - (void)handleAppWillEnterForegroundNotification:(id)enter{
 }
@@ -48,7 +59,11 @@ static PhotonMessageCenter *center = nil;
 - (void)initPhtonIMSDK{
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppWillEnterForegroundNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
     PhotonIMServerType serverType = [PhotonContent getServerSwitch];
-   [[PhotonIMClient sharedClient] setServerType:serverType];
+    [[PhotonIMClient sharedClient] setServerType:serverType];
+    [[PhotonIMClient sharedClient] supportFTS];
+    PhotonIMClientConfig *imclientConfig = [[PhotonIMClientConfig alloc] init];
+    [[PhotonIMClient sharedClient] setIMClientConfig:imclientConfig];
+    
 //#ifdef DEBUG
     // 是否在写log时开启控制台日志输出，debug模式下建议开启
     [[PhotonIMClient sharedClient] openPhotonIMLog:YES];
@@ -131,10 +146,13 @@ static PhotonMessageCenter *center = nil;
     }
 }
 
-- (void)sendTextMessage:(PhotonChatTextMessageItem *)item conversation:(nullable PhotonIMConversation *)conversation   completion:(nullable CompletionBlock)completion{
+- (void)sendTextMessage:(PhotonChatTextMessageItem *)item conversation:(nullable PhotonIMConversation *)conversation type:(int)type completion:(nullable CompletionBlock)completion{
     
     // 文本消息，直接构建文本消息对象发送
     PhotonIMMessage *message = [PhotonIMMessage commonMessageWithFrid:[PhotonContent currentUser].userID toid:conversation.chatWith messageType:PhotonIMMessageTypeText chatType:conversation.chatType];
+    if (type == 4) {
+         [message unSaveMessage];
+    }
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     for (PhotonChatAtInfo *atInfo in item.atInfo) {
         if ([atInfo.userid isNotEmpty]) {
@@ -144,24 +162,56 @@ static PhotonMessageCenter *center = nil;
     [message setAtInfoWithAtType:(PhotonIMAtType)(item.type) atList:uids];
     PhotonIMTextBody *body = [[PhotonIMTextBody alloc] initWithText:item.messageText];
     [message setMesageBody:body];
-    
     item.userInfo = message;
+    self.timeOut = 0;
+    if(conversation.chatType == PhotonIMChatTypeRoom){
+        self.timeOut = 10;
+        [self _sendMessage:message timeout:self.timeOut completion:completion];
+        return;
+    }
     
-    [self _sendMessage:message readyCompletion:nil  completion:completion];
+    if (type == 0 || type== 4) {
+         self.timeOut = 0;
+         [self _sendMessage:message timeout:self.timeOut completion:completion];
+    }else if (type == 3){
+         self.timeOut = 15;
+         [self _sendMessage:message timeout:self.timeOut completion:completion];
+    }else{
+        NSData *data = [item.messageText dataUsingEncoding:NSUTF8StringEncoding];
+        NSString* msgID = [[PhotonIMClient sharedClient] sendChennalMsgWithFromid:message.fr toid:message.to msgBody:[PhotonIMCustomBody customBodyWithArg1:1 arg2:2 customData:data] assuredDelivery:(type == 2) enablePush:(type == 2) timeout:10  completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+            if (succeed) {
+                 message.messageStatus = PhotonIMMessageStatusSucceed;
+             }else{
+                 message.messageStatus = PhotonIMMessageStatusFailed;
+             }
+            if(completion){
+                completion(succeed,error);
+            }
+        }];
+        message.messageID = msgID;
+    }
     
 }
 
 - (void)sendTex:(NSString *)text conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion{
-    
+    self.timeOut = 0;
     // 文本消息，直接构建文本消息对象发送
-    PhotonIMMessage *message = [PhotonIMMessage commonMessageWithFrid:[PhotonContent currentUser].userID toid:conversation.chatWith messageType:PhotonIMMessageTypeText chatType:conversation.chatType];
-    NSMutableArray *uids = [[NSMutableArray alloc] init];
-    [message setAtInfoWithAtType:PhotonIMAtTypeNoAt atList:uids];
-    PhotonIMTextBody *body = [[PhotonIMTextBody alloc] initWithText:text];
-    [message setMesageBody:body];
+    PhotonIMMessage *message = [PhotonIMMessage commonMessageWithFrid:[PhotonContent currentUser].userID toid:conversation.chatWith messageType:PhotonIMMessageTypeRaw chatType:conversation.chatType];
+//    NSMutableArray *uids = [[NSMutableArray alloc] init];
+//    [message setAtInfoWithAtType:PhotonIMAtTypeNoAt atList:uids];
+//    PhotonIMTextBody *body = [[PhotonIMTextBody alloc] initWithText:text];
+//    [message setMesageBody:body];
     
-    [self _sendMessage:message readyCompletion:nil completion:completion];
-    
+    NSString *conetnt = @"侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架侧撒数据库才能定僵尸狂潮你当时能促进肯定是城南旧事肯定能及内存几点开始你参考是点击劫持的你上亏待了脑挫裂伤机动车拿到手离开刹那间历史库鸡蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架蛋呢陈老师库导出就撒跨连接时的你测试监控到了开收据的内产生了快到家立刻升级到了锤娜丽莎可劲的了快速搭建城南旧事但考虑到临时卡几点撤你当时就开了立刻升级到了脑挫裂伤打开的隆盛科技的超能力SDK拉屎肯德基才能定时间看了隆盛科技的超能力SDK你索拉卡的劫持那算了的框架";
+    PhotonIMCustomBody *cusBody = [PhotonIMCustomBody customBodyWithArg1:1 arg2:2 customData:[conetnt dataUsingEncoding:NSUTF8StringEncoding]];
+    [message setMesageBody:cusBody];
+    [[PhotonIMClient sharedClient] sendMessage:message completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+        [PhotonUtil runMainThread:^{
+        if (completion) {
+            completion(succeed,error);
+        }
+        }];
+    }];
 }
 
 - (void)sendImageMessage:(PhotonChatImageMessageItem *)item
@@ -230,6 +280,121 @@ static PhotonMessageCenter *center = nil;
 
 
 #pragma mark  -------- Private ---------------
+- (void)p_sendImageMessage:(PhotonIMMessage *)message completion:(nullable CompletionBlock)completion{
+    // 存储文件上传前的message
+    [[PhotonMessageCenter sharedCenter] insertOrUpdateMessage:message];
+    // 先做图片上传处理，获得资源地址后构建图片消息对象发送消息
+    PhotonIMImageBody *body =(PhotonIMImageBody *)message.messageBody;
+    PhotonUploadFileInfo *fileInfo = [[PhotonUploadFileInfo alloc]init];
+    fileInfo.name = @"fileUpload";
+    fileInfo.fileName = @"chatimage.jpg";
+    fileInfo.mimeType = @"image/jpeg";
+    fileInfo.fileURLString = [[PhotonMessageCenter sharedCenter] getImageFilePath:message.chatWith fileName:body.localFileName];
+    PhotonWeakSelf(self)
+    [[PhotonFileUploadManager defaultManager] uploadRequestMethodWithMutiFile:PHOTON_IMAGE_UPLOAD_PATH paramter:nil header:@{} fromFiles:@[fileInfo] progressBlock:^(NSProgress * _Nonnull progress) {
+    } completion:^(NSDictionary * _Nonnull dict) {
+        [weakself p_sendMessag:message result:dict completion:completion];
+    } failure:^(PhotonErrorDescription * _Nonnull error) {
+        [weakself p_sendMessag:message result:nil completion:completion];
+    }];
+}
+
+- (void)p_sendVoiceMessage:(PhotonIMMessage *)message completion:(nullable CompletionBlock)completion{
+    // 存储文件上传前的message
+    [[PhotonMessageCenter sharedCenter] insertOrUpdateMessage:message];
+    // 先做图片上传处理，获得资源地址后构建图片消息对象发送消息
+    PhotonIMAudioBody *body =(PhotonIMAudioBody *)message.messageBody;
+    PhotonUploadFileInfo *fileInfo = [[PhotonUploadFileInfo alloc]init];
+    fileInfo.name = @"fileUpload";
+    fileInfo.fileName = @"chataudio.opus";
+    fileInfo.mimeType = @"audio/opus";
+    fileInfo.fileURLString = [[PhotonMessageCenter sharedCenter] getVoiceFilePath:message.chatWith fileName:body.localFileName];
+    PhotonWeakSelf(self)
+    [[PhotonFileUploadManager defaultManager] uploadRequestMethodWithMutiFile:PHOTON_AUDIO_UPLOAD_PATH  paramter:nil header:@{} fromFiles:@[fileInfo] progressBlock:^(NSProgress * _Nonnull progress) {
+    } completion:^(NSDictionary * _Nonnull dict) {
+        [weakself p_sendMessag:message result:dict completion:completion];
+    } failure:^(PhotonErrorDescription * _Nonnull error) {
+        [weakself p_sendMessag:message result:nil completion:completion];
+    }];
+}
+
+- (void)p_sendMessag:(PhotonIMMessage *)message result:(NSDictionary *)result completion:(nullable CompletionBlock)completion{
+    NSString *fileURL = [[[[result objectForKey:@"data"] isNil] objectForKey:@"url"] isNil];
+    if (!message) {
+        return;
+    }
+    if ([fileURL isNotEmpty]) {
+        if(message.messageType == PhotonIMMessageTypeImage){
+            PhotonIMImageBody *body = (PhotonIMImageBody *)message.messageBody;
+            body.url = fileURL;
+            [message setMesageBody:body];
+        }else if(message.messageType == PhotonIMMessageTypeAudio){
+            PhotonIMAudioBody *body = (PhotonIMAudioBody *)message.messageBody;
+            body.url = fileURL;
+        }
+        // 文件下载成功
+        if (completion) {
+            completion(YES,nil);
+        }
+        [self _sendMessage:message timeout:0 completion:completion];
+    }else{
+        message.messageStatus = PhotonIMMessageStatusFailed;
+        [self insertOrUpdateMessage:message];
+        PhotonIMError *error = [PhotonIMError errorWithDomain:@"photoimdomain" code:-1 errorMessage:@"文件上传失败" userInfo:@{}];
+        if (completion) {
+            completion(NO,error);
+        }
+        
+    }
+}
+
+- (void)p_sendVideoMessage:(PhotonIMMessage *)message completion:(nullable CompletionBlock)completion{
+    // 存储文件上传前的message
+    [[PhotonMessageCenter sharedCenter] insertOrUpdateMessage:message];
+    // 先做图片上传处理，获得资源地址后构建图片消息对象发送消息
+    PhotonIMVideoBody *body =(PhotonIMVideoBody *)message.messageBody;
+    PhotonUploadFileInfo *fileInfo = [[PhotonUploadFileInfo alloc]init];
+    fileInfo.name = @"file";
+    fileInfo.fileName = @"chataudio.mp4";
+    fileInfo.mimeType = @"video/mp4";
+    fileInfo.fileURLString = [[PhotonMessageCenter sharedCenter] getVoiceFilePath:message.chatWith fileName:body.localFileName];
+    PhotonWeakSelf(self)
+    NSString *appId = @"";
+     PhotonIMServerType serverType = [PhotonContent getServerSwitch];
+    if (serverType == PhotonIMServerTypeInland) {
+            appId = APP_ID_INLAND;
+       }else if (serverType == PhotonIMServerTypeOverseas){
+           appId = APP_ID_OVERSEAS;
+       }
+       
+    // 处理header
+      NSMutableDictionary *header = [NSMutableDictionary dictionary];
+      [header setValue:appId forKey:@"appId"];
+      NSString *timestamp = [NSString stringWithFormat:@"%@",@((int64_t)[NSDate date].timeIntervalSince1970)];
+      [header setValue:timestamp forKey:@"timestamp"];
+     NSString *token = [[MMKV defaultMMKV] getStringForKey:TOKENKEY defaultValue:@""];
+      NSString *signString = [NSString stringWithFormat:@"%@%@%@",appId,token,timestamp];
+      signString = [signString md5];
+      [header setValue:signString forKey:@"sign"];
+      [header setValue:[PhotonContent currentUser].userID forKey:@"userId"];
+      [header setValue:token forKey:@"Token"];
+    // 处理parameter
+    NSMutableDictionary *paramter = [NSMutableDictionary dictionary];
+    [paramter setValue:@"1" forKey:@"fileType"];
+    [paramter setValue:@(1) forKey:@"coverOffset"];
+    
+    [[PhotonFileUploadManager defaultManager] uploadRequestMethodWithMutiFile:PHOTON_FILE_UPLOAD_PATH paramter:paramter header:header fromFiles:@[fileInfo] progressBlock:^(NSProgress * _Nonnull progress) {
+        
+    } completion:^(NSDictionary * _Nonnull dict) {
+        
+        [weakself p_sendMessag:message result:dict completion:completion];
+        
+    } failure:^(PhotonErrorDescription * _Nonnull error) {
+        
+        [weakself p_sendMessag:message result:nil completion:completion];
+    }];
+}
+
 // 重发消息
 - (void)resendMessage:(nullable PhotonChatBaseItem *)item completion:(nullable CompletionBlock)completion{
     PhotonIMMessage *message = (PhotonIMMessage *)item.userInfo;
@@ -242,6 +407,7 @@ static PhotonMessageCenter *center = nil;
     }
     [self _sendMessage:message readyCompletion:nil completion:completion];
 }
+
 
 // 发送已读消息
 - (void)sendReadMessage:(NSArray<NSString *> *)readMsgIDs conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion{
@@ -297,39 +463,53 @@ static PhotonMessageCenter *center = nil;
     return sendMessage;
 }
 
-- (void)_sendMessage:(nullable PhotonIMMessage *)message readyCompletion:(nullable void(^)(PhotonIMMessage * _Nullable message ))readyCompletion completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion{
+- (void)_sendMessage:(nullable PhotonIMMessage *)message timeout:(NSTimeInterval)timeout completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion{
     PhotonWeakSelf(self);
-//    [[PhotonIMClient sharedClient] sendMessage:message readyToSendBlock:readyCompletion fileUploadProgress:^(NSProgress * _Nonnull uploadProgress) {
-//        [PhotonUtil runMainThread:^{
-//            NSHashTable *_observer = [weakself.observers copy];
-//            for (id<PhotonMessageProtocol> observer in _observer) {
-//                if (observer && [observer respondsToSelector:@selector(fileTransportProgress:userInfo:)]) {
-//                    [observer fileTransportProgress:uploadProgress userInfo:message];
-//                }
-//            }
-//        }];
-//
-//    }  completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
-//        [PhotonUtil runMainThread:^{
-//            if (!succeed && error.code >= 1000) {
-//                message.notic = error.em;
-//            }
-//            if (completion) {
-//                completion(succeed,error);
-//            }else{
-//                NSHashTable *_observer = [weakself.observers copy];
-//                for (id<PhotonMessageProtocol> observer in _observer) {
-//                    if (observer && [observer respondsToSelector:@selector(sendMessageResultCallBack:)]) {
-//                        [observer sendMessageResultCallBack:message];
-//                    }
-//                }
-//            }
-//        }];
-//    }];
+    BOOL isTimeOut = timeout > 0;
+    if (isTimeOut) {
+        [[PhotonIMClient sharedClient] sendMessage:message timeout:timeout completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+            [PhotonUtil runMainThread:^{
+                if (!succeed && error.code >= 1000) {
+                    message.notic = error.em;
+                }
+                if (completion) {
+                    completion(succeed,error);
+                }else{
+                    NSHashTable *_observer = [weakself.observers copy];
+                    for (id<PhotonMessageProtocol> observer in _observer) {
+                        if (observer && [observer respondsToSelector:@selector(sendMessageResultCallBack:)]) {
+                            [observer sendMessageResultCallBack:message];
+                        }
+                    }
+                }
+            }];
+        }];
+    }else{
+        [[PhotonIMClient sharedClient] sendMessage:message completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+            [PhotonUtil runMainThread:^{
+                if (!succeed && error.code >= 1000) {
+                    message.notic = error.em;
+                }
+                if (completion) {
+                    completion(succeed,error);
+                }else{
+                    NSHashTable *_observer = [weakself.observers copy];
+                    for (id<PhotonMessageProtocol> observer in _observer) {
+                        if (observer && [observer respondsToSelector:@selector(sendMessageResultCallBack:)]) {
+                            [observer sendMessageResultCallBack:message];
+                        }
+                    }
+                }
+            }];
+        }];
+    }
     
-    [[PhotonIMClient sharedClient] sendMessage:message readyToSendBlock:readyCompletion];
 }
 
+- (void)_sendMessage:(nullable PhotonIMMessage *)message readyCompletion:(nullable void(^)(PhotonIMMessage * _Nullable message ))readyCompletion completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion{
+    [[PhotonIMClient sharedClient] sendMessage:message readyToSendBlock:readyCompletion ];
+}
+ 
 
 - (void)sendAddGrupNoticeMessage:(nullable PhotonIMMessage *)message completion:(nullable CompletionBlock)completion{
     [[PhotonIMClient sharedClient] sendMessage:message completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
@@ -379,7 +559,7 @@ static PhotonMessageCenter *center = nil;
 
 #pragma mark ---  数据操作相关 -----
 - (void)insertOrUpdateMessage:(PhotonIMMessage *)message{
-    [self.imClient insertOrUpdateMessage:message updateConversion:YES];
+    [self.imClient saveOrUpdateMessage:message];
 }
 - (void)deleteMessage:(PhotonIMMessage *)message{
     [self.imClient deleteMessage:message];
@@ -507,9 +687,6 @@ static PhotonMessageCenter *center = nil;
     return res;
 }
 
-- (void)imClient:(id)client didReceiveCustomMesage:(PhotonIMMessage *)message{
-    [PhotonUtil showInfoHint:@"这是自定义消息"];
-}
 
 #pragma mark --------- 消息接收相关 ----------------
 
@@ -517,7 +694,6 @@ static PhotonMessageCenter *center = nil;
     switch (failedType) {
         case PhotonIMLoginFailedTypeTokenError:
         case PhotonIMLoginFailedTypeParamterError:{
-            NSLog(@"[pim]:PhotonIMLoginFailedTypeTokenError or PhotonIMLoginFailedTypeParamterError");
             [self reGetToken];
         }
             break;
@@ -539,14 +715,10 @@ static PhotonMessageCenter *center = nil;
     return YES;
 }
 
+
 - (void)imClient:(id)client sendResultWithMsgID:(NSString *)msgID chatType:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith error:(PhotonIMError *)error{
     NSLog(@"[pim sendResultWithMsgID msgID=%@,chatType=%@,chatWith=%@,errorCode=%@",msgID,@(chatType),chatWith,@(error.code));
 }
-
-- (PhotonIMForbidenAutoResendType)messageWillBeAutoResend{
-    return PhotonIMForbidenAutoResendTypeNO;
-}
-
 
 #pragma mark ---- 登录相关 ----
 - (void)reGetToken{
@@ -562,22 +734,28 @@ static PhotonMessageCenter *center = nil;
     }
     NSString *token = [[MMKV defaultMMKV] getStringForKey:TOKENKEY defaultValue:@""];
     if ([token isNotEmpty]) {
-         [[PhotonIMClient sharedClient] loginWithToken:token extra:extra];
+        [[PhotonIMClient sharedClient] loginWithToken:token extra:extra];
+        
     }else{
+        __weak typeof(self)weaKSelf = self;
         NSMutableDictionary *paramter = [NSMutableDictionary dictionary];
         [self.netService commonRequestMethod:PhotonRequestMethodPost queryString:PHOTON_TOKEN_PATH paramter:paramter completion:^(NSDictionary * _Nonnull dict) {
             NSString *token = [[dict objectForKey:@"data"] objectForKey:@"token"];
             [[MMKV defaultMMKV] setString:token forKey:TOKENKEY];
-            
+
             [[PhotonIMClient sharedClient] loginWithToken:token extra:extra];
-            
+
             PhotonLog(@"[pim] dict = %@",dict);
         } failure:^(PhotonErrorDescription * _Nonnull error) {
             PhotonLog(@"[pim] error = %@",error.errorMessage);
             [PhotonUtil showAlertWithTitle:@"Token获取失败" message:error.errorMessage];
-            [self logout];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [weaKSelf reGetToken];
+            });
         }];
     }
+    
+               
 }
 
 - (PhotonNetworkService *)netService{

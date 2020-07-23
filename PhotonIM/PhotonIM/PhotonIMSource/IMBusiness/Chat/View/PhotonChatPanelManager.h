@@ -18,7 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 聊天面板高度改变，控制相关视图的移动
 - (void)scrollToBottomWithAnimation:(BOOL)animation;
 // 发送文本，emoji信息
-- (void)sendTextMessage:(NSString *)text atItems:(NSArray<PhotonChatAtInfo *>*)atItems type:(AtType)atType;
+- (void)sendTextMessage:(NSString *)text atItems:(NSArray<PhotonChatAtInfo *>*)atItems type:(AtType)atType msgType:(int)msgType;
+
 // 发送图片信息
 - (void)sendImageMessage:(NSData *)imageData;
 // 发送语音信息

@@ -58,6 +58,7 @@ PhotonAudioRecorderDelegate>
 
 @property (strong, nonatomic) HXPhotoManager *photonManager;
 
+@property (copy,nonatomic)NSString *contentText;
 @end
 @implementation PhotonChatPanelManager
 - (void)dealloc
@@ -123,13 +124,25 @@ PhotonAudioRecorderDelegate>
     PhotonMoreKeyboardItem *fileItem = [PhotonMoreKeyboardItem createByType:PhotonMoreKeyboardItemTypeFile
                                                                              title:@"文件"
                                                                          imagePath:@"chatfile"];
+    PhotonMoreKeyboardItem *chennalSetItem = [PhotonMoreKeyboardItem createByType:PhotonMoreKeyboardItemTypeChennalSet
+                                                                             title:@"通道set消息"
+                                                                         imagePath:@"location"];
+    PhotonMoreKeyboardItem *chennalSyncItem = [PhotonMoreKeyboardItem createByType:PhotonMoreKeyboardItemTypeChennalSync
+                                                                                title:@"通道sync消息"
+                                                                            imagePath:@"location"];
+    PhotonMoreKeyboardItem *unsaveItem = [PhotonMoreKeyboardItem createByType:PhotonMoreKeyboardItemTypemUNSaveMsg
+        title:@"消息不入库"
+    imagePath:@"location"];
+    PhotonMoreKeyboardItem *timeoutMsgItem = [PhotonMoreKeyboardItem createByType:PhotonMoreKeyboardItemTypemMSGTimeOUT
+        title:@"带超时消息"
+    imagePath:@"location"];
     
     [self.moreKeyboard setDelegate:self];
     [self.moreKeyboard setKeyboardDelegate:self];
     [self.emojiKeyboard setDelegate:self];
     [self.emojiKeyboard setKeyboardDelegate:self];
     
-    [self.moreKeyboard setChatMoreKeyboardItems:[@[imageItem,cameraItem,vedioItem,locationItem,fileItem] mutableCopy]];
+    [self.moreKeyboard setChatMoreKeyboardItems:[@[imageItem,cameraItem,vedioItem,locationItem,fileItem,chennalSetItem,chennalSyncItem,timeoutMsgItem,unsaveItem] mutableCopy]];
     [self.emojiKeyboard setChatEmojiKeyboardItems:nil];
     
     [self addMasonry];
@@ -306,9 +319,10 @@ PhotonAudioRecorderDelegate>
     if ([sendText length] == 0) {
         return;
     }
-    if ([self.delegate respondsToSelector:@selector(sendTextMessage:atItems:type:)]) {
+    _contentText = sendText;
+    if ([self.delegate respondsToSelector:@selector(sendTextMessage:atItems:type:msgType:)]) {
         NSArray *infos = [chatBar.atInfos copy];
-        [self.delegate sendTextMessage:text atItems:infos type:chatBar.atType];
+        [self.delegate sendTextMessage:text atItems:infos type:chatBar.atType msgType:0];
         chatBar.atInfos = [@[] copy];
         chatBar.atType = AtTypeNoAt;
     }
@@ -467,9 +481,6 @@ PhotonAudioRecorderDelegate>
                  if (self.delegate && [self.delegate respondsToSelector:@selector(sendVideoMessage:duraion:)]) {
                      [self.delegate sendVideoMessage:fileName duraion:model.videoDuration + 1];
                  }
-//                [weakSelf compressVideo:model.videoURL completion:^(NSURL * videoURL) {
-//
-//                }];
             } cancel:^(HXCustomCameraViewController *viewController) {
                 NSSLog(@"取消了");
             }];
@@ -530,6 +541,60 @@ PhotonAudioRecorderDelegate>
             };
             [[self getCurrentVC].navigationController pushViewController:documentVCL animated:YES];
         }
+            break;
+         case PhotonMoreKeyboardItemTypeChennalSet:
+         {
+             NSString *sendText = self.chatBar.textView.text;
+             if ([sendText length] == 0) {
+                 return;
+             }
+             if ([self.delegate respondsToSelector:@selector(sendTextMessage:atItems:type:msgType:)]) {
+                 NSArray *infos = [self.chatBar.atInfos copy];
+                 [self.delegate sendTextMessage:sendText atItems:infos type:self.chatBar.atType msgType:1];
+                 self.chatBar.atInfos = [@[] copy];
+                 self.chatBar.atType = AtTypeNoAt;
+             }
+         }
+            break;
+         case PhotonMoreKeyboardItemTypeChennalSync:{
+             NSString *sendText = self.chatBar.textView.text;
+             if ([sendText length] == 0) {
+                 return;
+             }
+             if ([self.delegate respondsToSelector:@selector(sendTextMessage:atItems:type:msgType:)]) {
+                 NSArray *infos = [self.chatBar.atInfos copy];
+                 [self.delegate sendTextMessage:sendText atItems:infos type:self.chatBar.atType msgType:2];
+                 self.chatBar.atInfos = [@[] copy];
+                 self.chatBar.atType = AtTypeNoAt;
+             }
+         }
+            break;
+        case PhotonMoreKeyboardItemTypemMSGTimeOUT:{
+            NSString *sendText = self.chatBar.textView.text;
+            if ([sendText length] == 0) {
+                return;
+            }
+            if ([self.delegate respondsToSelector:@selector(sendTextMessage:atItems:type:msgType:)]) {
+                NSArray *infos = [self.chatBar.atInfos copy];
+                [self.delegate sendTextMessage:sendText atItems:infos type:self.chatBar.atType msgType:3];
+                self.chatBar.atInfos = [@[] copy];
+                self.chatBar.atType = AtTypeNoAt;
+            }
+        }
+            break;
+        case PhotonMoreKeyboardItemTypemUNSaveMsg:{
+            NSString *sendText = self.chatBar.textView.text;
+            if ([sendText length] == 0) {
+                return;
+            }
+            if ([self.delegate respondsToSelector:@selector(sendTextMessage:atItems:type:msgType:)]) {
+                NSArray *infos = [self.chatBar.atInfos copy];
+                [self.delegate sendTextMessage:sendText atItems:infos type:self.chatBar.atType msgType:4];
+                self.chatBar.atInfos = [@[] copy];
+                self.chatBar.atType = AtTypeNoAt;
+            }
+        }
+            break;
         default:
             break;
     }

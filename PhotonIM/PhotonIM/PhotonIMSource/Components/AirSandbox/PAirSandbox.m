@@ -11,6 +11,7 @@
 #import "PhotonIMSwift-Swift.h"
 #import "PhotonBaseViewController.h"
 #import <DatabaseVisual/DatabaseManager.h>
+#import "PhotonBaseViewController.h"
 #define ASThemeColor [UIColor colorWithWhite:0.2 alpha:1.0]
 #define ASWindowPadding 0
 

@@ -24,7 +24,13 @@
     [super loadItems:params finish:finish failure:failure];
     __weak typeof(self)weakSelf = self;
     [PhotonUtil showLoading:nil];
-    [self.netService commonRequestMethod:PhotonRequestMethodPost queryString:@"photonimdemo/contact/groups" paramter:nil completion:^(NSDictionary * _Nonnull responseDict) {
+    NSString *path = @"";
+    if (_type == 2) {
+        path = @"photonimdemo/contact/groups";
+    }else if (_type == 3){
+        path = @"photonimdemo/contact/rooms";
+    }
+    [self.netService commonRequestMethod:PhotonRequestMethodPost queryString:path paramter:nil completion:^(NSDictionary * _Nonnull responseDict) {
         [weakSelf wrappResponseddDict:responseDict];
         if (finish) {
             finish(nil);
@@ -37,6 +43,7 @@
         [PhotonUtil hiddenLoading];
     }];
 }
+
 
 - (void)wrappResponseddDict:(NSDictionary *)dict{
     [super wrappResponseddDict:dict];
@@ -62,6 +69,10 @@
                 if ([groupids containsObject:conItem.contactID]) {
                     conItem.isInGroup = YES;
                 }
+                if (self.type == 3) {
+                    conItem.isInGroup = YES;
+                }
+               
                 [self.items addObject:conItem];
             }
         }
@@ -69,19 +80,30 @@
 }
 
 
-- (void)enterGroup:(NSString *)gid finish:(void (^)(NSDictionary * _Nullable))finish failure:(void (^)(PhotonErrorDescription * _Nullable))failure{
+- (void)enter:(NSString *)gid finish:(void (^)(NSDictionary * _Nullable))finish failure:(void (^)(PhotonErrorDescription * _Nullable))failure{
     if (![gid isNotEmpty]) {
         return;
     }
     PhotonWeakSelf(self);
     NSDictionary *patamter = @{@"gid":gid};
-    [self.netService commonRequestMethod:PhotonRequestMethodPost queryString:@"photonimdemo/group/remote/join" paramter:patamter completion:^(NSDictionary * _Nonnull responseDict) {
+    NSString *path = @"";
+    if (_type == 2) {
+           path = @"photonimdemo/group/remote/join";
+       }else if (_type == 3){
+           path = @"photonimdemo/room/remote/join";
+       }
+    [self.netService commonRequestMethod:PhotonRequestMethodPost queryString:path paramter:patamter completion:^(NSDictionary * _Nonnull responseDict) {
         if (finish) {
             finish(nil);
         }
-        [weakself sendEnterGroupNoticeMessage:gid];
+        if (weakself.type == 2) {
+            [weakself sendEnterGroupNoticeMessage:gid];
+             [[PhotonContent currentUser] loadMembersFormGroup:gid completion:nil];
+        }else if (weakself.type == 3){
+             [[PhotonContent currentUser] loadMembersFormRoom:gid completion:nil];
+        }
+        
         [PhotonContent addGroupToCurrentUserByGid:gid];
-        [[PhotonContent currentUser] loadMembersFormGroup:gid completion:nil];
         [PhotonUtil hiddenLoading];
     } failure:^(PhotonErrorDescription * _Nonnull error) {
         if (failure) {

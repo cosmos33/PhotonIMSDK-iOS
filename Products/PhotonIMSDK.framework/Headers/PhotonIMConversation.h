@@ -8,8 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "PhotonIMEnum.h"
+#import "PhotonIMMessage.h"
 NS_ASSUME_NONNULL_BEGIN
 
+
+/// 会话相关,管理会话的相关属性.
 @interface PhotonIMConversation : NSObject
 
 /**
@@ -33,8 +36,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, assign) uint64_t lastTimeStamp;
 
-
+/**
+会话的草稿
+*/
 @property(nonatomic, copy, nullable) NSString *draft;
+
+/**
+会话中最新一条消息的对象
+*/
+@property(nonatomic,strong, nullable)PhotonIMMessage *lastMessage;
 
 /**
  会话中最近一条消息

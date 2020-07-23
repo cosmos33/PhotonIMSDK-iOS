@@ -237,10 +237,17 @@
         [addIndexPathes addObject:indexPath];
     }];
     
-    [self.tableView beginUpdates];
-    [self.tableView insertRowsAtIndexPaths:addIndexPathes withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView endUpdates];
-    [self.tableView scrollToRowAtIndexPath:addIndexPathes.lastObject atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    @try
+    {
+       [self.tableView beginUpdates];
+        [self.tableView insertRowsAtIndexPaths:addIndexPathes withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
+        [self.tableView scrollToRowAtIndexPath:addIndexPathes.lastObject atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    }
+    @catch(NSException *exception)
+    {
+        NSLog(@"exception == \n %@",[exception userInfo]);
+    }
 }
 
 - (void)remove:(NSArray<NSIndexPath *> *)indexPaths

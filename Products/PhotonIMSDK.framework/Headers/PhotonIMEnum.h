@@ -16,7 +16,7 @@
 /**
  IM登录状态
 
- - PhotonIMLoginStatusUnknow: 未知
+ - PhotonIMLoginStatusUnknow: 未知,初始默认
  - PhotonIMLoginStatusConnecting: 连接服务器中。。。
  - PhotonIMLoginStatusConnected: 已连接服务器
  - PhotonIMLoginStatusConnectFailed: 连接服务器失败
@@ -39,14 +39,14 @@ typedef NS_ENUM(NSInteger, PhotonIMLoginStatus) {
 };
 
 /**
- 登录失败类型
+ 登录失败类型。注：业务端仅需要对 PhotonIMLoginFailedTypeTokenError PhotonIMLoginFailedTypeParamterError PhotonIMLoginFailedTypeKick三个枚举值在业务端做相关的处理。
 
  - PhotonIMLoginFailedTypeUnknow: 未知
  - PhotonIMLoginFailedTypeTimeOut: 登录超时
  - PhotonIMLoginFailedTypeTokenError: auth失败，token校验失败(403)
  - PhotonIMLoginFailedTypeParamterError: auth参数错误（404）
  - PhotonIMLoginFailedTypeAbnormal: auth异常，重试（405）使用已有数据重新连接一次
- - PhotonIMLoginFailedTypeKick: 当前用户在其他ap登录，踢掉当前连接（409）被踢掉，回到登录界面
+ - PhotonIMLoginFailedTypeKick: 当前用户在其他ap登录，踢掉当前连接（409）被踢掉，业务端需要结合业务层处理后续先关逻辑，一种场景为回到登录界面
  - PhotonIMLoginFailedTypeReConnect: 重连，让当前用户在其他ap重新连接(410) // 内部处理，使用返回的ap在内部处理连接
  
  - PhotonIMLoginFailedTypeAppIDEmpty: APPID为空，请检查在调用login之前是否调用了- (void)registerIMClientWithAppid:方法
@@ -84,9 +84,9 @@ typedef NS_ENUM(NSInteger,PhotonIMSyncStatus) {
 /**
  使用数据可的模式
 
- - PhotonIMDBModeNoDB: 不使用数据库
- - PhotonIMDBModeDBSync: 同步使用数据库
- - PhotonIMDBModeDBAsync: 异步使用数据库
+ - PhotonIMDBModeNoDB: 不使用数据库,业务端需要自行处理数据的存储逻辑.
+ - PhotonIMDBModeDBSync: 同步使用数据库,消息的收发和入库操作是同步执行。消息的接收效率较低
+ - PhotonIMDBModeDBAsync: 异步使用数据库，消息的收发和入库操作异步执行，消息的接收效率较高，推荐使用
  */
 typedef NS_ENUM(NSInteger,PhotonIMDBMode) {
     PhotonIMDBModeNoDB = 0,
@@ -102,19 +102,21 @@ typedef NS_ENUM(NSInteger,PhotonIMDBMode) {
  
  - PhotonIMChatTypeSingle: 单聊类型
  - PhotonIMChatTypeGroup: 群聊类型
- - PhotonIMChatTypeCustom: 自定义类型
+ - PhotonIMChatTypeCustom: 系统通道类型
+ - PhotonIMChatTypeRoom: 聊天室类型
  */
 typedef NS_ENUM(NSInteger,PhotonIMChatType){
     PhotonIMChatTypeSingle = 1,
     PhotonIMChatTypeGroup,
     PhotonIMChatTypeCustom,
+    PhotonIMChatTypeRoom
 
 };
 
 /**
  消息类型
  
- - PhotonIMMessageTypeUnknow: 位置
+ - PhotonIMMessageTypeUnknow: 未知
  - PhotonIMMessageTypeRaw: 自定义
  - PhotonIMMessageTypeText: 文本消息
  - PhotonIMMessageTypeImage: 图片
@@ -214,11 +216,6 @@ typedef NS_ENUM(NSInteger, PhotonIMAtType) {
     PhotonIMAtTypeAtAll = 2,
 };
 
-typedef NS_ENUM(NSInteger, PhotonIMForbidenAutoResendType){
-    PhotonIMForbidenAutoResendTypeNO = 0,
-    PhotonIMForbidenAutoResendTypeLogin = 1,
-    PhotonIMForbidenAutoResendTypeColdStart = 2,
-};
 
 /**
 下载文件的质量
@@ -250,6 +247,12 @@ typedef NS_ENUM(NSInteger, PhotonIMDownloadFileQuality){
     PhotonIMDownloadFileQualityLow = 2
 };
 
+/**
+服务类型
+
+- PhotonIMServerTypeInland: 国内服务
+- PhotonIMServerTypeOverseas: 海外服务
+*/
 typedef NS_ENUM(NSInteger, PhotonIMServerType){
     PhotonIMServerTypeInland = 0,
     PhotonIMServerTypeOverseas = 1,

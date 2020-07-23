@@ -459,7 +459,7 @@ static NSString *message_syncing = @"消息(收取中......)";
                       item.isStartChat = NO;
                       [weakself updateItem:item];
                      }
-                     
+
                   if ([conversation.chatWith isEqualToString:weakself.currentConversation.chatWith]) {
                       [weakself setTestContent:chatData];
                   }
@@ -516,6 +516,11 @@ static NSString *message_syncing = @"消息(收取中......)";
     
     UILabel *title = [[UILabel alloc] init];
     _titleLable = title;
+    _titleLable.userInteractionEnabled = YES;
+    _titleLable.enabled = YES;
+    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(uigesture)];
+           gesture.numberOfTapsRequired = 1;
+    [_titleLable addGestureRecognizer:gesture];
     title.numberOfLines = 1;
     title.text = @"";
     title.textAlignment = NSTextAlignmentCenter;
@@ -527,14 +532,14 @@ static NSString *message_syncing = @"消息(收取中......)";
     [self.testUIView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(10);
         make.right.mas_equalTo(-10);
-        make.top.mas_equalTo(90);
+        make.top.mas_equalTo(140);
         make.bottom.mas_equalTo(-90);
     }];
     
     [title mas_makeConstraints:^(MASConstraintMaker *make) {
            make.left.and.right.mas_equalTo(0);
            make.top.mas_equalTo(0);
-           make.height.mas_equalTo(20);
+           make.height.mas_equalTo(40);
        }];
     
     [self.contentFiled mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -660,9 +665,10 @@ static NSString *message_syncing = @"消息(收取中......)";
     if (!_testUIView) {
         _testUIView= [[UIView alloc] init];
         _testUIView.backgroundColor = [UIColor whiteColor];
-        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(uigesture)];
-        gesture.numberOfTapsRequired = 1;
-        [_testUIView addGestureRecognizer:gesture];
+//        _testUIView.userInteractionEnabled = NO;
+//        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(uigesture)];
+//        gesture.numberOfTapsRequired = 2;
+//        [_testUIView addGestureRecognizer:gesture];
     }
     return _testUIView;
 }

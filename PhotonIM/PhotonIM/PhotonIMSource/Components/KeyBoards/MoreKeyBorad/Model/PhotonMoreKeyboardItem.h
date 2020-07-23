@@ -15,6 +15,10 @@ typedef NS_ENUM(NSUInteger, PhotonMoreKeyboardItemType) {
     PhotonMoreKeyboardItemTypeVideo,
     PhotonMoreKeyboardItemTypeLocation,
     PhotonMoreKeyboardItemTypeFile,
+    PhotonMoreKeyboardItemTypeChennalSet,
+    PhotonMoreKeyboardItemTypeChennalSync,
+    PhotonMoreKeyboardItemTypemMSGTimeOUT,
+    PhotonMoreKeyboardItemTypemUNSaveMsg,
 };
 
 @interface PhotonMoreKeyboardItem : NSObject

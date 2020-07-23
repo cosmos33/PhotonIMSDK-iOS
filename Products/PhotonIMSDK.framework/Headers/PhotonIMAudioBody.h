@@ -10,6 +10,7 @@
 #import "PhotonIMMediaBody.h"
 NS_ASSUME_NONNULL_BEGIN
 
+/// 音频消息的消息体，构建此消息体发送音频消息，其对应的消息类型是PhotonIMMessageType::PhotonIMMessageTypeAudio
 @interface PhotonIMAudioBody : PhotonIMMediaBody
 
 /// 构建PhotonIMAudioBody对象,此构造方法适用于业务端自己管理文件上传下载及相关的存储

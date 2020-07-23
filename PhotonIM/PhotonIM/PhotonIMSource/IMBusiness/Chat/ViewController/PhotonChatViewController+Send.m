@@ -15,8 +15,12 @@
 - (void)textViewDidEndEditing:(NSString *)text{
     [[PhotonMessageCenter sharedCenter] alterConversationDraft:self.conversation.chatType chatWith:self.conversation.chatWith draft:text];
 }
+
 // 发送文本消息
-- (void)sendTextMessage:(NSString *)text atItems:(nonnull NSArray<PhotonChatAtInfo *> *)atItems type:(AtType)atType{
+- (void)sendTextMessage:(NSString *)text atItems:(nonnull NSArray<PhotonChatAtInfo *> *)atItems type:(AtType)atType msgType:(int)msgType{
+    [self sendTextMessage:text atItems:atItems type:(AtType)atType msgtype:msgType];
+}
+- (void)sendTextMessage:(NSString *)text atItems:(nonnull NSArray<PhotonChatAtInfo *> *)atItems type:(AtType)atType msgtype:(int)type{
     PhotonChatTextMessageItem *textItem = [[PhotonChatTextMessageItem alloc] init];
     textItem.fromType = PhotonChatMessageFromSelf;
     textItem.timeStamp = [[NSDate date] timeIntervalSince1970] * 1000.0;
@@ -32,7 +36,7 @@
          weakself.totleSendCount =  count;
         
     }];
-    [[PhotonMessageCenter sharedCenter] sendTextMessage:textItem conversation:self.conversation completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
+    [[PhotonMessageCenter sharedCenter] sendTextMessage:textItem conversation:self.conversation type:type completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
         if (succeed) {
              NSInteger count = weakself.sendSucceedCount + 1;
             weakself.sendSucceedCount = count;

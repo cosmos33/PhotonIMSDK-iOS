@@ -52,6 +52,10 @@
     self.dataSource = dataSource;
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+     [PhotonUtil hiddenLoading];
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     PhotonBaseContactItem *item = self.model.items[indexPath.row];

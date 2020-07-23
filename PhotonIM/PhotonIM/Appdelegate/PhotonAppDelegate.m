@@ -10,10 +10,60 @@
 #import <UserNotifications/UserNotifications.h>
 #import <pushsdk/MoPushManager.h>
 #import "UIWindow+PhotonExtensions.h"
+#import "PhotonIMClientConfig.h"
 #import "PhotonContent.h"
 #import "PhotonAppLaunchManager.h"
 #import "PhotonMessageCenter.h"
 #import "YYFPSLabel.h"
+#import "Growing.h"
+#import <Rifle/Rifle.h>
+#import <PhotonHTTPDNS/PhotonHTTPDNS.h>
+@interface PhotonHTTPDNSConfig : NSObject<PhotonHTTPDNSConfigProtocol>
+
+@end
+
+@implementation PhotonHTTPDNSConfig
+// appid
+- (NSString *)getAppid{
+    return @"2bd1a15c553de0a9df6dcede9af22962";
+}
+
+- (NSString *)getAppVersion{
+    return @"1438";
+}
+
+- (NSString *)getOsType{
+    return @"iOS";
+}
+
+- (NSString *)getUseragent{
+    return @"MomoChat/9.0 ios/1471 (iPhone 8; iOS 12.1.2; zh_CN; iPhone10,1; S1)";
+}
+// 获取全局的域名配置，有则设置
+- (NSString *)getHttpDNSGlobalConfigs{
+    return @"";
+}
+// 获取当前的用户id
+- (NSString *)getUserid{
+    return @"12345";
+}
+
+// 获取当前的用户id
+- (double)getLng{
+    return 0.0f;
+}
+
+// 获取当前的用户id
+- (double)getLat{
+    return 32.43f;
+}
+
+// 指定预先解析的域名
+- (nonnull NSArray<NSString *> *)getPreResolveHosts {
+    return @[@"immomo.com"];
+}
+@end
+
 @interface PhotonAppDelegate ()<UNUserNotificationCenterDelegate>
 
 @property (nonatomic, strong) YYFPSLabel *fpsLabel;
@@ -23,12 +73,29 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    PhotonHTTPDNSConfig *config1 = [[PhotonHTTPDNSConfig alloc] init];
+     [PhotonHTTPDNSClient initHTTPDNSWithConfig:config1];
+
+//     // 打开底层log 日志，用于排查问题，默认是关闭
+//    [PhotonHTTPDNSClient shouldConsolLog:YES];
+//     // 可配置那些域名支持自动接入Httpdns的方式，其调用在startEnableAutoRequest之前
+//    NSSet *filter = [NSSet setWithObjects:@"cosmos-im-api.immomo.com",@"cosmos-im-demo.immomo.com",@"paas-push-api.immomo.com", nil];
+//    [PhotonHTTPDNSClient setRequestDomainFilter:filter];
+//    // 可配置那些域名支持自动接入Httpdns的方式，其调用在startEnableAutoRequest之前
+//    [PhotonHTTPDNSClient supportWKWebview];
+//
+//    [PhotonHTTPDNSClient startEnableAutoRequest];
     
+    
+//    [Rifle startWithAppId:APP_ID_INLAND config:nil];
     [[PhotonMessageCenter sharedCenter] initPhtonIMSDK];
-    
+//    [Growing startWithAccountId:@"98874232e8f917cc"];
+//    [Growing setEnableLog:YES];
     [self registerPushSDK];
     
-    UNUserNotificationCenter.currentNotificationCenter.delegate = self;
+    PhotonIMClientConfig *config = [[PhotonIMClientConfig alloc] init];
+    [MoPushManager setNotiCenterDelegate:config];
+    UNUserNotificationCenter.currentNotificationCenter.delegate = config;
     [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
         if (settings.authorizationStatus == UNAuthorizationStatusNotDetermined) {
             [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound completionHandler:^(BOOL granted, NSError * _Nullable error) {
@@ -74,7 +141,7 @@
 
 - (void)addFPSLabel {
     _fpsLabel = [YYFPSLabel new];
-    _fpsLabel.frame = CGRectMake(35, 35, 50, 30);
+    _fpsLabel.frame = CGRectMake(135, 35, 50, 30);
     [_fpsLabel sizeToFit];
     [self.window addSubview:_fpsLabel];
 }
@@ -82,7 +149,7 @@
 
 #pragma mark - Notification
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
-    PhotonLog(@"获取到deviceToken --"); //SDK内部hook，业务层无需配置
+    PhotonLog(@"获取到deviceToken --");
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"cdscds" message:@"vxvsd" delegate:self cancelButtonTitle:@"" otherButtonTitles:@"ok", nil];
     [alert show];
     
@@ -98,7 +165,7 @@
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
     if ([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
         NSDictionary *dict = response.notification.request.content.userInfo;
-        NSLog(@"%@",dict);
+        NSLog(@"%@",[dict description]);
     }
     completionHandler();
 }
@@ -129,6 +196,14 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options{
+    if ([Growing handleUrl:url]) // 请务必确保该函数被调用
+       {
+           return YES;
+       }
+       return NO;
 }
 
 

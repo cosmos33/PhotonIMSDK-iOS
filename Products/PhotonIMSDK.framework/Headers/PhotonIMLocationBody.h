@@ -9,11 +9,15 @@
 #import <Foundation/Foundation.h>
 #import "PhotonIMBaseBody.h"
 NS_ASSUME_NONNULL_BEGIN
+
+
 typedef enum{
     CoordinateSystem_WGS84 = 0,
     CoordinateSystem_GCJ02 = 1,
     CoordinateSystem_BD09 = 2
 } CoordinateSystem;
+
+/// 位置消息的消息体，构建此消息体发送位置消息，其对应的消息类型是PhotonIMMessageType::PhotonIMMessageTypeLocation
 @interface PhotonIMLocationBody : PhotonIMBaseBody
 @property(nonatomic,assign)CoordinateSystem coordinateSystem;// 坐标系类型
 @property(nonatomic,copy)NSString *address;// 坐标地址名称

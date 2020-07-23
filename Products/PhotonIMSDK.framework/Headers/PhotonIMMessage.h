@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 
+///PhotonIMBaseMessage的子类，管理消息相关的数据
 @interface PhotonIMMessage : PhotonIMBaseMessage
 
 /**
@@ -51,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly, copy) NSArray<NSString*> *msgAtList;
 
 /**
- 是否已当前消息的时间戳加载服务端的历史数据
+ 此是否前是否有历史消息存储在服务端
  */
 @property(nonatomic, assign)BOOL remainHistory;
 

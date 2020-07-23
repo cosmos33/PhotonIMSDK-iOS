@@ -10,8 +10,10 @@
 #import <UIKit/UIKit.h>
 #import "PhotonIMMediaBody.h"
 NS_ASSUME_NONNULL_BEGIN
-
+/// 视频消息的消息体，构建此消息体发送视频消息，其对应的消息类型是PhotonIMMessageType::PhotonIMMessageTypeVideo
 @interface PhotonIMVideoBody : PhotonIMMediaBody
+
+/// 服务端存储的封面图地址
 @property(nonatomic, copy, nullable) NSString *coverUrl;
 @property(nonatomic, strong, nullable)UIImage *coverImage;
 @property(nonatomic, assign)CGFloat  whRatio;

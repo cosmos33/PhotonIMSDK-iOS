@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "PhotonIMBaseBody.h"
 NS_ASSUME_NONNULL_BEGIN
-
+/// 图片消息的消息体，构建此消息体发送图片消息，其对应的消息类型是PhotonIMMessageType::PhotonIMMessageTypeImage
 @interface PhotonIMImageBody : PhotonIMBaseBody
 
 /**

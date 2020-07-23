@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSIndexPath *)getFtsSearchContentIndexpath;
 
 - (NSInteger)getPageSize;
+
+- (void)quit:(NSString *)gid finish:(void (^)(NSDictionary * _Nullable))finish failure:(void (^)(PhotonErrorDescription * _Nullable))failure;
 @end
 
 NS_ASSUME_NONNULL_END

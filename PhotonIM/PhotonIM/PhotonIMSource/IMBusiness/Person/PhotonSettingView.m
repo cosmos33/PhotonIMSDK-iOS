@@ -183,16 +183,14 @@ typedef NS_ENUM(NSInteger,SelectDateType) {
             [PhotonUtil showErrorHint:@"数字输入格式错误"];
         }
         
-       content = self.beginTimeLable.text;
-        if ([self deptNumInputShouldNumber:content]) {
-            [PhotonContent currentSettingModel].beginTime = [content longLongValue];
+        if ([self deptNumInputShouldNumber:self.beginTimeLable.text]) {
+            [PhotonContent currentSettingModel].beginTime = [self.beginTimeLable.text longLongValue];
         }else{
             [PhotonUtil showErrorHint:@"开始时间输入格式错误"];
         }
         
-        content= self.endTimeLable.text;
-        if ([self deptNumInputShouldNumber:content]) {
-            [PhotonContent currentSettingModel].endTime = [content longLongValue];
+        if ([self deptNumInputShouldNumber:self.endTimeLable.text]) {
+            [PhotonContent currentSettingModel].endTime = [self.endTimeLable.text longLongValue];
         }else{
             [PhotonUtil showErrorHint:@"结束时间输入格式错误"];
         }
