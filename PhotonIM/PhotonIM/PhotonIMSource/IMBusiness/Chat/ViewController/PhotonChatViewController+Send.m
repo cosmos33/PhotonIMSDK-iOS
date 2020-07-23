@@ -49,7 +49,7 @@
             NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970] * 1000.0;
             int duration = endTime - weakself.startTime;
             NSLog(@"%@",[NSString stringWithFormat:@"总耗时(毫秒)：%@",@(duration)]);
-             weakself.totalTimeLable.text = [NSString stringWithFormat:@"总耗时(毫秒)：%@",@(duration)];
+            weakself.totalTimeLable.text = [NSString stringWithFormat:@"总耗时(毫秒)：%@",@(duration)];
         }
         if (!succeed && error.code >=1000 && error.em) {
            textItem.tipText = error.em;

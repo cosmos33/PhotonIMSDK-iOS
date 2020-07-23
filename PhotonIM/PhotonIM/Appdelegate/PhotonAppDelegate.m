@@ -25,9 +25,9 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [Rifle startWithAppId:APP_ID_INLAND config:nil];
+//    [Rifle startWithAppId:APP_ID_INLAND config:nil];
     [[PhotonMessageCenter sharedCenter] initPhtonIMSDK];
-    [Growing startWithAccountId:@"98874232e8f917cc"];
+//    [Growing startWithAccountId:@"98874232e8f917cc"];
 //    [Growing setEnableLog:YES];
     [self registerPushSDK];
     

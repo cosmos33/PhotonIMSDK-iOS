@@ -39,6 +39,7 @@ def writeNewTagToSpecFile(name,tag,am):
         f.write(result1);
         f.close();
         print('git commit -am"'+am+'"');
+        os.system('git add *');
         os.system('git commit -am"'+am+'"');
         os.system('git pull');
         os.system('git push');
