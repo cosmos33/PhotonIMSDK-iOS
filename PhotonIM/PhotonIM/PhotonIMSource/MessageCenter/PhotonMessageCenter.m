@@ -161,6 +161,7 @@ static PhotonMessageCenter *center = nil;
     }
     [message setAtInfoWithAtType:(PhotonIMAtType)(item.type) atList:uids];
     PhotonIMTextBody *body = [[PhotonIMTextBody alloc] initWithText:item.messageText];
+//     PhotonIMCustomBody *body = [PhotonIMCustomBody customBodyWithArg1:1 arg2:1 customData:[@"哈哈哈哈哈哈" dataUsingEncoding:NSUTF8StringEncoding]];
     [message setMesageBody:body];
     item.userInfo = message;
     self.timeOut = 0;
