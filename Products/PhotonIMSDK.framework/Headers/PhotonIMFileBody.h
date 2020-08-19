@@ -25,14 +25,25 @@ NS_ASSUME_NONNULL_BEGIN
                                hashAlgType:(HashAlgType)hashAlgType
                                 algContent:(nullable NSString *)algContent;
 
-
-
 /// 构建PhotonIMFileBody对象,此构件方法适用于使用SDK的文件托管（sdk处理文件的上传下载和存储功能）
 /// @param filePath 文件在业务端本地的路径
 /// @param displayName 文件要显示的名称
 + (PhotonIMFileBody *)fileBodyWithFilePath:(nullable NSString *)filePath
                                        displayName:(NSString *)displayName;
 
+/// 遍历构建文件消息体
+/// @param fileName 文件名
+/// @param url 文件在服务端的存储地址
+/// @param fileSize 文件大小
+/// @param hashAlgType 文件唯一表示算法
+/// @param algContent 处理后的唯一标识
+/// @param srcDescription  资源描述，此字段会入库，内容可作为全文搜索使用
++ (PhotonIMFileBody *)FileBodyWithFileName:(nullable NSString *)fileName
+                                       url:(NSString *)url
+                                  fileSize:(int64_t)fileSize
+                               hashAlgType:(HashAlgType)hashAlgType
+                                algContent:(nullable NSString *)algContent
+                               srcDescription:(nullable NSString *)srcDescription;
 @end
 
 NS_ASSUME_NONNULL_END

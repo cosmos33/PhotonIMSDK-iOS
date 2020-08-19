@@ -55,6 +55,18 @@ NS_ASSUME_NONNULL_BEGIN
 + (PhotonIMImageBody *)imageBodyWithImagePath:(NSString *)imagePath
                                     imageName:(nullable NSString *)imageName
                                       whRatio:(CGFloat)whRatio;
+
+/// 遍历构造ImageBody
+/// @param url 服务端保存的原图地址
+/// @param thumbURL 服务端保存的缩略图地址
+/// @param localFileName 文件本地存储相对路径
+/// @param whRatio <#whRatio description#>
+/// @param srcDescription  资源描述，此字段会入库，内容可作为全文搜索使用
++ (PhotonIMImageBody *)imageBodyWithURL:(NSString *)url
+                            thumbURL:(nullable NSString *)thumbURL
+                               localFileName:(nullable NSString *)localFileName
+                                whRatio:(CGFloat)whRatio
+                         srcDescription:(nullable NSString *)srcDescription;
 @end
 
 NS_ASSUME_NONNULL_END

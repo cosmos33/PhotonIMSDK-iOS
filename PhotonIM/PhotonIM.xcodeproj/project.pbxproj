@@ -2043,6 +2043,7 @@
 				D99E72E0FD125B1043427EFA /* [CP] Copy Pods Resources */,
 				3221880B22CCA51C007E9FA3 /* Sources */,
 				321838C722F84B3F005CCB00 /* Embed App Extensions */,
+				32E9F91D24CE911B00DF1BB7 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -2175,6 +2176,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		32E9F91D24CE911B00DF1BB7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n####################################################################\n#       请注意配置app-id 和 app-key\n####################################################################\nRIFLE_APP_ID=\"9122fba3a09654f2972c0fde0ad19f96\"\nRIFLE_APP_KEY=\"dde92416e245afe840794e4efd86d9cd\"\n\n####################################################################\n#       符号表默认只在非DEBUG下上传，如果想在DEBUG下上上传\n#       打开 RIFLE_FORCE_UPLOAD\n####################################################################\nexport RIFLE_FORCE_UPLOAD=\"EN\"\n\n####################################################################\n#       下面脚本会在构建阶段自动异步上传符号表,注意不要写错脚本地址\n####################################################################\n#./TestRifle/Rifle/Rifle.framework/run ${RIFLE_APP_ID} ${RIFLE_APP_KEY}\n./Pods/Rifle/iOS/Rifle.framework/run ${RIFLE_APP_ID} ${RIFLE_APP_KEY} # 如果使用cocoapods \n#\n\n";
+		};
 		46374B2F87D80AB1A8466C83 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

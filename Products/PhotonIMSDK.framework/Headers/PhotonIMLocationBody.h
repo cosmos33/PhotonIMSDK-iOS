@@ -35,6 +35,20 @@ typedef enum{
                                                 address:(nullable NSString *)address
                                         detailedAddress:(nullable NSString *)detailedAddress
                                                     lng:(double)lng lat:(double)lat;
+
+/// 遍历构造LocationBody
+/// @param coordinateSystem 坐标系类型
+/// @param address 坐标地址名称
+/// @param detailedAddress 坐标详细地址名称
+/// @param lng  经度
+/// @param lat 纬度
+/// @param srcDescription  资源描述，此字段会入库，内容可作为全文搜索使用
++(PhotonIMLocationBody *)locationBodyWithCoordinateSystem:(CoordinateSystem)coordinateSystem
+                                                address:(nullable NSString *)address
+                                        detailedAddress:(nullable NSString *)detailedAddress
+                                                    lng:(double)lng lat:(double)lat
+                                           srcDescription:(nullable NSString *)srcDescription;
+
 @end
 
 NS_ASSUME_NONNULL_END

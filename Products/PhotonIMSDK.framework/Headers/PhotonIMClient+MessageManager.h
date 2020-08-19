@@ -173,9 +173,9 @@ NS_ASSUME_NONNULL_BEGIN
 @param msgId 消息id
 @return <#return value description#>
 */
-- (PhotonIMMessage *)findMessage:(PhotonIMChatType)chatType
+- (nullable PhotonIMMessage *)findMessage:(PhotonIMChatType)chatType
                         chatWith:(NSString *)chatWith
-                           msgId:(nullable NSString *)msgId;
+                           msgId:(NSString *)msgId;
 /**
  查找消息
 
@@ -234,12 +234,15 @@ NS_ASSUME_NONNULL_BEGIN
                          beginTimeStamp:(NSTimeInterval)beginTimeStamp
                                 endTime:(NSTimeInterval)endTime;
 
+
+
+#pragma mark ---- Find Message List----
 /**
 @brief 加载会话中的所有消息，支持按锚点向前或向后查找
 
 @param chatType 查找的会话类型
 @param chatWith 会话中对方的id 群组为群组id
-@param anchor 锚点消息id （未有可为空
+@param anchor 锚点消息id,未有可为空
 @param beforeAnchor 查找的数据为锚点之前之后的数据，YES为查找锚点之前的数据（即早于锚点消息的数据） NO为查找锚点之后的数据（即晚于于锚点消息的数据）
 @param size 以锚点为中心，要查找的消息的个数
 @return PhotonIMMessage 对象列表
@@ -261,11 +264,49 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)loadHistoryMessages:(PhotonIMChatType)chatType
                    chatWith:(NSString *)chatWith
-                     anchor:(nullable NSString *)anchor
+                     anchorMsgId:(nullable NSString *)anchor
                        size:(int)size
                 reaultBlock:(void(^)(NSArray<PhotonIMMessage *> * _Nullable,NSString * _Nullable,BOOL))result;
 
 
+/**
+@brief 查找符合Extra中key-value的会话消息加，支持按锚点向前或向后查找
+
+@param chatType 查找的会话类型
+@param chatWith 会话中对方的id 群组为群组id
+@param anchor 锚点消息id,未有可为空
+@param beforeAnchor 查找的数据为锚点之前之后的数据，YES为查找锚点之前的数据（即早于锚点消息的数据） NO为查找锚点之后的数据（即晚于于锚点消息的数据）
+@param key Extra指定的key
+@param value Extra指定的key对应的value值。
+@param size 以锚点为中心，要查找的消息的个数
+@return PhotonIMMessage 对象列表
+*/
+- (NSArray<PhotonIMMessage *> *)loadHistoryMessages:(PhotonIMChatType)chatType
+                                           chatWith:(NSString *)chatWith
+                                        anchorMsgId:(nullable NSString *)anchor
+                                       beforeAuthor:(BOOL)beforeAnchor
+                                           extraKey:(NSString *)key
+                                         extraValue:(NSString *)value
+                                               size:(int)size;
+
+/**
+ @brief 查找符合Extra中key-value的会话消息加，指定按锚点向前查找
+
+ @param chatType 会话类型
+ @param chatWith 会话中对方的id 群组为群组id
+ @param anchor 开始一次查询的锚点 锚点取消息id(msgID)
+ @param key Extra指定的key
+ @param value Extra指定的key对应的value值。 注：key 或 value为空，查找结果忽略key-value限制
+ @param size 每次查询的条数
+ @param result 回调的数据结构是查询到数据对象（message对象集合，锚点,和指定同步此处的消息之后是否开始拉取服务端的消息）
+ */
+- (void)loadHistoryMessages:(PhotonIMChatType)chatType
+                   chatWith:(NSString *)chatWith
+                     anchorMsgId:(nullable NSString *)anchor
+                   extraKey:(NSString *)key
+                 extraValue:(NSString *)value
+                       size:(int)size
+                reaultBlock:(void(^)(NSArray<PhotonIMMessage *> * _Nullable,NSString * _Nullable))result;
 
 /**
 @brief 加载会话中指定消息类型的所有消息，支持按锚点向前或向后查找
@@ -301,6 +342,7 @@ NS_ASSUME_NONNULL_BEGIN
                      anchorMsgId:(nullable NSString *)anchor
                        size:(int)size
                 reaultBlock:(void(^)(NSArray<PhotonIMMessage *> * _Nullable,NSString * _Nullable))result;
+
 
 
 /// @brief 加载指定时间范围的会话消息（仅同步本地数据库）此方法指定查找锚点值之前的数,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息
@@ -375,6 +417,56 @@ NS_ASSUME_NONNULL_BEGIN
                beforeAuthor:(BOOL)beforeAnchor
                        size:(int)size;
 
+
+/// @brief  加载指定消息类型、指定时间范围以及查找符合扩展Extra中key-value值的会话消息（仅同步本地数据库）此方法指定查找锚点值之前的数据,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息
+/// @param chatType 会话类型
+/// @param chatWith 会话中对方的id 群组为群组id
+/// @param messageTypeList PhotonIMMessageType的集合，为空查找所有类型消息
+/// @param anchor 开始一次查询的锚点 锚点取消息id(msgID)
+/// @param beginTimeStamp 消息的起始拉取时间，比如7天前
+/// @param endTime 消息的结束拉取时间，比如当前时间
+/// @param key Extra指定的key
+/// @param value Extra指定的key对应的value值。 注：key 或 value为空，查找结果忽略key-value限制
+/// @param size 每次拉去的条数
+/// @param result 回调的结果（message对象集合，锚点,和指定同步此处的消息之后是否开始拉取服务端的消息）
+- (void)loadHistoryMessages:(PhotonIMChatType)chatType
+                   chatWith:(NSString *)chatWith
+                messageTypeList:(nullable NSArray<NSNumber *>*)messageTypeList
+                anchorMsgId:(nullable NSString *)anchor
+             beginTimeStamp:(NSTimeInterval)beginTimeStamp
+                    endTime:(NSTimeInterval)endTime
+                   extraKey:(nullable NSString *)key
+                   extraValue:(nullable NSString *)value
+                       size:(int)size
+                reaultBlock:(void(^)(NSArray<PhotonIMMessage *> * _Nullable,NSString * _Nullable))result;
+
+
+
+/// @brief 加载指定消息类型、指定时间范围以及查找符合Extra中key-value的会话消息（仅同步本地数据库），支持按锚点向前或向后查找,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息，可按锚点拉取新旧消息
+/// @param chatType 会话类型
+/// @param chatWith 会话中对方的id 群组为群组id
+/// @param messageTypeList PhotonIMMessageType的集合，为空查找所有类型消息
+/// @param anchor 开始一次查询的锚点 锚点取消息id(msgID)
+/// @param beginTimeStamp 消息的起始拉取时间，比如7天前
+/// @param endTime 消息的结束拉取时间，比如当前时间。注:如果设置的时间范围不合法，则默认依次拉取所有的消息，可按锚点拉取新旧消息
+/// @param key Extra指定的key
+/// @param value Extra指定的key对应的value值。 注：key 或 value为空，查找结果忽略key-value限制
+/// @param beforeAnchor 查找的数据为锚点之前之后的数据，YES为查找锚点之前的数据（即早于锚点消息的数据）NO为查找锚点之后的数据（即晚于于锚点消息的数据）
+/// @param size 每次拉去的条数
+/// @return PhotonIMMessage 对象列表
+- (NSArray<PhotonIMMessage *> *)loadHistoryMessages:(PhotonIMChatType)chatType
+                                           chatWith:(NSString *)chatWith
+                                    messageTypeList:(nullable NSArray<NSNumber *>*)messageTypeList
+                                        anchorMsgId:(nullable NSString *)anchor
+                                     beginTimeStamp:(NSTimeInterval)beginTimeStamp
+                                            endTime:(NSTimeInterval)endTime
+                                       beforeAuthor:(BOOL)beforeAnchor
+                                           extraKey:(nullable NSString *)key
+                                         extraValue:(nullable NSString *)value
+                                               size:(int)size;
+
+
+#pragma mark --- fts -----
 /**
  @brief 同步服务端上的历史数据
 
@@ -414,26 +506,51 @@ NS_ASSUME_NONNULL_BEGIN
                                                 BOOL haveNext,
                                                 NSError * _Nullable error))result;
 
+/// @brief 全文搜索（获取所有包含查询结果的会话，每个会话中包含针对此会话查询结果的条数，在ftsResultCount此属性获取）
+/// @param matchQuery 搜索关键词
+/// @param startIdentifier 开始标签，比如 @"<a>"
+/// @param endIdentifier 结束标签，比如 @"</a>"
+/// @param maxCharacterLenth 显示的最大字符数
+/// @param pageSize 只查找指定数量，其他忽略。建议全查pagesize
+- (NSArray<PhotonIMConversation *> *)SearchFtsSessionsWithMatchQuery:(NSString *)matchQuery
+                                                     startIdentifier:(NSString *)startIdentifier
+                                                       endIdentifier:(NSString *)endIdentifier
+                                                   maxCharacterLenth:(NSInteger)maxCharacterLenth
+                                                            pageSize:(int)pageSize;
 /// @brief 全文搜索（所有会话消息）
 /// @param matchQuery 搜索关键词
 /// @param startIdentifier 开始标签，比如 @"<a>"
-/// @param andIdentifier 结束标签，比如 @"</a>"
+/// @param endIdentifier 结束标签，比如 @"</a>"
 /// @param maxCharacterLenth 显示的最大字符数
 - (NSArray<PhotonIMMessage *> *)searchMessagesWithMatchQuery:(NSString *)matchQuery
                                            startIdentifier:(NSString *)startIdentifier
-                                             andIdentifier:(NSString *)andIdentifier maxCharacterLenth:(NSInteger)maxCharacterLenth;
+                                             endIdentifier:(NSString *)endIdentifier maxCharacterLenth:(NSInteger)maxCharacterLenth DEPRECATED_MSG_ATTRIBUTE("Please use 'searchMessagesWithMatchQuery: startIdentifier: endIdentifier: maxCharacterLenth: anchor: pageSize:' instead");;
+
+/// @brief 全文搜索（所有会话消息）,支持分页
+/// @param matchQuery 搜索关键词
+/// @param startIdentifier 开始标签，比如 @"<a>"
+/// @param endIdentifier 结束标签，比如 @"</a>"
+/// @param maxCharacterLenth 显示的最大字符数
+/// @param anchor 锚点 消息id
+/// @param pageSize 每页显示条数
+- (NSArray<PhotonIMMessage *> *)searchMessagesWithMatchQuery:(NSString *)matchQuery
+                                             startIdentifier:(NSString *)startIdentifier
+                                               endIdentifier:(NSString *)endIdentifier
+                                           maxCharacterLenth:(NSInteger)maxCharacterLenth
+                                                      anchor:(nullable NSString *)anchor
+                                                    pageSize:(int)pageSize;
 
 /// @brief 全文搜索 （不支持支持分页）
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id
 /// @param startIdentifier 开始标签，比如 @"<a>"
-/// @param andIdentifier 结束标签，比如 @"</a>"
+/// @param endIdentifier 结束标签，比如 @"</a>"
 /// @param maxCharacterLenth 显示的最大字符数
 /// @param matchQuery 搜索关键词
 - (NSArray<PhotonIMMessage *> *)searchMessagesWithChatType:(PhotonIMChatType)chatType
                                                 chatWith:(NSString *)chatWith
                                          startIdentifier:(NSString *)startIdentifier
-                                           andIdentifier:(NSString *)andIdentifier
+                                           endIdentifier:(NSString *)endIdentifier
                                        maxCharacterLenth:(NSInteger)maxCharacterLenth
                                               matchQuery:(NSString *)matchQuery;
 
@@ -442,18 +559,18 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id
 /// @param startIdentifier 开始标签，比如 @"<a>"
-/// @param andIdentifier 结束标签，比如 @"</a>"
+/// @param endIdentifier 结束标签，比如 @"</a>"
 /// @param maxCharacterLenth 显示的最大字符数
 /// @param matchQuery 搜索关键词
-/// @param anchor 锚点
+/// @param anchor 锚点，消息id
 /// @param pageSize 每页显示条数
 - (NSArray<PhotonIMMessage *> *)searchMessagesWithChatType:(PhotonIMChatType)chatType
                                                   chatWith:(NSString *)chatWith
                                            startIdentifier:(NSString *)startIdentifier
-                                             andIdentifier:(NSString *)andIdentifier
+                                             endIdentifier:(NSString *)endIdentifier
                                          maxCharacterLenth:(NSInteger)maxCharacterLenth
                                                 matchQuery:(NSString *)matchQuery
-                                                    anchor:(NSString *)anchor
+                                                    anchor:(nullable NSString *)anchor
                                                   pageSize:(int)pageSize;
 @end
 

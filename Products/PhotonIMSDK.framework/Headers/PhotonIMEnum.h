@@ -216,7 +216,6 @@ typedef NS_ENUM(NSInteger, PhotonIMAtType) {
     PhotonIMAtTypeAtAll = 2,
 };
 
-
 /**
 下载文件的质量
  

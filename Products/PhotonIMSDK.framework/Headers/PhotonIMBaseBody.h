@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable)NSString *localFileName;
 
 /**
+<<<<<<< HEAD
  本地资源的绝对路径，上行地址为业务端的资源地址，下行为SDK完成资源上传后存储在SDK管理的路径下
  */
 @property (nonatomic, copy, nullable)NSString *localFilePath;
@@ -51,6 +52,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,assign)HashAlgType hashAlgType;//标注文件唯一性的算法 比如md5值
 
 @property(nonatomic,copy,nullable)NSString *fileHash;// 比如md5值
+/*
+ 资源描述，此字段会入库，内容默认作为全文搜索使用。此字段仅适用于资源消息和自定义消息
+ */
+@property (nonatomic, copy, nullable)NSString *srcDescription;
 @end
 
 NS_ASSUME_NONNULL_END
