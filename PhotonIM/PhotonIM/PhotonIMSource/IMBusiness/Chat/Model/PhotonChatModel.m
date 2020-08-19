@@ -82,30 +82,11 @@
             if(!weakself.anchorMsgId || weakself.anchorMsgId.length == 0){
                 weakself.anchorMsgId = [[[weakself.items firstObject] userInfo] messageID];
             }
-//            [imclient loadHistoryMessages:chatType chatWith:chatWith anchor:weakself.anchorMsgId size:(int)weakself.pageSize reaultBlock:^(NSArray<PhotonIMMessage *> * _Nullable messages, NSString * _Nullable an, BOOL remainHistoryInServer) {
-//                NSMutableArray *items = [NSMutableArray array];
-//                weakself.anchorMsgId = [an copy];
-//                for (PhotonIMMessage *msg in messages) {
-//                    id item =  [weakself wrapperMessage:msg];
-//                    if (item) {
-//                        [items addObject:item];
-//                    }
-//                }
-//                NSMutableArray *totolItems = [NSMutableArray arrayWithCapacity:weakself.items.count + items.count];
-//                [totolItems addObjectsFromArray:items];
-//                [totolItems addObjectsFromArray:weakself.items];
-//                weakself.items = [PhotonIMThreadSafeArray arrayWithArray:totolItems];
-//                if (finish) {
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        finish(nil);
-//                    });
-//                }
-//            }] ;
-        
-        [imclient loadHistoryMessages:chatType chatWith:chatWith messageTypeList:@[@(PhotonIMMessageTypeUnknow)] anchorMsgId:weakself.anchorMsgId size:(int)self.pageSize reaultBlock:^(NSArray<PhotonIMMessage *> * _Nullable messages, NSString * _Nullable an) {
+        [imclient loadHistoryMessages:chatType chatWith:chatWith anchorMsgId:weakself.anchorMsgId size:(int)self.pageSize reaultBlock:^(NSArray<PhotonIMMessage *> * _Nullable messages, NSString * _Nullable an,BOOL loadHist) {
             NSMutableArray *items = [NSMutableArray array];
             weakself.anchorMsgId = [an copy];
             for (PhotonIMMessage *msg in messages) {
+                NSLog(@"%@",[msg extraValueForKey:@"age"]);
                 id item =  [weakself wrapperMessage:msg];
                 if (item) {
                     [items addObject:item];

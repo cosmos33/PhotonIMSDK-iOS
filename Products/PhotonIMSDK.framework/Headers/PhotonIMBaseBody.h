@@ -20,6 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
  本地资源名称或者路径
  */
 @property (nonatomic, copy, nullable)NSString *localFileName;
+
+/**
+ 资源描述，此字段会入库，内容默认作为全文搜索使用。此字段仅适用于资源消息和自定义消息
+ */
+@property (nonatomic, copy, nullable)NSString *srcDescription;
+
 @end
 
 NS_ASSUME_NONNULL_END

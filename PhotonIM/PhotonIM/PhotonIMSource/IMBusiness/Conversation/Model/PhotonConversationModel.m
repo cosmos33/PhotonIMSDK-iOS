@@ -20,7 +20,7 @@
 - (void)loadItems:(nullable NSDictionary *)params finish:(void (^)(NSDictionary * _Nullable))finish failure:(void (^)(PhotonErrorDescription * _Nullable))failure{
     PhotonWeakSelf(self);
     [super loadItems:params finish:finish failure:failure];
-    NSArray<PhotonIMConversation *> *conversations = [[PhotonIMClient sharedClient] findConversationList:@"" pageSize:100];
+    NSArray<PhotonIMConversation *> *conversations = [[PhotonIMClient sharedClient] findConversationList:@"" pageSize:100 extraKey:@"" extraValue:@""];
         [weakself.items removeAllObjects];
         if (conversations.count > 0) {
             NSMutableArray *chatWiths = [NSMutableArray array];
@@ -104,7 +104,7 @@
         PhotonLog(@"history session data count: %@",@([lists count]));
         if (lists.count > 0) {
             for (NSDictionary *item in lists) {
-                if ([item isKindOfClass:[NSNull null]]) {
+                if ([item isKindOfClass:[NSNull class]]) {
                     continue;
                 }
                 NSString *chatWith = [[item objectForKey:@"id"] isNil];
@@ -143,7 +143,6 @@
     }
     
     if (conversations.count) {
-//        [[PhotonIMClient sharedClient] saveConversationBatch:conversations];
         self.conversations = [conversations copy];
         if(self.loadConverationMessage){
             [self loadConversationMessage];

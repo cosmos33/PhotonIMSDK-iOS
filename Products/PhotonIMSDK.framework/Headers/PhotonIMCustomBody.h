@@ -27,6 +27,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (PhotonIMCustomBody *)customBodyWithArg1:(int32_t)arg1
                                       arg2:(int32_t)arg2
                                 customData:(nullable NSData *)customData;
+
+/// 遍历构造CustomBody
+/// @param arg1 业务端自定义参数1
+/// @param arg2 业务端自定义参数2
+/// @param customData 自定义的二进制数据
+/// @param srcDescription  资源描述，此字段会入库，内容可作为全文搜索使用
++ (PhotonIMCustomBody *)customBodyWithArg1:(int32_t)arg1
+                                      arg2:(int32_t)arg2
+                                customData:(nullable NSData *)customData
+                            srcDescription:(nullable NSString *)srcDescription;
 @end
 
 NS_ASSUME_NONNULL_END

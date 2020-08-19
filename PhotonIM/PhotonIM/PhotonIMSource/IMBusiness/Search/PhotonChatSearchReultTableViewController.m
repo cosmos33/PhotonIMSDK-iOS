@@ -87,14 +87,23 @@
 }
 
 - (void)loadFirst{
-       NSArray<PhotonIMMessage *> *msgList = [[PhotonIMClient sharedClient] searchMessagesWithChatType:_chatType chatWith:_chatWith startIdentifier:@"<a>" andIdentifier:@"</a>" maxCharacterLenth:10 matchQuery:[NSString stringWithFormat:@"%@*",_searchKeyword] anchor:@"" pageSize:_pageSize];
-      [self _reloadData:msgList];
+    NSArray<PhotonIMMessage *> * _Nonnull extractedExpr = [[PhotonIMClient sharedClient] searchMessagesWithChatType:_chatType chatWith:_chatWith startIdentifier:@"<a>" endIdentifier:@"</a>" maxCharacterLenth:10 matchQuery:[NSString stringWithFormat:@"%@*",_searchKeyword] anchor:@"" pageSize:_pageSize];
+    
+//    NSArray<PhotonIMConversation *> * list = [[PhotonIMClient sharedClient] SearchFtsSessionsWithMatchQuery:[NSString stringWithFormat:@"%@*",_searchKeyword] startIdentifier:nil endIdentifier:nil maxCharacterLenth:10 pageSize:-1];
+//    
+//    extractedExpr = [[PhotonIMClient sharedClient] searchMessagesWithMatchQuery:[NSString stringWithFormat:@"%@*",_searchKeyword] startIdentifier:@"<a>" endIdentifier:@"</a>" maxCharacterLenth:10 anchor:@"" pageSize:20];
+    for (PhotonIMMessage *msg in extractedExpr) {
+        NSLog(@"[Source Description] search Result  msgId = %@ === %@",msg.messageID, [msg.messageBody srcDescription]);
+    }
+    
+    NSArray<PhotonIMMessage *> *msgList = extractedExpr;
+    [self _reloadData:msgList];
 }
 - (void)loadMoreDataItems{
     if (!self.hasNext) {
         return;
     }
-    NSArray<PhotonIMMessage *> *msgList = [[PhotonIMClient sharedClient] searchMessagesWithChatType:_chatType chatWith:_chatWith startIdentifier:@"<a>" andIdentifier:@"</a>" maxCharacterLenth:2 matchQuery:[NSString stringWithFormat:@"%@*",_searchKeyword] anchor:_anchor pageSize:_pageSize];
+    NSArray<PhotonIMMessage *> *msgList = [[PhotonIMClient sharedClient] searchMessagesWithChatType:_chatType chatWith:_chatWith startIdentifier:@"<a>" endIdentifier:@"</a>" maxCharacterLenth:2 matchQuery:[NSString stringWithFormat:@"%@*",_searchKeyword] anchor:_anchor pageSize:_pageSize];
     [self _reloadData:msgList];
 }
 

@@ -216,11 +216,6 @@ typedef NS_ENUM(NSInteger, PhotonIMAtType) {
     PhotonIMAtTypeAtAll = 2,
 };
 
-typedef NS_ENUM(NSInteger, PhotonIMForbidenAutoResendType){
-    PhotonIMForbidenAutoResendTypeNO = 0,
-    PhotonIMForbidenAutoResendTypeLogin = 2,
-    PhotonIMForbidenAutoResendTypeColdStart = 3,
-};
 
 /**
 服务类型

@@ -67,12 +67,6 @@ NS_ASSUME_NONNULL_BEGIN
                         chatWith:(NSString *)chatWith
                           sticky:(BOOL)sticky;
 
-/**
- @brief 会话草稿
-
- @param conversation <#conversation description#>
- */
-- (void)updateConversationDraft:(PhotonIMConversation *)conversation DEPRECATED_MSG_ATTRIBUTE("Please use 'alterConversationDraft:chatWith:draft:' instead");
 
 
 /// @brief 添加会话的中草稿
@@ -175,7 +169,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param chatWith 会话中对方的id 群组为群组id
  @return 会话对象
  */
-- (PhotonIMConversation *)findConversation:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
+- (nullable PhotonIMConversation *)findConversation:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
 
 /**
  @brief 查找会话
@@ -194,6 +188,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (NSArray<PhotonIMConversation *> *)findConversationList:(NSString *)anchor pageSize:(int)pageSize;
 
+
 /**
 @brief 查找会话
 @param anchor 为chatWith,开始查找的位置，查找小于此锚点对应的排序id的数据，查找结果按降序排列
@@ -201,8 +196,38 @@ NS_ASSUME_NONNULL_BEGIN
 @param completion finish表示列表拉取完成，netAnchor表示拉取下一页的锚点
 @return 查找到的session列表
 */
-- (NSArray<PhotonIMConversation *> *)findConversationList:(NSString *)anchor pageSize:(int)pageSize completion:(nullable void(^)(BOOL finish, NSString * _Nullable netAnchor))completion;
+- (NSArray<PhotonIMConversation *> *)findConversationList:(NSString *)anchor
+                                                 pageSize:(int)pageSize
+                                               completion:(nullable void(^)(BOOL finish, NSString * _Nullable netAnchor))completion;
 
+
+/**
+@brief 查找会话 符合Extra中key-value指定的会话
+@param anchor 为chatWith,开始查找的位置，查找小于此锚点对应的排序id的数据，查找结果按降序排列
+@param pageSize 每次查找的条数
+@param key Extra指定的key
+@param value Extra指定的key对应的value值。 注：key 或 value为空，查找结果忽略key-value限制
+@return 查找到的session列表
+*/
+- (NSArray<PhotonIMConversation *> *)findConversationList:(NSString *)anchor
+                                                 pageSize:(int)pageSize
+                                                 extraKey:(NSString *)key
+                                               extraValue:(NSString *)value;
+
+/**
+@brief 查找会话 符合Extra中key-value指定的会话
+@param anchor 为chatWith,开始查找的位置，查找小于此锚点对应的排序id的数据，查找结果按降序排列
+@param pageSize 每次查找的条数
+@param key Extra指定的key
+@param value Extra指定的key对应的value值。 注：key 或 value为空，查找结果忽略key-value限制
+@param completion finish表示列表拉取完成，netAnchor表示拉取下一页的锚点
+@return 查找到的session列表
+*/
+- (NSArray<PhotonIMConversation *> *)findConversationList:(NSString *)anchor
+                                                 pageSize:(int)pageSize
+                                                 extraKey:(NSString *)key
+                                               extraValue:(NSString *)value
+                                               completion:(nullable void(^)(BOOL finish, NSString * _Nullable netAnchor))completion;
 
 /**
  @brief 判断会话是否存在
@@ -296,6 +321,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id 群组为群组id
 - (int64_t)findConversationCreateTime:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
+
+
+/// @brief 清空所有会话的未读数
+/// @param result 清空成功（succeed:YES),失败（succeed:NO）
+- (void)clearTotalUnreadCount:(void(^)(BOOL succeed))result;
 @end
 
 NS_ASSUME_NONNULL_END

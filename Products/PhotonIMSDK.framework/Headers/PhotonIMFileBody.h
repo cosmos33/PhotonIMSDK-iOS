@@ -44,6 +44,19 @@ typedef NS_ENUM(NSInteger,HashAlgType) {
                                hashAlgType:(HashAlgType)hashAlgType
                                 algContent:(nullable NSString *)algContent;
 
+/// 遍历构建文件消息t提
+/// @param fileName 文件名
+/// @param url 文件在服务端的存储地址
+/// @param fileSize 文件大小
+/// @param hashAlgType 文件唯一表示算法
+/// @param algContent 处理后的唯一标识
+/// @param srcDescription  资源描述，此字段会入库，内容可作为全文搜索使用
++ (PhotonIMFileBody *)FileBodyWithFileName:(nullable NSString *)fileName
+                                       url:(NSString *)url
+                                  fileSize:(int64_t)fileSize
+                               hashAlgType:(HashAlgType)hashAlgType
+                                algContent:(nullable NSString *)algContent
+                               srcDescription:(nullable NSString *)srcDescription;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -28,6 +28,21 @@ NS_ASSUME_NONNULL_BEGIN
                                coverUrl:(nullable NSString *)coverUrl
                                 whRatio:(CGFloat)whRatio
                           localFileName:(nullable NSString *)localFileName;
+
+
+/// 遍历构造VideoBody
+/// @param url 服务端存储的资源地址
+/// @param mediaTime 视频时长（单位可由业务端协商自行决定）
+/// @param coverUrl 服务端存储的封面图地址
+/// @param whRatio 封面图的宽高比
+/// @param localFileName 资源本地存储的相对路径
+/// @param srcDescription  资源描述，此字段会入库，内容可作为全文搜索使用
++ (PhotonIMVideoBody *)videoBodyWithURL:(NSString *)url
+                              mediaTime:(int64_t)mediaTime
+                               coverUrl:(nullable NSString *)coverUrl
+                                whRatio:(CGFloat)whRatio
+                          localFileName:(nullable NSString *)localFileName
+                            srcDescription:(nullable NSString *)srcDescription;
 @end
 
 NS_ASSUME_NONNULL_END

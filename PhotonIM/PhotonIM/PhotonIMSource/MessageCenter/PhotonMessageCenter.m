@@ -150,8 +150,13 @@ static PhotonMessageCenter *center = nil;
     
     // 文本消息，直接构建文本消息对象发送
     PhotonIMMessage *message = [PhotonIMMessage commonMessageWithFrid:[PhotonContent currentUser].userID toid:conversation.chatWith messageType:PhotonIMMessageTypeText chatType:conversation.chatType];
+    [message.extra setValue:@"zss" forKey:@"name"];
+    [message.extra setValue:@"42" forKey:@"age"];
     if (type == 4) {
          [message unSaveMessage];
+    }
+    if (type == 6) {
+         [message notAutoIncrementUnReadNumber];
     }
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     for (PhotonChatAtInfo *atInfo in item.atInfo) {
@@ -162,6 +167,7 @@ static PhotonMessageCenter *center = nil;
     [message setAtInfoWithAtType:(PhotonIMAtType)(item.type) atList:uids];
     PhotonIMTextBody *body = [[PhotonIMTextBody alloc] initWithText:item.messageText];
 //     PhotonIMCustomBody *body = [PhotonIMCustomBody customBodyWithArg1:1 arg2:1 customData:[@"哈哈哈哈哈哈" dataUsingEncoding:NSUTF8StringEncoding]];
+//    [message notAutoIncrementUnReadNumber];
     [message setMesageBody:body];
     item.userInfo = message;
     self.timeOut = 0;
@@ -171,7 +177,7 @@ static PhotonMessageCenter *center = nil;
         return;
     }
     
-    if (type == 0 || type== 4) {
+    if (type == 0 || type== 4 || type == 6) {
          self.timeOut = 0;
          [self _sendMessage:message timeout:self.timeOut completion:completion];
     }else if (type == 3){
@@ -209,6 +215,31 @@ static PhotonMessageCenter *center = nil;
     
 }
 
+-(NSArray*)getRandomArrFrome{
+    NSArray *dexLists = @[
+        @"去征服，所有不服",
+        @"我们不生产水，我们只是大自然的搬运工",
+        @"有两样东西我不会错过—回家的末班车和尽情享受每一刻的机会",
+        @"你未必出类拔萃，但肯定与众不同",
+        @"Being with you is like walking on a very clear morning",
+        @"Want to say too much to say to him",
+        @"You are my sweet-heart.",
+        @"First impression of you is most lasting",
+        @"When love is not madness, it is not love",
+    ];
+    NSArray *tempItems = [dexLists copy];
+    tempItems = [tempItems sortedArrayUsingComparator:^NSComparisonResult(NSString *str1, NSString *str2) {
+           int seed = arc4random_uniform(2);
+           if (seed) {
+               return [str1 compare:str2];
+           } else {
+               return [str2 compare:str1];
+           }
+           
+       }];
+    return tempItems;
+}
+
 - (void)sendImageMessage:(PhotonChatImageMessageItem *)item conversation:(nullable PhotonIMConversation *)conversation completion:(nullable CompletionBlock)completion{
     // 文本消息，直接构建文本消息对象发送
     PhotonIMMessage *message = [PhotonIMMessage commonMessageWithFrid:[PhotonContent currentUser].userID toid:conversation.chatWith messageType:PhotonIMMessageTypeImage chatType:conversation.chatType];
@@ -218,6 +249,7 @@ static PhotonMessageCenter *center = nil;
     body.whRatio = item.whRatio;
     [message setMesageBody:body];
     item.userInfo = message;
+    message.messageBody.srcDescription = [[self getRandomArrFrome] firstObject];
     
     // 先做图片上传处理，获得资源地址后构建图片消息对象发送消息
     [self p_sendImageMessage:message completion:completion];
@@ -460,8 +492,12 @@ static PhotonMessageCenter *center = nil;
 }
 
 - (void)_sendMessage:(nullable PhotonIMMessage *)message timeout:(NSTimeInterval)timeout completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion{
+    if (message.messageType != PhotonIMMessageTypeText) {
+        message.messageBody.srcDescription = [[self getRandomArrFrome] firstObject];
+    }
     PhotonWeakSelf(self);
     BOOL isTimeOut = timeout > 0;
+    NSLog(@"[Source Description] send message msgId = %@ === %@",message.messageID, [message.messageBody srcDescription]);
     if (isTimeOut) {
         [[PhotonIMClient sharedClient] sendMessage:message timeout:timeout completion:^(BOOL succeed, PhotonIMError * _Nullable error) {
             [PhotonUtil runMainThread:^{
@@ -523,7 +559,7 @@ static PhotonMessageCenter *center = nil;
 
 - (void)clear:(NSString *)anchorMsgId chatType:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith completion:(void(^)(BOOL finish))completion{
     PhotonWeakSelf(self)
-    [self.imClient loadHistoryMessages:chatType chatWith:chatWith anchor:anchorMsgId size:100 reaultBlock:^(NSArray<PhotonIMMessage *> * _Nullable messages, NSString * _Nullable an, BOOL remainHistoryInServer) {
+    [self.imClient loadHistoryMessages:chatType chatWith:chatWith anchorMsgId:anchorMsgId size:100 reaultBlock:^(NSArray<PhotonIMMessage *> * _Nullable messages, NSString * _Nullable an, BOOL remainHistoryInServer) {
         if (!messages || messages.count == 0) {
             if (completion) {
                 completion(YES);

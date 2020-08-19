@@ -105,7 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  获取当前的连接状态
  */
-- (PhotonIMLoginStatus)currentLoginStatus;
+- (PhotonIMLoginStatus)getCurrentLoginStatus;
 
 
 /**

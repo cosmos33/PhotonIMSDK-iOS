@@ -112,6 +112,7 @@
         [self.navigationController pushViewController:chatvc animated:YES];
         [[PhotonMessageCenter sharedCenter]clearConversationUnReadCount:item.userInfo];
         [[PhotonMessageCenter sharedCenter] resetAtType:item.userInfo];
+         
     }
 }
 
