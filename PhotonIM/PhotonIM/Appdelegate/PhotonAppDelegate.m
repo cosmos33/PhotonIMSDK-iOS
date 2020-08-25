@@ -16,6 +16,7 @@
 #import "YYFPSLabel.h"
 #import "Growing.h"
 #import <Rifle/Rifle.h>
+
 @interface PhotonAppDelegate ()<UNUserNotificationCenterDelegate>
 
 @property (nonatomic, strong) YYFPSLabel *fpsLabel;

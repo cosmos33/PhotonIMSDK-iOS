@@ -8,7 +8,7 @@
 
 #import "PhotonContent.h"
 #import "PhotonAPIMacros.h"
-#import <pushsdk/MoPushManager.h>
+#import <pushsdk/pushsdk.h>
 #import "PhotonDBUserStore.h"
 #import "PhotonMessageCenter.h"
 #import "PhotonAppLaunchManager.h"
