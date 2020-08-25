@@ -527,7 +527,7 @@ static PhotonMessageCenter *center = nil;
 
 - (void)clear:(NSString *)anchorMsgId chatType:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith completion:(void(^)(BOOL finish))completion{
     PhotonWeakSelf(self)
-    [self.imClient loadHistoryMessages:chatType chatWith:chatWith anchor:anchorMsgId size:100 reaultBlock:^(NSArray<PhotonIMMessage *> * _Nullable messages, NSString * _Nullable an, BOOL remainHistoryInServer) {
+    [self.imClient loadHistoryMessages:chatType chatWith:chatWith anchorMsgId:anchorMsgId size:100 reaultBlock:^(NSArray<PhotonIMMessage *> * _Nullable messages, NSString * _Nullable an, BOOL remainHistoryInServer) {
         if (!messages || messages.count == 0) {
             if (completion) {
                 completion(YES);

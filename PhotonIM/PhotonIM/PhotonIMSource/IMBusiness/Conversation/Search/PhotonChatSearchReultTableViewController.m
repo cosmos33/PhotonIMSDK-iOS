@@ -87,14 +87,14 @@
 }
 
 - (void)loadFirst{
-       NSArray<PhotonIMMessage *> *msgList = [[PhotonIMClient sharedClient] searchMessagesWithChatType:_chatType chatWith:_chatWith startIdentifier:@"<a>" andIdentifier:@"</a>" maxCharacterLenth:10 matchQuery:[NSString stringWithFormat:@"%@*",_searchKeyword] anchor:@"" pageSize:_pageSize];
+       NSArray<PhotonIMMessage *> *msgList = [[PhotonIMClient sharedClient] searchMessagesWithChatType:_chatType chatWith:_chatWith startIdentifier:@"<a>" endIdentifier:@"</a>" maxCharacterLenth:10 matchQuery:[NSString stringWithFormat:@"%@*",_searchKeyword] anchor:@"" pageSize:_pageSize];
       [self _reloadData:msgList];
 }
 - (void)loadMoreDataItems{
     if (!self.hasNext) {
         return;
     }
-    NSArray<PhotonIMMessage *> *msgList = [[PhotonIMClient sharedClient] searchMessagesWithChatType:_chatType chatWith:_chatWith startIdentifier:@"<a>" andIdentifier:@"</a>" maxCharacterLenth:2 matchQuery:[NSString stringWithFormat:@"%@*",_searchKeyword] anchor:_anchor pageSize:_pageSize];
+    NSArray<PhotonIMMessage *> *msgList = [[PhotonIMClient sharedClient] searchMessagesWithChatType:_chatType chatWith:_chatWith startIdentifier:@"<a>" endIdentifier:@"</a>" maxCharacterLenth:2 matchQuery:[NSString stringWithFormat:@"%@*",_searchKeyword] anchor:_anchor pageSize:_pageSize];
     [self _reloadData:msgList];
 }
 
