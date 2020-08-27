@@ -19,7 +19,7 @@ target :PhotonIM do
     pod 'MMBase-iOS'
     pod 'DatabaseVisual'
 #    pod 'PhotonPushSDK',:git => 'https://github.com/zhanghesheng/PhotonPushSDK.git',:tag => '1.0.3'
-    pod 'PhotonIMSDK',:git => 'https://github.com/zhanghesheng/PhotonIMSDK-iOS.git',:tag => '2.3.0'
+    pod 'PhotonIMSDK',:git => 'https://github.com/zhanghesheng/PhotonIMSDK-iOS.git',:tag => '2.3.1'
 #    pod 'PhotonIMSDK',:path => '../'
     pod 'PhotonPushSDK','1.1.1'
 #    pod 'PhotonIMSDK','2.3.0'
