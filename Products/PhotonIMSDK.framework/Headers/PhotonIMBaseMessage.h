@@ -148,4 +148,161 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeExtraValueForKey:(NSString *)key;
 @end
 
+
+
+@interface PhotonIMMessageQueryPara : NSObject
+
+/// 查找的条数。
+/// 默认：20
+/// 此属性不适用查询消息的条数（-getMessageCountByParamter:chatWith:queryParameter:）
+@property(nonatomic, assign)NSInteger size;
+
+/// 查找的数据为锚点之前之后的数据，YES为查找锚点之前的数据（即早于锚点消息的数据）
+/// NO为查找锚点之后的数据（即晚于于锚点消息的数据）。
+/// 默认：YES。
+/// 此属性不适用查询消息的条数（-getMessageCountByParamter:chatWith:queryParameter:）
+@property(nonatomic, assign)BOOL beforeAnchor;
+
+/// 锚点
+/// 当beforeAnchor==YES时，取查询结果list的第一个元素消息（firstObject）的消息id作为锚点。
+/// 当beforeAnchor==NO时，取查询结果list的最后一个元素消息（lastObject）的消息id作为锚点。
+/// 此属性不适用查询消息的条数（-getMessageCountByParamter:chatWith:queryParameter:）
+@property(nonatomic, copy, nullable)NSString *anchorMsgId;
+
+
+/// 开始时间,单位毫秒
+@property(nonatomic, assign)int64_t beginTimeStamp;
+
+/// 结束时间,单位毫秒
+@property(nonatomic, assign)int64_t endTime;
+
+///消息发送方,默认为空
+@property(nonatomic, copy, nullable)NSString *from;
+
+/// 消息接收方,默认为空
+@property(nonatomic, copy, nullable)NSString *to;
+/**
+消息类型集合
+
+- PhotonIMMessageTypeUnknow: 未知
+- PhotonIMMessageTypeRaw: 自定义
+- PhotonIMMessageTypeText: 文本消息
+- PhotonIMMessageTypeImage: 图片
+- PhotonIMMessageTypeAudio: 语音
+- PhotonIMMessageTypeVideo: 视频
+- PhotonIMMessageTypeFile: 文件信息
+- PhotonIMMessageTypeLocation: 位置信息
+*/
+@property(nonatomic, copy, nullable)NSArray<NSNumber *>*messageTypeList;
+/**
+消息的状态集合
+
+- PhotonIMMessageStatusDefault: 默认
+- PhotonIMMessageStatusRecall: 发送或收到的消息已撤回
+- PhotonIMMessageStatusSending: 消息发送中
+- PhotonIMMessageStatusFailed: 消息发送失败
+- PhotonIMMessageStatusSucceed: 消息已送达
+- PhotonIMMessageStatusSentRead: 发送的消息对方已读
+- PhotonIMMessageStatusRecvRead: 收到的消息自己已读
+*/
+@property(nonatomic, copy, nullable)NSArray<NSNumber *>*messageStatusList;
+
+/// 扩展中的key
+@property(nonatomic, copy, nullable)NSString *extraKey;
+
+/// 扩展中的value
+@property(nonatomic, copy, nullable)NSString *extraValue;
+
+/**
+@brief 构造查询参数对象
+支持按锚点向前或向后查找
+@param anchor 锚点消息id,未有可为空
+@param beforeAnchor 查找的数据为锚点之前之后的数据，YES为查找锚点之前的数据（即早于锚点消息的数据） NO为查找锚点之后的数据（即晚于于锚点消息的数据）
+@param size 以锚点为中心，要查找的消息的个数
+@return PhotonIMMessageQueryPara 对象
+*/
++ (instancetype)messageQueryParaWithAnchorMsgId:(nullable NSString *)anchor
+                                   beforeAuthor:(BOOL)beforeAnchor
+                                           size:(int)size;
+
+/**
+@brief 构造查询参数对象
+查找符合Extra中key-value的会话消息加，支持按锚点向前或向后查找
+@param anchor 锚点消息id,未有可为空
+@param beforeAnchor 查找的数据为锚点之前之后的数据，YES为查找锚点之前的数据（即早于锚点消息的数据） NO为查找锚点之后的数据（即晚于于锚点消息的数据）
+@param key Extra指定的key
+@param value Extra指定的key对应的value值。
+@param size 以锚点为中心，要查找的消息的个数
+@return PhotonIMMessageQueryPara 对象
+*/
++ (instancetype)messageQueryParaWithAnchorMsgId:(nullable NSString *)anchor
+                                                   beforeAuthor:(BOOL)beforeAnchor
+                                                       extraKey:(NSString *)key
+                                                     extraValue:(NSString *)value
+                                                           size:(int)size;
+
+/**
+@brief 构造查询参数对象
+加载会话中指定消息类型的所有消息，支持按锚点向前或向后查找
+@param anchor 开始一次查询的锚点 锚点取消息id(msgID)
+@param messageTypeList PhotonIMMessageType的集合
+@param beforeAnchor 查找的数据为锚点之前之后的数据，YES为查找锚点之前的数据（即早于锚点消息的数据） NO为查找锚点之后的数据（即晚于于锚点消息的数据）
+@param size 以锚点为中心，要查找的消息的个数
+@return PhotonIMMessageQueryPara 对象
+*/
++ (instancetype)messageQueryParaWithAnchorMsgId:(nullable NSString *)anchor
+                                    messageTypeList:(nullable NSArray<NSNumber *>*)messageTypeList
+                                       beforeAuthor:(BOOL)beforeAnchor
+                                               size:(int)size;
+
+/// @brief 构造查询参数对象
+/// 加载指定时间范围的会话消息（仅同步本地数据库），支持按锚点向前或向后查找,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息。可按锚点拉取新旧消息
+/// @param anchor 开始一次查询的锚点 锚点取消息id(msgID)
+/// @param beginTimeStamp 消息的起始拉取时间，比如7天前
+/// @param endTime 消息的结束拉取时间，比如当前时间
+/// @param beforeAnchor 查找的数据为锚点之前之后的数据，YES为查找锚点之前的数据（即早于锚点消息的数据）NO为查找锚点之后的数据（即晚于于锚点消息的数据）
+/// @param size 每次拉去的条数
+/// @return PhotonIMMessageQueryPara 对象
++ (instancetype)messageQueryParaWithAnchorMsgId:(nullable NSString *)anchor
+                                 beginTimeStamp:(int64_t)beginTimeStamp
+                                        endTime:(int64_t)endTime
+                                   beforeAuthor:(BOOL)beforeAnchor
+                                           size:(int)size;
+
+
+// @brief 构造查询参数对象 加载指定消息类型和指定时间范围的会话消息（仅同步本地数据库），支持按锚点向前或向后查找,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息，可按锚点拉取新旧消息
+/// @param anchor 开始一次查询的锚点 锚点取消息id(msgID)
+/// @param messageTypeList PhotonIMMessageType的集合
+/// @param beginTimeStamp 消息的起始拉取时间，比如7天前
+/// @param endTime 消息的结束拉取时间，比如当前时间
+/// @param beforeAnchor 查找的数据为锚点之前之后的数据，YES为查找锚点之前的数据（即早于锚点消息的数据）NO为查找锚点之后的数据（即晚于于锚点消息的数据）
+/// @param size 每次拉去的条数
+/// @return PhotonIMMessageQueryPara 对象
++ (instancetype)messageQueryParaWithAnchorMsgId:(nullable NSString *)anchor
+            messageTypeList:(nullable NSArray<NSNumber *>*)messageTypeList
+             beginTimeStamp:(int64_t)beginTimeStamp
+                    endTime:(int64_t)endTime
+               beforeAuthor:(BOOL)beforeAnchor
+                       size:(int)size;
+
+
+/// @brief 构造查询参数对象 加载指定消息类型、指定时间范围以及查找符合Extra中key-value的会话消息（仅同步本地数据库），支持按锚点向前或向后查找,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息，可按锚点拉取新旧消息
+/// @param anchor 开始一次查询的锚点 锚点取消息id(msgID)
+/// @param messageTypeList PhotonIMMessageType的集合，为空查找所有类型消息
+/// @param beginTimeStamp 消息的起始拉取时间，比如7天前
+/// @param endTime 消息的结束拉取时间，比如当前时间。注:如果设置的时间范围不合法，则默认依次拉取所有的消息，可按锚点拉取新旧消息
+/// @param key Extra指定的key
+/// @param value Extra指定的key对应的value值。 注：key 或 value为空，查找结果忽略key-value限制
+/// @param beforeAnchor 查找的数据为锚点之前之后的数据，YES为查找锚点之前的数据（即早于锚点消息的数据）NO为查找锚点之后的数据（即晚于于锚点消息的数据）
+/// @param size 每次拉去的条数
+/// @return PhotonIMMessageQueryPara 对象
++ (instancetype)messageQueryParaWithAnchorMsgId:(nullable NSString *)anchor
+                                    messageTypeList:(nullable NSArray<NSNumber *>*)messageTypeList
+                                     beginTimeStamp:(int64_t)beginTimeStamp
+                                            endTime:(int64_t)endTime
+                                       beforeAuthor:(BOOL)beforeAnchor
+                                           extraKey:(nullable NSString *)key
+                                         extraValue:(nullable NSString *)value
+                                               size:(int)size;
+@end
 NS_ASSUME_NONNULL_END

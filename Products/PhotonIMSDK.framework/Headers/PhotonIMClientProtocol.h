@@ -105,7 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param message [PhotonIMMessage](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMMessage.html) 消息对象，存储消息内容
  */
 - (void)imClient:(id)client didReceiveSingleWithDrawMesage:(PhotonIMMessage *)message;
-
+ 
 /**
  收到群组消息撤回消息时回调
  

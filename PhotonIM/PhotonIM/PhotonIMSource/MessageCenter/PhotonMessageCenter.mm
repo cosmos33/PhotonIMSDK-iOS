@@ -15,6 +15,8 @@
 #import "PhotonCharBar.h"
 #import <PhotonIMSDK/PhotonIMSDK.h>
 #import "PhotonIMClientConfig.h"
+#include <iostream>
+#include <fstream>
 static PhotonMessageCenter *center = nil;
 @interface PhotonMessageCenter()<PhotonIMClientProtocol>
 @property (nonatomic, strong, nullable)PhotonNetworkService *netService;
@@ -75,7 +77,7 @@ static PhotonMessageCenter *center = nil;
 //    [[PhotonIMClient sharedClient] setAssertEnable:NO];
 //#endif
     
-    // 通过注册appid 完成sdk的初始化
+    // 通过注册appid 完成sdk的初始化∫
     if (serverType == PhotonIMServerTypeInland) {
         [[PhotonIMClient sharedClient] registerIMClientWithAppid:APP_ID_INLAND];
     }else if (serverType == PhotonIMServerTypeOverseas){
@@ -713,6 +715,10 @@ static PhotonMessageCenter *center = nil;
      NSString *path = [NSString stringWithFormat:@"%@/PhotonIM/File/%@/%@/", [NSFileManager documentsPath], [PhotonContent currentUser].userID,chatWith];
     bool res = [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
     return res;
+}
+
+- (void)corrupt{
+    [[PhotonIMClient sharedClient] corrupt];
 }
 
 

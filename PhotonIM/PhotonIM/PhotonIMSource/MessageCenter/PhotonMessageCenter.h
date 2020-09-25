@@ -150,6 +150,9 @@ typedef void(^CompletionBlock) (BOOL succeed, PhotonIMError * _Nullable error);
 - (PhotonIMConversation *)findConversation:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
 
 - (void)resetAtType:(PhotonIMConversation *)conversation;
+
+
+- (void)corrupt;
 @end
 
 NS_ASSUME_NONNULL_END

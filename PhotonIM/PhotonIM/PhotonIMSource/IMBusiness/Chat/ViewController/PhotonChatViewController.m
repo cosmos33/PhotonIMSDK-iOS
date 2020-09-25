@@ -61,7 +61,7 @@
         
         _dataDispatchSource = [MFDispatchSource sourceWithDelegate:self type:refreshType_Data dataQueue:dispatch_queue_create("com.cosmos.PhotonIM.chatdata", DISPATCH_QUEUE_SERIAL)];
         
-        
+        NSTimeInterval time = [[PhotonIMClient sharedClient] findConversationCreateTime:conversation.chatType chatWith:conversation.chatWith];
         [conversation setExtraValue:@"123" forKey:@"chatWith"];
         // 添加接收消息的监听
         [[PhotonMessageCenter sharedCenter] addObserver:self];

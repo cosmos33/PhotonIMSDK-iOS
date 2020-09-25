@@ -73,10 +73,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id 群组为群组id
 /// @param draft 草稿内容
-- (void)addConversationDraft:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith draft:(nullable NSString *)draft;
+- (void)addConversationDraft:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith draft:(nullable NSString *)draft DEPRECATED_MSG_ATTRIBUTE("Please use 'alterConversationDraft:chatType:chatWith:draft:' instead");
 
 
-/// @brief 修改会话的中草稿
+/// @brief 添加修改会话的中草稿,不存在则添加，存在则修改
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id
 /// @param draft 草稿内容

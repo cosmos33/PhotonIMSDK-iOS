@@ -32,7 +32,7 @@
 		3221882422CCA5B6007E9FA3 /* PhotonAccountDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FDC9EF22C4AAA100EECD24 /* PhotonAccountDataSource.m */; };
 		3221882522CCA5B6007E9FA3 /* PhotonAccountItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FDC9F222C4AAF600EECD24 /* PhotonAccountItem.m */; };
 		3221882622CCA5B6007E9FA3 /* PhotonAccountCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FDC9F522C4AB0800EECD24 /* PhotonAccountCell.m */; };
-		3221882722CCA5B6007E9FA3 /* PhotonMessageCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FDC80722C46FAF00EECD24 /* PhotonMessageCenter.m */; };
+		3221882722CCA5B6007E9FA3 /* PhotonMessageCenter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 32FDC80722C46FAF00EECD24 /* PhotonMessageCenter.mm */; };
 		3221882A22CCA5B6007E9FA3 /* PhotonContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 322B426022C1CF760027C1A3 /* PhotonContent.m */; };
 		3221882B22CCA5B6007E9FA3 /* PhotonUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 322B428522C2252C0027C1A3 /* PhotonUser.m */; };
 		3221882C22CCA5B6007E9FA3 /* PhotonAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 32286FC522BA10DF009B6881 /* PhotonAppDelegate.m */; };
@@ -745,7 +745,7 @@
 		32F94DAE2338F092002DF468 /* PhotonGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonGroup.h; sourceTree = "<group>"; };
 		32F94DAF2338F092002DF468 /* PhotonGroup.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonGroup.m; sourceTree = "<group>"; };
 		32FDC80622C46FAF00EECD24 /* PhotonMessageCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonMessageCenter.h; sourceTree = "<group>"; };
-		32FDC80722C46FAF00EECD24 /* PhotonMessageCenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonMessageCenter.m; sourceTree = "<group>"; };
+		32FDC80722C46FAF00EECD24 /* PhotonMessageCenter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PhotonMessageCenter.mm; sourceTree = "<group>"; };
 		32FDC9E822C4A8F800EECD24 /* PhotonRegisterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonRegisterViewController.h; sourceTree = "<group>"; };
 		32FDC9E922C4A8F800EECD24 /* PhotonRegisterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotonRegisterViewController.m; sourceTree = "<group>"; };
 		32FDC9EB22C4A91100EECD24 /* PhotonLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotonLoginViewController.h; sourceTree = "<group>"; };
@@ -1777,7 +1777,7 @@
 			children = (
 				3270BBFF22C5F049004CAA00 /* FileManager */,
 				32FDC80622C46FAF00EECD24 /* PhotonMessageCenter.h */,
-				32FDC80722C46FAF00EECD24 /* PhotonMessageCenter.m */,
+				32FDC80722C46FAF00EECD24 /* PhotonMessageCenter.mm */,
 				32982BB124668D91000F9953 /* PhotonIMClientConfig.h */,
 				32982BB224668D91000F9953 /* PhotonIMClientConfig.m */,
 			);
@@ -2113,7 +2113,7 @@
 				32C557E223CDD9E0007F06CE /* HXPhotoViewPresentTransition.m in Sources */,
 				32C557FA23CDD9E0007F06CE /* HXPhotoPreviewViewController.m in Sources */,
 				32258AE122CD9F4E002D56E5 /* PhotonDownLoadFileManager.m in Sources */,
-				3221882722CCA5B6007E9FA3 /* PhotonMessageCenter.m in Sources */,
+				3221882722CCA5B6007E9FA3 /* PhotonMessageCenter.mm in Sources */,
 				32C557EE23CDD9E0007F06CE /* UIColor+HXExtension.m in Sources */,
 				32258ADA22CD9D61002D56E5 /* PhotonFileUploadOperation.m in Sources */,
 				32C5580023CDD9E0007F06CE /* HXPhotoManager.m in Sources */,
@@ -2501,7 +2501,7 @@
 				CODE_SIGN_ENTITLEMENTS = PhotonIM/PhotonIM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2210;
+				CURRENT_PROJECT_VERSION = 2310;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4BXE593ED8;
@@ -2585,7 +2585,7 @@
 				CODE_SIGN_ENTITLEMENTS = PhotonIM/PhotonIM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2210;
+				CURRENT_PROJECT_VERSION = 2310;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4BXE593ED8;

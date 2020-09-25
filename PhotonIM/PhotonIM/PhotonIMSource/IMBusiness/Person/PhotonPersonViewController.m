@@ -91,7 +91,14 @@
         documentItem.value = @"";
         documentItem.type = PhotonPersonItemTypeDocument;
         documentItem .valueColor = [UIColor colorWithHex:0x5D5C6F];
-       
+    
+        PhotonPersonItem *corruptItem = [[PhotonPersonItem alloc] init];
+        corruptItem.key = @"模拟数据库损坏";
+        corruptItem.shorArrow = NO;
+        corruptItem.value = @"";
+        corruptItem.type = PhotonPersonItemTypeCorrupt;
+        corruptItem .valueColor = [UIColor colorWithHex:0x5D5C6F];
+           
        
        
        PhotonPersonItem *personItem4 = [[PhotonPersonItem alloc] init];
@@ -108,6 +115,9 @@
        [self.items addObject:settingItem];
        [self.items addObject:documentItem];
        
+       [self.items addObject:emptyitem];
+    
+       [self.items addObject:corruptItem];
        [self.items addObject:emptyitem];
        
     
@@ -162,7 +172,10 @@
                 [[PAirSandbox sharedInstance] showSandboxBrowser];
             }
                 break;
-                
+            case PhotonPersonItemTypeCorrupt:{
+                [[PhotonMessageCenter sharedCenter] corrupt];
+            }
+                break;
             default:
                 break;
         }

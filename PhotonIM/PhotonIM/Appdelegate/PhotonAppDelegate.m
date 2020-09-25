@@ -14,7 +14,7 @@
 #import "PhotonAppLaunchManager.h"
 #import "PhotonMessageCenter.h"
 #import "YYFPSLabel.h"
-#import "Growing.h"
+//#import "Growing.h"
 #import <Rifle/Rifle.h>
 
 @interface PhotonAppDelegate ()<UNUserNotificationCenterDelegate>
@@ -28,8 +28,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [Rifle startWithAppId:APP_ID_INLAND config:nil];
     [[PhotonMessageCenter sharedCenter] initPhtonIMSDK];
-    [Growing startWithAccountId:@"98874232e8f917cc"];
-    [Growing setEnableLog:YES];
+//    [Growing startWithAccountId:@"98874232e8f917cc"];
+//    [Growing setEnableLog:YES];
     [self registerPushSDK];
     
     PhotonIMClientConfig *config = [[PhotonIMClientConfig alloc] init];
@@ -138,13 +138,13 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options{
-    if ([Growing handleUrl:url]) // 请务必确保该函数被调用
-       {
-           return YES;
-       }
-       return NO;
-}
+//- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options{
+//    if ([Growing handleUrl:url]) // 请务必确保该函数被调用
+//       {
+//           return YES;
+//       }
+//       return NO;
+//}
 
 
 @end

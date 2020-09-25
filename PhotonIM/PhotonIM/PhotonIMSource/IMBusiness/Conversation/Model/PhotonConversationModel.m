@@ -152,6 +152,7 @@
 
 - (void)loadConversationMessage{
     self.loadConverationMessage = YES;
+    [[PhotonIMClient sharedClient] saveConversationBatch:self.conversations];
     if (self.conversations.count) {
         for (PhotonIMConversation *conversation in self.conversations) {
                    [[PhotonIMClient sharedClient] syncHistoryMessagesFromServer:conversation.chatType chatWith:conversation.chatWith anchor:nil size:20 beginTimeStamp:0 endTimeStamp:[[NSDate date] timeIntervalSince1970] * 1000.0 reaultBlock:^(NSArray<PhotonIMMessage *> * _Nullable messageList, NSString * _Nullable anchor,BOOL haveNext, NSError * _Nullable error) {

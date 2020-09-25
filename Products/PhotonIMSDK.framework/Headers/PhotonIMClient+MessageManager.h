@@ -235,6 +235,15 @@ NS_ASSUME_NONNULL_BEGIN
                                 endTime:(NSTimeInterval)endTime;
 
 
+/// 查找指定参数的消息的数量
+/// @param chatType 查找的会话类型
+/// @param chatWith 会话中对方的id 群组为群组id
+/// @param queryParameter 参数对象
+- (NSInteger)getMessageCountByParamter:(PhotonIMChatType)chatType
+                              chatWith:(NSString *)chatWith
+                        queryParameter:(nullable PhotonIMMessageQueryPara *)queryParameter;
+
+
 
 #pragma mark ---- Find Message List----
 /**
@@ -274,7 +283,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @param chatType 查找的会话类型
 @param chatWith 会话中对方的id 群组为群组id
-@param anchor 锚点消息id,未有可为空
+@param anchor 锚点消息id,未有可为空 当beforeAnchor==YES时，取查询结果list的第一个元素消息（firstObject）的消息id作为锚点。当beforeAnchor==NO时，取查询结果list的最后一个元素消息（lastObject）的消息id作为锚点。
 @param beforeAnchor 查找的数据为锚点之前之后的数据，YES为查找锚点之前的数据（即早于锚点消息的数据） NO为查找锚点之后的数据（即晚于于锚点消息的数据）
 @param key Extra指定的key
 @param value Extra指定的key对应的value值。
@@ -314,7 +323,7 @@ NS_ASSUME_NONNULL_BEGIN
 @param chatType 查找的会话类型
 @param chatWith 会话中对方的id 群组为群组id
  @param messageTypeList PhotonIMMessageType的集合
-@param anchor 开始一次查询的锚点 锚点取消息id(msgID)
+@param anchor 开始一次查询的锚点 锚点取消息id(msgID) 当beforeAnchor==YES时，取查询结果list的第一个元素消息（firstObject）的消息id作为锚点。当beforeAnchor==NO时，取查询结果list的最后一个元素消息（lastObject）的消息id作为锚点。
 @param beforeAnchor 查找的数据为锚点之前之后的数据，YES为查找锚点之前的数据（即早于锚点消息的数据） NO为查找锚点之后的数据（即晚于于锚点消息的数据）
 @param size 以锚点为中心，要查找的消息的个数
 @return PhotonIMMessage 对象列表
@@ -364,7 +373,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @brief 加载指定时间范围的会话消息（仅同步本地数据库），支持按锚点向前或向后查找,此方法可设置要拉取的时间范围（beginTimeStamp<endTime且 endTime<0），如果设置的时间范围不合法，则默认依次拉取所有的消息。可按锚点拉取新旧消息
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id 群组为群组id
-/// @param anchor 开始一次查询的锚点 锚点取消息id(msgID)
+/// @param anchor 开始一次查询的锚点 锚点取消息id(msgID) 当beforeAnchor==YES时，取查询结果list的第一个元素消息（firstObject）的消息id作为锚点。当beforeAnchor==NO时，取查询结果list的最后一个元素消息（lastObject）的消息id作为锚点。
 /// @param beginTimeStamp 消息的起始拉取时间，比如7天前
 /// @param endTime 消息的结束拉取时间，比如当前时间
 /// @param beforeAnchor 查找的数据为锚点之前之后的数据，YES为查找锚点之前的数据（即早于锚点消息的数据）NO为查找锚点之后的数据（即晚于于锚点消息的数据）
@@ -402,7 +411,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id 群组为群组id
 /// @param messageTypeList PhotonIMMessageType的集合
-/// @param anchor 开始一次查询的锚点 锚点取消息id(msgID)
+/// @param anchor 开始一次查询的锚点 锚点取消息id(msgID) 当beforeAnchor==YES时，取查询结果list的第一个元素消息（firstObject）的消息id作为锚点。当beforeAnchor==NO时，取查询结果list的最后一个元素消息（lastObject）的消息id作为锚点。
 /// @param beginTimeStamp 消息的起始拉取时间，比如7天前
 /// @param endTime 消息的结束拉取时间，比如当前时间
 /// @param beforeAnchor 查找的数据为锚点之前之后的数据，YES为查找锚点之前的数据（即早于锚点消息的数据）NO为查找锚点之后的数据（即晚于于锚点消息的数据）
@@ -422,7 +431,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id 群组为群组id
 /// @param messageTypeList PhotonIMMessageType的集合，为空查找所有类型消息
-/// @param anchor 开始一次查询的锚点 锚点取消息id(msgID)
+/// @param anchor 开始一次查询的锚点 锚点取消息id(msgID) 
 /// @param beginTimeStamp 消息的起始拉取时间，比如7天前
 /// @param endTime 消息的结束拉取时间，比如当前时间
 /// @param key Extra指定的key
@@ -446,7 +455,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param chatType 会话类型
 /// @param chatWith 会话中对方的id 群组为群组id
 /// @param messageTypeList PhotonIMMessageType的集合，为空查找所有类型消息
-/// @param anchor 开始一次查询的锚点 锚点取消息id(msgID)
+/// @param anchor 开始一次查询的锚点 锚点取消息id(msgID) 当beforeAnchor==YES时，取查询结果list的第一个元素消息（firstObject）的消息id作为锚点。当beforeAnchor==NO时，取查询结果list的最后一个元素消息（lastObject）的消息id作为锚点。
 /// @param beginTimeStamp 消息的起始拉取时间，比如7天前
 /// @param endTime 消息的结束拉取时间，比如当前时间。注:如果设置的时间范围不合法，则默认依次拉取所有的消息，可按锚点拉取新旧消息
 /// @param key Extra指定的key
@@ -464,6 +473,14 @@ NS_ASSUME_NONNULL_BEGIN
                                            extraKey:(nullable NSString *)key
                                          extraValue:(nullable NSString *)value
                                                size:(int)size;
+
+/// 加载历史消息
+/// @param chatType 会话类型
+/// @param chatWith 会话中对方的id 群组为群组id
+/// @param queryParameter 加载时的具体参数，详情请查看：PhotonIMMessageQueryPara
+- (NSArray<PhotonIMMessage *> *)loadHistoryMessages:(PhotonIMChatType)chatType
+                                           chatWith:(NSString *)chatWith
+                                     queryParameter:(nullable PhotonIMMessageQueryPara *)queryParameter;
 
 
 #pragma mark --- fts -----
