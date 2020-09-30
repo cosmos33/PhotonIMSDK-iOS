@@ -133,6 +133,22 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)clearConversationUnReadCount:(PhotonIMChatType)chatType
                             chatWith:(NSString *)chatWith;
 
+
+/// 减少会话未读数
+/// @param chatType 会话类型
+/// @param chatWith 会话中对方的id 群组为群组id
+/// @param decCount 调用一次在总数上减少的个数
+- (void)decreaseUnreadCount:(PhotonIMChatType)chatType
+                   chatWith:(NSString *)chatWith
+                   decCount:(NSInteger)decCount;
+
+/// 增加会话未读数
+/// @param chatType 会话类型
+/// @param chatWith 会话中对方的id 群组为群组id
+/// @param incCount 调用一次在总数上增加的个数
+- (void)increaseUnreadCount:(PhotonIMChatType)chatType
+                   chatWith:(NSString *)chatWith
+                   incCount:(NSInteger)incCount;
 /**
  @brief 删除会话
 

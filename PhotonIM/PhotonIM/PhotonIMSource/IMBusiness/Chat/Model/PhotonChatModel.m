@@ -100,7 +100,7 @@
 //      queryPara.endTime = [[NSDate date] timeIntervalSince1970] * 1000;
       queryPara.beforeAnchor = YES;
       queryPara.size = self.pageSize;
-      queryPara.messageTypeList = @[@(PhotonIMMessageTypeImage),@(PhotonIMMessageTypeAudio)];
+//      queryPara.messageTypeList = @[@(PhotonIMMessageTypeImage),@(PhotonIMMessageTypeAudio)];
         
       NSArray<PhotonIMMessage *> * _Nullable messages = [imclient loadHistoryMessages:chatType chatWith:chatWith  queryParameter:queryPara];
 
@@ -121,27 +121,6 @@
               finish(nil);
           });
       }
-        
-//        [imclient loadHistoryMessages:chatType chatWith:chatWith anchorMsgId:weakself.anchorMsgId size:(int)self.pageSize reaultBlock:^(NSArray<PhotonIMMessage *> * _Nullable messages, NSString * _Nullable an,BOOL loadHist) {
-//            NSMutableArray *items = [NSMutableArray array];
-//            weakself.anchorMsgId = [an copy];
-//            for (PhotonIMMessage *msg in messages) {
-//                NSLog(@"%@",[msg extraValueForKey:@"age"]);
-//                id item =  [weakself wrapperMessage:msg];
-//                if (item) {
-//                    [items addObject:item];
-//                }
-//            }
-//            NSMutableArray *totolItems = [NSMutableArray arrayWithCapacity:weakself.items.count + items.count];
-//            [totolItems addObjectsFromArray:items];
-//            [totolItems addObjectsFromArray:weakself.items];
-//            weakself.items = [PhotonIMThreadSafeArray arrayWithArray:totolItems];
-//            if (finish) {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    finish(nil);
-//                });
-//            }
-//        }] ;
     }
 
 }

@@ -161,6 +161,7 @@ static PhotonMessageCenter *center = nil;
          [message notAutoIncrementUnReadNumber];
     }
     NSMutableArray *uids = [[NSMutableArray alloc] init];
+    [message notAutoIncrementUnReadNumber];
     for (PhotonChatAtInfo *atInfo in item.atInfo) {
         if ([atInfo.userid isNotEmpty]) {
             [uids addObject:atInfo.userid ];

@@ -216,7 +216,7 @@
     [[PhotonAudioPlayer sharedAudioPlayer] stopPlayingAudio];
     
     //清空未读数
-     [[PhotonMessageCenter sharedCenter] clearConversationUnReadCount:self.conversation];
+//     [[PhotonMessageCenter sharedCenter] clearConversationUnReadCount:self.conversation];
     
     if(self.conversation.chatType == PhotonIMChatTypeRoom){
         if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
