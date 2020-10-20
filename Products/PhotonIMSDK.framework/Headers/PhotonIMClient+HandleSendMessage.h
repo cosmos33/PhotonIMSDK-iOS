@@ -14,14 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PhotonIMClient (HandleSendMessage)
 #pragma mark ----- 发送消息相关 ------
 /**
- @brief 发送通用消息（不带超时逻辑，内部支持重发）
+ @brief 消息发送方法（不带超时逻辑，内部支持重发），此方法适用于不使用SDK的文件托管功能(即SDK负责文件的上传和发送，操作一体化)
  针对消息正在发送过程中，app被kill掉的情况，app重启后，kill之前的消息会被尝试发送，此时接入端需要实现[-imClient:(id)client sendResultWithMsgID:chatType:chatWith:](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Protocols/PhotonIMClientProtocol.html#//api/name/imClient:sendResultWithMsgID:chatType:chatWith:error:) 协议方法来处理被重发消息的发送状态。而针对带有资源上传的消息（图片，语音，视频等），如果是资源上传失败导致的消息未能发送，因为不会调用到sendMessage方法，此种情况需要业务端处理此类失败消息重发的逻辑，即在数据库中获取此类消息，重新上传文件，调用消息发送。
  @param message [PhotonIMMessage](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMMessage.html) 消息体
  @param completion 消息发送的回执，succeed=YES 发送成功此时error = nil;succeed=NO 发送失败此时error包含失败的原因
  */
 - (void)sendMessage:(nullable PhotonIMMessage *)message
          completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
-
 
 /// @brief 发送通用消息（超时逻辑，超时期间内失败的消息重发）
 /// 使用此方法发送聊天消息，在消息发送和等待服务端发送结果的回执之间启动超时机制，超时时间内消息未收到服务端的回执则告知服务端消息发送失败。
@@ -32,6 +31,26 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)sendMessage:(nullable PhotonIMMessage *)message
             timeout:(NSTimeInterval)timeout
          completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
+
+
+/// 消息发送方法，此方法支持文件托管功能(即SDK负责文件的上传和发送，操作一体化)。
+/// 此方法取消了progress来回调文件上传进度，更换使用代理方法 - (void)imClient:transportProgressWithMessage:progess:回调上传的进度。
+/// 取消了completion来回调消息发送完成的结果，更换使用代理方法- (void)imClient:sendResultWithMessage:succceed:error:回调消息发送完成的结果。
+/// @param message 消息对象
+/// @param readyToSendBlock 消息准备完成，将要上传和发送，业务端可使用此回调加载刷新ui显示
+- (void)sendMessage:(nullable PhotonIMMessage *)message
+   readyToSendBlock:(nullable void(^)(PhotonIMMessage * _Nullable message ))readyToSendBlock;
+
+
+/// 消息发送方法，此方法支持文件托管功能(即SDK负责文件的上传和发送，操作一体化)。
+/// 此方法使用代理方法 - (void)imClient:transportProgressWithMessage:progess:回调文件上传的进度。
+/// 使用代理方法- (void)imClient:sendResultWithMessage:succceed:error:回调消息发送完成的结果。
+/// @param message 消息对象
+/// @param timeout 超时时间，单位秒,此时间不包含文件上传的时间。
+/// @param readyToSendBlock 消息准备完成，将要上传和发送，业务端可使用此回调加载刷新ui显示
+- (void)sendMessage:(nullable PhotonIMMessage *)message
+            timeout:(NSTimeInterval)timeout
+   readyToSendBlock:(nullable void(^)(PhotonIMMessage * _Nullable message ))readyToSendBlock;
 
 
 /**
@@ -54,8 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)sendSingleWithDrawMessage:(NSString *)msgID
                            fromid:(NSString *)fromid
-                             toid:(NSString *)toid
-                       completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
+                             toid:(NSString *)toid completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
 
 
 /**
@@ -76,7 +94,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @brief 群组中发送消息的撤回
  
- @param MsgID 撤回消息的id
+ @param msgID 撤回消息的id
  @param originMsgTime 撤回消息的携带的时间戳
  @param fromid 撤回者的id，即消息发送者的id（即自己）
  @param toid 群组的id

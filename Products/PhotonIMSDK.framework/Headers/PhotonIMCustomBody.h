@@ -25,8 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param arg2 业务端自定义参数2
 /// @param customData 自定义的二进制数据
 + (PhotonIMCustomBody *)customBodyWithArg1:(int32_t)arg1
-                                      arg2:(int32_t)arg2
-                                customData:(nullable NSData *)customData;
+                              arg2:(int32_t)arg2
+                          customData:(nullable NSData *)customData;
 
 /// 遍历构造CustomBody
 /// @param arg1 业务端自定义参数1

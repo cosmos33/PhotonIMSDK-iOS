@@ -160,8 +160,11 @@ static PhotonMessageCenter *center = nil;
     if (type == 6) {
          [message notAutoIncrementUnReadNumber];
     }
+    if (type == 7) {
+        [message notAutoIncrementUnReadNumber];
+        [message updateSessionOrder];
+    }
     NSMutableArray *uids = [[NSMutableArray alloc] init];
-    [message notAutoIncrementUnReadNumber];
     for (PhotonChatAtInfo *atInfo in item.atInfo) {
         if ([atInfo.userid isNotEmpty]) {
             [uids addObject:atInfo.userid ];
@@ -180,7 +183,7 @@ static PhotonMessageCenter *center = nil;
         return;
     }
     
-    if (type == 0 || type== 4 || type == 6) {
+    if (type == 0 || type== 4 || type == 6 || type == 7) {
          self.timeOut = 0;
          [self _sendMessage:message timeout:self.timeOut completion:completion];
     }else if (type == 3){

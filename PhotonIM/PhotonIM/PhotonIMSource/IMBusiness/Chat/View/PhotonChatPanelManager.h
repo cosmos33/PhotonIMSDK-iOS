@@ -51,4 +51,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)dismissKeyboard;
 @end
 
+@interface MXPermissionCarmera:NSObject
++ (BOOL)isCarmeraPermissionOpen;
++ (BOOL)isPhotoPermissionOpen;
+@end
 NS_ASSUME_NONNULL_END

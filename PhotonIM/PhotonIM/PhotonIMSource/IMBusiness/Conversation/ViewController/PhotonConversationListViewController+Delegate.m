@@ -113,7 +113,7 @@
 //        [[PhotonMessageCenter sharedCenter]clearConversationUnReadCount:item.userInfo];
         [[PhotonIMClient sharedClient] decreaseUnreadCount:[item.userInfo chatType] chatWith:[item.userInfo chatWith] decCount:2];
         
-        [[PhotonIMClient sharedClient] increaseUnreadCount:[item.userInfo chatType] chatWith:[item.userInfo chatWith] incCount:4];
+        [[PhotonIMClient sharedClient] increaseUnreadCount:[item.userInfo chatType] chatWith:[item.userInfo chatWith] incCount:1];
         [[PhotonMessageCenter sharedCenter] resetAtType:item.userInfo];
          
     }

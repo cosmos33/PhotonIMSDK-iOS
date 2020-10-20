@@ -33,8 +33,8 @@
     [self registerPushSDK];
     
     PhotonIMClientConfig *config = [[PhotonIMClientConfig alloc] init];
-    [MoPushManager setNotiCenterDelegate:config];
-    UNUserNotificationCenter.currentNotificationCenter.delegate = config;
+    //[MoPushManager setNotiCenterDelegate:self];
+    UNUserNotificationCenter.currentNotificationCenter.delegate = self;
     [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
         if (settings.authorizationStatus == UNAuthorizationStatusNotDetermined) {
             [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound completionHandler:^(BOOL granted, NSError * _Nullable error) {

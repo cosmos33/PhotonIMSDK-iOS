@@ -125,6 +125,8 @@ PhotonAudioRecorderDelegate>
     PhotonMoreKeyboardItem *unsaveItem = [PhotonMoreKeyboardItem createByType:PhotonMoreKeyboardItemTypemUNSaveMsg
         title:@"消息不入库"
     imagePath:@"location"];
+    
+   
     PhotonMoreKeyboardItem *timeoutMsgItem = [PhotonMoreKeyboardItem createByType:PhotonMoreKeyboardItemTypemMSGTimeOUT
         title:@"带超时消息"
     imagePath:@"location"];
@@ -133,12 +135,17 @@ PhotonAudioRecorderDelegate>
         title:@"消息接收不增未读数"
     imagePath:@"location"];
     
+    PhotonMoreKeyboardItem *unsaveUpdateItem = [PhotonMoreKeyboardItem createByType:PhotonMoreKeyboardItemTypemUpdateSession
+        title:@"消息接收不增未读数但改变会话排序"
+    imagePath:@"location"];
+    
+    
     [self.moreKeyboard setDelegate:self];
     [self.moreKeyboard setKeyboardDelegate:self];
     [self.emojiKeyboard setDelegate:self];
     [self.emojiKeyboard setKeyboardDelegate:self];
     
-    [self.moreKeyboard setChatMoreKeyboardItems:[@[imageItem,cameraItem,locationItem,chennalSetItem,chennalSyncItem,timeoutMsgItem,unsaveItem,unReadItem] mutableCopy]];
+    [self.moreKeyboard setChatMoreKeyboardItems:[@[imageItem,cameraItem,locationItem,chennalSetItem,chennalSyncItem,timeoutMsgItem,unsaveItem,unReadItem,unsaveUpdateItem] mutableCopy]];
     [self.emojiKeyboard setChatEmojiKeyboardItems:nil];
     
     [self addMasonry];
@@ -573,6 +580,19 @@ PhotonAudioRecorderDelegate>
         }
         break;
         case PhotonMoreKeyboardItemTypemUNRead:{
+                   NSString *sendText = self.chatBar.textView.text;
+                   if ([sendText length] == 0) {
+                       return;
+                   }
+                   if ([self.delegate respondsToSelector:@selector(sendTextMessage:atItems:type:msgType:)]) {
+                       NSArray *infos = [self.chatBar.atInfos copy];
+                       [self.delegate sendTextMessage:sendText atItems:infos type:self.chatBar.atType msgType:6];
+                       self.chatBar.atInfos = [@[] copy];
+                       self.chatBar.atType = AtTypeNoAt;
+                   }
+               }
+        break;
+        case PhotonMoreKeyboardItemTypemUpdateSession:{
                    NSString *sendText = self.chatBar.textView.text;
                    if ([sendText length] == 0) {
                        return;

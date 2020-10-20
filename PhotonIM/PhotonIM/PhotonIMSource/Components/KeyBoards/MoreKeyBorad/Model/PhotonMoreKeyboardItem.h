@@ -19,6 +19,7 @@ typedef NS_ENUM(NSUInteger, PhotonMoreKeyboardItemType) {
     PhotonMoreKeyboardItemTypemMSGTimeOUT,
     PhotonMoreKeyboardItemTypemUNSaveMsg,
     PhotonMoreKeyboardItemTypemUNRead,
+    PhotonMoreKeyboardItemTypemUpdateSession,
 };
 
 @interface PhotonMoreKeyboardItem : NSObject

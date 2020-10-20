@@ -216,6 +216,35 @@ typedef NS_ENUM(NSInteger, PhotonIMAtType) {
     PhotonIMAtTypeAtAll = 2,
 };
 
+/**
+下载文件的质量
+ 
+图片文件:
+- PhotonIMDownloadQualityOrigin: 下载原图
+- PhotonIMDownloadQualityHight: 下载图片的预览大图
+- PhotonIMDownloadQualityLow: 下载文件的预览下图
+
+视频文件:
+ - PhotonIMDownloadQualityOrigin: 视频源文件
+ - PhotonIMDownloadQualityHight: 视频的封面图
+ - PhotonIMDownloadQualityLow:  视频的封面图
+ 
+语音文件:三者默认语音源文件
+ - PhotonIMDownloadQualityOrigin: 语音源文件
+ - PhotonIMDownloadQualityHight: 语音源文件
+ - PhotonIMDownloadQualityLow:  语音源文件
+ 
+其他类型文件：三者默认文件源文件
+ - PhotonIMDownloadQualityOrigin: 文件源文件
+ - PhotonIMDownloadQualityHight: 文件源文件
+ - PhotonIMDownloadQualityLow:  文件源文件
+ */
+
+typedef NS_ENUM(NSInteger, PhotonIMDownloadFileQuality){
+    PhotonIMDownloadFileQualityOrigin = 0,
+    PhotonIMDownloadFileQualityHight = 1,
+    PhotonIMDownloadFileQualityLow = 2
+};
 
 /**
 服务类型
@@ -227,4 +256,5 @@ typedef NS_ENUM(NSInteger, PhotonIMServerType){
     PhotonIMServerTypeInland = 0,
     PhotonIMServerTypeOverseas = 1,
 };
+
 #endif /* PhotonIMEnum_h */
