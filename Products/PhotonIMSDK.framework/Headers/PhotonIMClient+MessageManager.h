@@ -523,6 +523,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                 BOOL haveNext,
                                                 NSError * _Nullable error))result;
 
+
 /// @brief 全文搜索（获取所有包含查询结果的会话，每个会话中包含针对此会话查询结果的条数，在ftsResultCount此属性获取）
 /// @param matchQuery 搜索关键词
 /// @param startIdentifier 开始标签，比如 @"<a>"
@@ -539,6 +540,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param startIdentifier 开始标签，比如 @"<a>"
 /// @param endIdentifier 结束标签，比如 @"</a>"
 /// @param maxCharacterLenth 显示的最大字符数
+
 - (NSArray<PhotonIMMessage *> *)searchMessagesWithMatchQuery:(NSString *)matchQuery
                                            startIdentifier:(NSString *)startIdentifier
                                              endIdentifier:(NSString *)endIdentifier maxCharacterLenth:(NSInteger)maxCharacterLenth DEPRECATED_MSG_ATTRIBUTE("Please use 'searchMessagesWithMatchQuery: startIdentifier: endIdentifier: maxCharacterLenth: anchor: pageSize:' instead");;

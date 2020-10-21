@@ -58,8 +58,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, assign)BOOL remainHistory;
 
-
-
 /**
  普通消息构造函数
 

@@ -148,8 +148,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)keepConnectedOnBackground:(BOOL)keep;
 
 
-/// 获取数据库的存储路径
-- (NSString *)getDBPath;
+/// 数据库的路径
+- (NSString *)dbPath;
 
 
 - (void)corrupt;
