@@ -97,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 表示接收端是否在接收到消息后，对应的会话的排序更新到最新，YES为未不做控制，使用sdk默认，NO为控制
  */
-@property (nonatomic,assign,readonly)BOOL updateSessionOrder;
+@property (nonatomic,assign)BOOL unUSOrder;
 
 #pragma mark ----- 消息在服务端的位置标记，使用sdk的数据库不需要关注此项 -----
 /**
@@ -135,10 +135,6 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (void)notAutoIncrementUnReadNumber;
 
-/**
- 设置接收方接收到消息后都要改变session的排序
-
-*/
 - (void)unUpdateSessionOrder;
 
 #pragma mark ------ Extra数据操作 用于扩展功能 ------

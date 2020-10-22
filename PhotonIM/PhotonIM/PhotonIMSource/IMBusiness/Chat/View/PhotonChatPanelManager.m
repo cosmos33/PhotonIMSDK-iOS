@@ -599,7 +599,7 @@ PhotonAudioRecorderDelegate>
                    }
                    if ([self.delegate respondsToSelector:@selector(sendTextMessage:atItems:type:msgType:)]) {
                        NSArray *infos = [self.chatBar.atInfos copy];
-                       [self.delegate sendTextMessage:sendText atItems:infos type:self.chatBar.atType msgType:6];
+                       [self.delegate sendTextMessage:sendText atItems:infos type:self.chatBar.atType msgType:7];
                        self.chatBar.atInfos = [@[] copy];
                        self.chatBar.atType = AtTypeNoAt;
                    }

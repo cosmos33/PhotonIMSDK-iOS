@@ -162,7 +162,7 @@ static PhotonMessageCenter *center = nil;
     }
     if (type == 7) {
         [message notAutoIncrementUnReadNumber];
-        [message updateSessionOrder];
+        [message unUpdateSessionOrder];
     }
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     for (PhotonChatAtInfo *atInfo in item.atInfo) {
