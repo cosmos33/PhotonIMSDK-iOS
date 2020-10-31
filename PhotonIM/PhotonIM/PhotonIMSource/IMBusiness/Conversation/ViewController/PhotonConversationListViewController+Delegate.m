@@ -110,10 +110,10 @@
         PhotonChatViewController *chatvc = [[PhotonChatViewController alloc] initWithConversation:item.userInfo];
         [chatvc setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:chatvc animated:YES];
-//        [[PhotonMessageCenter sharedCenter]clearConversationUnReadCount:item.userInfo];
-        [[PhotonIMClient sharedClient] decreaseUnreadCount:[item.userInfo chatType] chatWith:[item.userInfo chatWith] decCount:2];
-        
-        [[PhotonIMClient sharedClient] increaseUnreadCount:[item.userInfo chatType] chatWith:[item.userInfo chatWith] incCount:1];
+        [[PhotonMessageCenter sharedCenter]clearConversationUnReadCount:item.userInfo];
+//        [[PhotonIMClient sharedClient] decreaseUnreadCount:[item.userInfo chatType] chatWith:[item.userInfo chatWith] decCount:2];
+//
+//        [[PhotonIMClient sharedClient] increaseUnreadCount:[item.userInfo chatType] chatWith:[item.userInfo chatWith] incCount:1];
         [[PhotonMessageCenter sharedCenter] resetAtType:item.userInfo];
          
     }

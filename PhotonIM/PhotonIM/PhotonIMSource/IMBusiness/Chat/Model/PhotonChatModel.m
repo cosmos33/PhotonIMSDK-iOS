@@ -298,6 +298,10 @@
             tempItem = item;
         }
     }
+    PhotonIMMessage *message = [[PhotonIMClient sharedClient] findMessage:messag.chatType chatWith:messag.chatWith msgId:messag.withdrawMsgID];
+    
+    [[PhotonIMClient sharedClient] saveOrUpdateMessage:message];
+    
     if (tempItem) {
         NSInteger index = [self.items indexOfObject:tempItem];
         PhotonChatNoticItem *noticItem = [[PhotonChatNoticItem alloc] init];

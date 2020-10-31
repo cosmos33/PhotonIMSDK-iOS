@@ -31,6 +31,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isMessageExist:(PhotonIMMessage *)message;
 
 /**
+ 更新数据 如果数据则会更新，不存在执行失败
+@param message 消息对象
+ */
+- (void)updateMessage:(PhotonIMMessage *)message;
+/**
  存储或者更新数据 如果数据不存在，则插入一条数据，数据存在则更新
 @param message 消息对象
  */
