@@ -342,6 +342,22 @@ NS_ASSUME_NONNULL_BEGIN
 /// @brief 清空所有会话的未读数
 /// @param result 清空成功（succeed:YES),失败（succeed:NO）
 - (void)clearTotalUnreadCount:(void(^)(BOOL succeed))result;
+
+/// 获取指定会话类型的未读总数，排除设置了免打扰的会话未读数
+- (NSInteger)getUnreadCountExcludeIgnore;
+
+/// 获取指定会话的未读数
+/// @param chatType 会话类型
+/// @param chatWith 会话中对方的id 群组为群组id
+- (NSInteger)getUnreadCountWithChatType:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
+
+/// 获取指定会话类型的未读总数，排除设置了免打扰的会话未读数
+/// @param chatTypeList 指定的会话类型，单聊、群聊等
+- (NSInteger)getUnreadCountExcludeIgnore:(NSArray<NSNumber *> *)chatTypeList;
+
+/// 获取指定会话类型的未读总数
+/// @param chatTypeList 指定的会话类型，单聊、群聊等
+- (NSInteger)getUnreadCountWithTypes:(NSArray<NSNumber *> *)chatTypeList;
 @end
 
 NS_ASSUME_NONNULL_END

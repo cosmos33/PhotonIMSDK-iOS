@@ -2362,7 +2362,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 8;
-				DEVELOPMENT_TEAM = 4BXE593ED8;
+				DEVELOPMENT_TEAM = 72CZEEPG39;
 				INFOPLIST_FILE = PhotonIMNotificationService/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2373,7 +2373,7 @@
 				MARKETING_VERSION = 2.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wemomo.cosmos.hwphotonim.push;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = photonimpushhoc;
+				PROVISIONING_PROFILE_SPECIFIER = "common-inhouse-profile";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2588,7 +2588,7 @@
 				CURRENT_PROJECT_VERSION = 2310;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 4BXE593ED8;
+				DEVELOPMENT_TEAM = 72CZEEPG39;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2656,7 +2656,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.wemomo.cosmos.hwphotonim;
 				PRODUCT_NAME = PhotonIMMerge;
-				PROVISIONING_PROFILE_SPECIFIER = hwphotonimhoc;
+				PROVISIONING_PROFILE_SPECIFIER = "common-inhouse-profile";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
