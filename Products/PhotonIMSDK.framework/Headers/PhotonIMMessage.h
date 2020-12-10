@@ -59,6 +59,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign)BOOL remainHistory;
 
 /**
+ 此是否前是否有历史消息存储在服务端
+ */
+@property(nonatomic, assign,readonly)BOOL retryMsg;
+
+/**
  普通消息构造函数
 
  @param frid 消息从谁发出
@@ -100,6 +105,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param atList 存储at对象的id
 - (void)setAtInfoWithAtType:(PhotonIMAtType)sendAtType
                      atList:(nullable NSArray<NSString *> *)atList;
+
+- (void)retrySendMsg;
 @end
 
 NS_ASSUME_NONNULL_END
