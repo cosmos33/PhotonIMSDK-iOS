@@ -22,7 +22,7 @@ target :PhotonIM do
 #    pod 'PhotonIMSDK',:git => 'https://github.com/zhanghesheng/PhotonIMSDK-iOS.git',:tag => '2.2.14.1'
     pod 'PhotonIMSDK',:path => '../'
     pod 'PhotonPushSDK','1.1.2'
-#     pod 'PhotonIMSDK','2.2.14.3'
+#    pod 'PhotonIMSDK','2.2.14.4'
     pod 'GrowingAutoTrackKit'
     pod 'Rifle'
     pod 'Protobuf','~>3.6.1'
