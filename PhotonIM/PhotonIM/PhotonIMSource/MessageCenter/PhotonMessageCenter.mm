@@ -803,4 +803,8 @@ static PhotonMessageCenter *center = nil;
     }
     return _netService;
 }
+
+//- (void)imClient:(id)client didReceiveMesage:(PhotonIMMessage *)message{
+//    [[PhotonIMClient sharedClient] deleteMessage:message];
+//}
 @end

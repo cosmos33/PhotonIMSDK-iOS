@@ -51,6 +51,7 @@
  */
 - (void)imClient:(id)client didReceiveReadMesage:(PhotonIMMessage *)message{
     [self wrapperReadMessage:message];
+    
 }
 
 - (void)imClient:(id)client didReceiveCustomMesage:(PhotonIMMessage *)message{
