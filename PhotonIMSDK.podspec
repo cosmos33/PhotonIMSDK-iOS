@@ -21,4 +21,6 @@ TODO: Add long description of the pod here.
   s.dependency 'protobuf-lib'
   s.dependency 'Protobuf'
   s.dependency 'MMFileService','~>1.3.0'
+  s.dependency 'PhotonHTTPDNS'
+    
 end
