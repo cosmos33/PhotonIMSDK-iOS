@@ -82,6 +82,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)imClient:(id)client didReceiveGroupMesage:(PhotonIMMessage *)message;
 
 /**
+ 接收到群组聊消息时回调
+ 
+ @param client imclient
+ @param message [PhotonIMMessage](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMMessage.html) 消息对象，存储消息内容
+ */
+- (void)imClient:(id)client didReceiveChannelMesage:(PhotonIMMessage *)message;
+
+/**
  接收到自定义类型的通道消息时回调，消息包含：接收的消息包含服务端发的系统消息和对端发的通道消息
  @param client imclient
  @param message [PhotonIMMessage](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMMessage.html) 消息对象，存储消息内容
@@ -114,6 +122,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)imClient:(id)client didReceiveGroupWithDrawMesage:(PhotonIMMessage *)message;
 
+/**
+ 收到社区消息撤回消息时回调
+ 
+ @param client imclient
+ @param message [PhotonIMMessage](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMMessage.html) 消息对象，存储消息内容
+ */
+- (void)imClient:(id)client didReceiveChannelWithDrawMesage:(PhotonIMMessage *)message;
 
 /**
  收到消息已读的消息时回调

@@ -104,13 +104,14 @@ typedef NS_ENUM(NSInteger,PhotonIMDBMode) {
  - PhotonIMChatTypeGroup: 群聊类型
  - PhotonIMChatTypeCustom: 系统通道类型
  - PhotonIMChatTypeRoom: 聊天室类型
+ - PhotonIMChatTypeChannel: 社区类型
  */
 typedef NS_ENUM(NSInteger,PhotonIMChatType){
     PhotonIMChatTypeSingle = 1,
     PhotonIMChatTypeGroup,
     PhotonIMChatTypeCustom,
-    PhotonIMChatTypeRoom
-
+    PhotonIMChatTypeRoom,
+    PhotonIMChatTypeChannel
 };
 
 /**

@@ -1,5 +1,5 @@
 framework module PhotonIMSDK {
-  umbrella header "PhotonIMSDK-umbrella.h"
+  umbrella header "PhotonIMSDK.h"
 
   export *
   module * { export * }
