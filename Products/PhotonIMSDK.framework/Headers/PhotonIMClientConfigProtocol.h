@@ -19,6 +19,9 @@
 /// 业务端app的版本号
 - (NSString *)customAppVersion;
 
+/// 如果要实现httpdns需要实现此方法
+- (NSString *)ipFromHttpdns:(NSString *)domain;
+
 @end
 
 #endif /* PhotonIMClientConfigProtocol_h */

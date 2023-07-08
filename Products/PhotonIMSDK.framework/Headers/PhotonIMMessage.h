@@ -42,7 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable)NSArray  *readMsgIDs;
 
-@property(nonatomic, readwrite) BOOL isReplace;
 
 /**
  消息发送如果有at的内容请设置设（at部分人还是全部群组成员）
@@ -108,10 +107,6 @@ NS_ASSUME_NONNULL_BEGIN
                      atList:(nullable NSArray<NSString *> *)atList;
 
 - (void)retrySendMsg;
-
-
-
-
 @end
 
 NS_ASSUME_NONNULL_END

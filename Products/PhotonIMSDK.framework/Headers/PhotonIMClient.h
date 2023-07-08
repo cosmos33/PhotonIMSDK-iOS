@@ -57,6 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setServerType:(PhotonIMServerType)serverType;
 
 - (void)setIMClientConfig:(id<PhotonIMClientConfigProtocol>)imClientConfig;
+- (void)setIMHttpDnsConfig:(id<PhotonIMClientConfigProtocol>)imHttpdnsConfig;
 
 #pragma mark ---- 注册IMClient -----
 

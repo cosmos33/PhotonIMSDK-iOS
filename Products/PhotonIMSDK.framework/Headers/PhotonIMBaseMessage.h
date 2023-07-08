@@ -54,11 +54,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong, nullable) NSMutableDictionary<NSString*, NSString*> *extra;
 
-/**
-  discord 消息 reply 用，非必要
- */
-@property(nonatomic, copy, nullable) NSString *replyId;
-@property(nonatomic, copy, nullable) NSString *replyText;
 
 /**
  snippet content

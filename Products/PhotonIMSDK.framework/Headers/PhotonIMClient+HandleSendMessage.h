@@ -88,21 +88,6 @@ NS_ASSUME_NONNULL_BEGIN
                             toid:(NSString *)toid
                       completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion DEPRECATED_MSG_ATTRIBUTE("Please use 'sendGroupWithDrawMessage:fromid:toid:completion:' instead");
 
-
-/**
- 
- @brief 群组中发送消息的撤回
- 
- @param msgID 撤回消息的id
- @param fromid 撤回者的id，即消息发送者的id（即自己）
- @param toid 社区的id
- @param completion 消息发送的回执，succeed=YES 发送成功此时error = nil;succeed=NO 发送失败此时error包含失败的原因
- */
-- (void)sendChannelWithDrawMessage:(NSString *)msgID
-                          fromid:(NSString *)fromid
-                            toid:(NSString *)toid
-                      completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
-
 /**
  @brief 发送已读消息
  
@@ -113,7 +98,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)sendReadMessage:(NSArray<NSString *> *)readMsgIDs fromid:(NSString *)fromid toid:(NSString *)toid completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
 
-- (void)sendChannelReadMessage:(NSString *)cursor fromid:(NSString *)fromid toid:(NSString *)toid completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
 
 /**
 @brief 发送删除消息
@@ -139,7 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param timeout 消息的超时时间（单位秒）。(如果 timeout <= 0 则timeout默认为15秒)
 /// @param completion 消息发送的回执，succeed=YES 发送成功此时error = nil;succeed=NO 发送失败此时error包含失败的原因
 /// @return 返回值为发送消息的id(SDK内部生成的唯一消息id，业务端可获取用来做存储数据的id)
-- (NSString *)sendChannelMsgWithFromid:(NSString *)fromid
+- (NSString *)sendChennalMsgWithFromid:(NSString *)fromid
                             toid:(NSString *)toid
                          msgBody:(PhotonIMCustomBody *)msgBody
                           assuredDelivery:(BOOL)assuredDelivery
@@ -193,21 +177,6 @@ NS_ASSUME_NONNULL_BEGIN
  @param lv 偏移量
  */
 - (void)consumePacket:(NSString *)lt lv:(int64_t)lv;
-
-/**
- @brief 拉取channel历史消息
- 
- @param lastKey 最后一条消息extra的数据
- @param channelId 子渠道号
- */
-- (void)pullChannelMessage:(NSString *)lastKey channelId:(NSString *)channelId direction:(int)direction count:(int)count competion:(void(^)(BOOL succeed, PhotonIMError * _Nullable error))completion;
-
-- (void)pullToChannelMessage:(int64_t)lastLv to:(NSString *)lastKey channelId:(NSString *)channelId direction:(int)direction count:(int)count competion:(void(^)(BOOL succeed, PhotonIMError * _Nullable error))completion;
-
-
-- (void)sendReplyByEmoji:(NSString *)replyMsgIDs fromId:(NSString *)fromId channelId:(NSString *)channelId replyLv:(int64_t)replyLv emojiId:(NSString *)emojiId completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
-- (void)revokeReplyByEmoji:(NSString *)replyMsgIDs fromId:(NSString *)fromId channelId:(NSString *)channelId replyLv:(int64_t)replyLv emojiId:(NSString *)emojiId completion:(nullable void(^)(BOOL succeed, PhotonIMError * _Nullable error ))completion;
-
 @end
 
 NS_ASSUME_NONNULL_END
