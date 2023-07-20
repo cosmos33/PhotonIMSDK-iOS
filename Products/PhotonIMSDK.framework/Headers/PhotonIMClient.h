@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PhotonIMClient : NSObject
 
 /**
-  IM 处理线程，消息发送处理等
+ IM 处理线程，消息发送处理等
  */
 @property (nonatomic, strong,readonly, nullable)dispatch_queue_t queue;
 
@@ -69,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  支持群组功能，SDK默认不支持群聊功能，开启支持需在紧跟初始化时调用此方法
-*/
+ */
 - (void)supportGroup;
 
 /**
@@ -82,7 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  将登录IM的账号和IM进行绑定,在获取账号后调用，一般是业务端登录后调用
-
+ 
  @param userid 当前登录IM的账号
  */
 - (void)bindCurrentUserId:(NSString *)userid;
@@ -90,7 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  使用在服务端注册获取的登录token登录IM
-
+ 
  @param token 使用登录账号在服务端获取的登录token
  @param extra 登录携带的额外数据，一般不携带为nil
  */
@@ -110,15 +110,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  开启断言，接口调用不合理或者存在时会启用断言。建议在debugn模式下打开，release模式下关闭，默认是关闭状态
-
+ 
  @param enable <#enable description#>
  */
 - (void)setAssertEnable:(BOOL)enable;
 
 
 /**
-判断断言是否处于开启状态
-
+ 判断断言是否处于开启状态
+ 
  @return YES为开启,NO为关闭
  */
 - (BOOL)assertEnable;
@@ -126,7 +126,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  IM 连接登录相关操作
-
+ 
  @param block 执行的f方法函数
  */
 - (void)runInPhotonIMQueue:(dispatch_block_t)block;
@@ -139,12 +139,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)runInPhotonIMDBQueue:(dispatch_block_t)block;
 
 /**
-此方法可以设置是否使im在后台一直处于连接中，一定要谨慎使用。
-在确保app进到后台一直保活的前提下设置keep为YES。处于非保活下设置keep为NO
-使用场景一般是后台播放音频，后台定位等场景。进到此场景调用设置keep为YES，退回此场景设置Keep为NO.
+ 此方法可以设置是否使im在后台一直处于连接中，一定要谨慎使用。
+ 在确保app进到后台一直保活的前提下设置keep为YES。处于非保活下设置keep为NO
+ 使用场景一般是后台播放音频，后台定位等场景。进到此场景调用设置keep为YES，退回此场景设置Keep为NO.
  
-@param keep 默认是NO,因切后台在不开启后台运行模式的情况下app休眠的问题，im默认进到后台会断开处理。
-*/
+ @param keep 默认是NO,因切后台在不开启后台运行模式的情况下app休眠的问题，im默认进到后台会断开处理。
+ */
 - (void)keepConnectedOnBackground:(BOOL)keep;
 
 /// 自定义cosmos-im-ap-hw.immomo.com域名
@@ -154,6 +154,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param api cosmos-im-api-hw.immomo.com
  */
 - (void)customHWAp:(NSString *)url api:(NSString *)api;
+- (void)customHWIPs:(NSArray *)ips;
+
 @end
 
 NS_ASSUME_NONNULL_END
