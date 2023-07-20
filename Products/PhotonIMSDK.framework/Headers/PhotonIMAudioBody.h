@@ -1,43 +1,35 @@
-/*!
-
- @header PhotonIMAudioBody.h
-
- @abstract 语音消息体类，包含语音消息体类的各个基础属性
-
- @author Created by Bruce on 2019/6/27.
-
- @version 2.1.1 2019/12/25 Creation
-
-*/
+//
+//  PhotonIMAudioBody.h
+//  PhotonIMSDK
+//
+//  Created by Bruce on 2019/6/28.
+//  Copyright © 2019 Bruce. All rights reserved.
+//
 
 #import <Foundation/Foundation.h>
 #import "PhotonIMMediaBody.h"
 NS_ASSUME_NONNULL_BEGIN
-/*!
 
-@class PhotonIMAudioBody
-
-@abstract 语音消息体类，包含语音消息体类的各个基础属性
-*/
+/// 音频消息的消息体，构建此消息体发送音频消息，其对应的消息类型是PhotonIMMessageType::PhotonIMMessageTypeAudio
 @interface PhotonIMAudioBody : PhotonIMMediaBody
-/*!
 
-@abstract 遍历构造方法
- 
-@discussion 使用语音内容构建文本消息体对象
- 
-@param url 服务端资源地址
- 
-@param mediaTime 语音资源的时长
- 
-@param localFileName 本地资源名称
- 
-@return 语音消息体对象
-
-*/
+/// 便利构造AudioBody
+/// @param url 服务端保存的资源地址
+/// @param mediaTime 音频时长（单位可由业务端协商自行决定）
+/// @param localFileName 资源本地存储的相对路径
 + (PhotonIMAudioBody *)audioBodyWithURL:(NSString *)url
                               mediaTime:(int64_t)mediaTime
                           localFileName:(nullable NSString *)localFileName;
+
+/// 便利构造AudioBody
+/// @param url 服务端保存的资源地址
+/// @param mediaTime 音频时长（单位可由业务端协商自行决定）
+/// @param localFileName 资源本地存储的相对路径
+/// @param srcDescription  资源描述，此字段会入库，内容可作为全文搜索使用
++ (PhotonIMAudioBody *)audioBodyWithURL:(NSString *)url
+                              mediaTime:(int64_t)mediaTime
+                          localFileName:(nullable NSString *)localFileName
+                            srcDescription:(nullable NSString *)srcDescription;
 @end
 
 NS_ASSUME_NONNULL_END

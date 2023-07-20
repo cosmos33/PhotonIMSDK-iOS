@@ -1,69 +1,42 @@
-/*!
-
- @header PhotonIMCustomBody.h
-
- @abstract 自定义消息体类，包含自定义消息体类的各个基础属性
-
- @author Created by Bruce on 2019/6/27.
-
- @version 2.1.1 2019/12/25 Creation
-
-*/
+//
+//  PhotonIMCustomBody.h
+//  PhotonIMSDK
+//
+//  Created by Bruce on 2019/7/3.
+//  Copyright © 2019 Bruce. All rights reserved.
+//
 
 #import <PhotonIMSDK/PhotonIMSDK.h>
 
 NS_ASSUME_NONNULL_BEGIN
-/*!
-
-@class PhotonIMCustomBody
-
-@abstract 自定义消息体类，包含自定义消息体类的各个基础属性
-*/
+/// 自定义消息的消息体，构建此消息体发送自定义消息，其对应的消息类型是PhotonIMMessageType::PhotonIMMessageTypeRaw
 @interface PhotonIMCustomBody : PhotonIMBaseBody
-/*!
-
-@property arg1
-
-@abstract 自定义int参数1，可作为消息类型或数据类型等用途
- */
+/** 自定义int参数1，可作为消息类型或数据类型等用途 */
 @property(nonatomic) int32_t arg1;
 
-/*!
-
-@property arg2
-
-@abstract 自定义int参数2，可作为消息类型或数据类型等用途
- 
-*/
+/** 自定义int参数2，可作为消息类型或数据类型等用途 */
 @property(nonatomic) int32_t arg2;
 
-/*!
-
-@property data
-
-@abstract 自定义二进制数据
- 
- */
+/** 自定义二进制数据 */
 @property(nonatomic, copy, nullable) NSData *data;
 
-/*!
+/// 遍历构造CustomBody
+/// @param arg1 业务端自定义参数1
+/// @param arg2 业务端自定义参数2
+/// @param customData 自定义的二进制数据
++ (PhotonIMCustomBody *)customBodyWithArg1:(int32_t)arg1
+                                      arg2:(int32_t)arg2
+                                customData:(nullable NSData *)customData;
 
-@abstract 遍历构造方法
- 
-@discussion 使用语音内容构建文本消息体对象
- 
-@param arg1 自定义int参数1
- 
-@param arg2 自定义int参数2
- 
-@param data 自定义二进制数据
- 
-@return 自定义消息体对象
-
-*/
-+ (PhotonIMCustomBody *)customBodyWithURL:(int32_t *)arg1
-                              mediaTime:(int32_t)arg2
-                          localFileName:(nullable NSData *)data;
+/// 遍历构造CustomBody
+/// @param arg1 业务端自定义参数1
+/// @param arg2 业务端自定义参数2
+/// @param customData 自定义的二进制数据
+/// @param srcDescription  资源描述，此字段会入库，内容可作为全文搜索使用
++ (PhotonIMCustomBody *)customBodyWithArg1:(int32_t)arg1
+                                      arg2:(int32_t)arg2
+                                customData:(nullable NSData *)customData
+                            srcDescription:(nullable NSString *)srcDescription;
 @end
 
 NS_ASSUME_NONNULL_END

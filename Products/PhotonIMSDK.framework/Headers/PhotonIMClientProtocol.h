@@ -12,117 +12,145 @@
 #import "PhotonIMError.h"
 NS_ASSUME_NONNULL_BEGIN
 @class PhotonIMMessage;
+@class PhotonIMCustomBody;
+
+
+/// 此协议管理着im登录，消息接收等回调
 @protocol PhotonIMClientProtocol <NSObject>
 
 @optional
 #pragma mark ======== IM登录回调相关接收消息 ===========
 /**
- 登录状态
- 
- @param client im client
+ 登录状态，登录过程中状态改变时回调,业务端通过此回调方法监听IM登录过程中状态的变化。登录状态详情请见:
+ [PhotonIMLoginStatus](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Constants/PhotonIMLoginStatus.html)
+ @param client imclient
  @param loginstatus 登录过程中的状态
  */
 - (void)imClientLogin:(id)client loginStatus:(PhotonIMLoginStatus)loginstatus;
 
 
 /**
- 登录失败时回调
-
- @param client <#client description#>
+ 登录失败时回调。失败类型详情请见:
+ [PhotonIMLoginFailedType](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Constants/PhotonIMLoginFailedType.html)
+ @param client imclient
  @param failedType 失败的类型
  */
 - (void)imClientLogin:(id)client failedType:(PhotonIMLoginFailedType)failedType;
+
 #pragma mark ======== 拉取消息相关 ===========
 
 /**
- 拉取消息的状态回调
-
- @param client <#client description#>
- @param status <#status description#>
+ 拉取消息的状态回调。消息同步状态详情请见:
+ [PhotonIMSyncStatus](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Constants/PhotonIMSyncStatus.html)
+ @param client imclient
+ @param status 消息拉取的状态
  @return 是否仅在IM登录后回调执行一次Sync方法 YES 仅一次， NO 每次拉取消息都有回调,默认是NO;
  */
 - (BOOL)imClientSync:(id)client syncStatus:(PhotonIMSyncStatus)status;
 
+
 #pragma mark ======== 接收消息 ===========
 /**
- 设置会话中对方的id
+ 设置会话中对方的id，设置此值后，当前设置的类接收的消息回调是只针对此会话的消息
  
- @return <#return value description#>
+ @return 返回对话中对方的id
  */
 - (NSString *)getChatWith;
+
 /**
- 接收到消息 包含所有类型的消息（单聊，群聊）消息
+ 接收到消息时回调 包含所有类型的消息（单聊，群聊）消息.
  
- @param client <#client description#>
- @param message <#message description#>
+ @param client imclient
+ @param message [PhotonIMMessage](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMMessage.html) 消息对象，存储消息内容
  */
 - (void)imClient:(id)client didReceiveMesage:(PhotonIMMessage *)message;
 
 /**
- 接收到单聊消息
+ 接收到单聊消息时回调
  
- @param client <#client description#>
- @param message <#message description#>
+ @param client imclient
+ @param message [PhotonIMMessage](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMMessage.html) 消息对象，存储消息内容
  */
 - (void)imClient:(id)client didReceiveSingleMesage:(PhotonIMMessage *)message;
 
 /**
- 接收到群聊消息
+ 接收到群聊消息时回调
  
- @param client <#client description#>
- @param message <#message description#>
+ @param client imclient
+ @param message [PhotonIMMessage](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMMessage.html) 消息对象，存储消息内容
  */
 - (void)imClient:(id)client didReceiveGroupMesage:(PhotonIMMessage *)message;
 
 /**
- 接收到自定义消息
- 
- @param client <#client description#>
- @param message <#message description#>
+ 接收到自定义类型的通道消息时回调，消息包含：接收的消息包含服务端发的系统消息和对端发的通道消息
+ @param client imclient
+ @param message [PhotonIMMessage](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMMessage.html) 消息对象，存储消息内容
  */
 - (void)imClient:(id)client didReceiveCustomMesage:(PhotonIMMessage *)message;
 
 
 /**
- 收到单人消息撤回消息
+ 接收房间消息消息时回调
  
- @param client <#client description#>
- @param message <#message description#>
+ @param client imclient
+ @param message [PhotonIMMessage](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMMessage.html) 消息体，仅收到chatType为Room是回调
+ */
+- (void)imClient:(id)client didReceiveRoomMesage:(PhotonIMMessage *)message;
+
+
+/**
+ 收到单人消息撤回消息时回调
+ 
+ @param client imclient
+ @param message [PhotonIMMessage](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMMessage.html) 消息对象，存储消息内容
  */
 - (void)imClient:(id)client didReceiveSingleWithDrawMesage:(PhotonIMMessage *)message;
 
 /**
- 收到群组消息撤回消息
+ 收到群组消息撤回消息时回调
  
- @param client <#client description#>
- @param message <#message description#>
+ @param client imclient
+ @param message [PhotonIMMessage](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMMessage.html) 消息对象，存储消息内容
  */
 - (void)imClient:(id)client didReceiveGroupWithDrawMesage:(PhotonIMMessage *)message;
 
 
 /**
- 收到消息已读的消息
+ 收到消息已读的消息时回调
  
- @param client <#client description#>
- @param message <#message description#>
+ @param client imclient
+ @param message [PhotonIMMessage](https://cosmos.immomo.com/cosmos_sdk_apidoc/imios/html/Classes/PhotonIMMessage.html) 消息对象，存储消息内容
  */
-- (void)imClient:(id)client didReceiveReadMesage:(PhotonIMMessage *)message;
-
+- (void)imClient:(id)client didReceiveReadMesage:(PhotonIMMessage *)message DEPRECATED_MSG_ATTRIBUTE("Use imClient:didReceiveReadMesage:chatWith:readMsgIDs:userInfo: instead.");
 
 /**
- 收到消息的删除消息
+ 收到消息已读的消息。同方法:imClient:didReceiveReadMesage:
  
- @param client
+ @param client   client 对象
  @param chatType 删除的消息所属的会话类型
  @param chatWith 删除的消息所属的会话id
- @param delMsgIds 删除消息的msgid
- @userInfo 预留属性字段
+ @param readMsgIDs 对方已读的消息idl列表
+ @param userInfo 预留属性字段
+ */
+- (void)imClient:(id)client
+    didReceiveReadMesage:(PhotonIMChatType)chatType
+                chatWith:(NSString *)chatWith
+                readMsgIds:(NSArray<NSString *> *)readMsgIDs
+                userInfo:(nullable id)userInfo;
+/**
+ 收到消息的删除消息时回调
+ 
+ @param client   client 对象
+ @param chatType 删除的消息所属的会话类型
+ @param chatWith 删除的消息所属的会话id
+ @param delMsgIds 对方删除消息的id列表
+ @param userInfo 预留属性字段
  */
 - (void)imClient:(id)client
                 didReceiveDeleteMesage:(PhotonIMChatType)chatType
                 chatWith:(NSString *)chatWith
                 delMsgIds:(NSArray<NSString *> *)delMsgIds
-                userInfo:(nullable NSDictionary<NSString *,id>  *)userInfo;
+                userInfo:(nullable id)userInfo;
 
 #pragma mark ======== 其他 ===========
 /**
@@ -137,11 +165,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  会话数据有变化，依据此回调刷新会话列表
+ 
+ @param networkStatus 网络状态
  */
 - (void)networkChange:(PhotonIMNetworkStatus)networkStatus;
 
+
+
+@required
 /**
- 重发程序kill时的消息，消息发出后监听此回执
+ 重发程序kill时的消息，消息发出后监听此回执，刷新会话列表页UI展示
  
  @param client client
  @param msgID 消息的id
@@ -154,16 +187,6 @@ NS_ASSUME_NONNULL_BEGIN
         chatType:(PhotonIMChatType)chatType
         chatWith:(NSString * _Nullable)chatWith
         error:( PhotonIMError* _Nullable)error;
-
-
-/*
- 未发送成功的消息在被重新发送前触发，业务端实现返回枚举值
- 
- PhotonIMForbidenAutoResendTypeNO // 允许消息重发，此为默认值
- PhotonIMForbidenAutoResendTypeLogin // 禁止每次登录成功后消息的重发,
- PhotonIMForbidenAutoResendTypeColdStart = 3 // 仅在app冷启登录时消息重新发送
- */
-- (PhotonIMForbidenAutoResendType)messageWillBeAutoResend;
 @end
 #endif /* PhotonIMClientProtocol_h */
 NS_ASSUME_NONNULL_END

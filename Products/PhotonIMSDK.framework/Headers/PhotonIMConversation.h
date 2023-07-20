@@ -1,220 +1,169 @@
-/*!
-
- @header PhotonIMConversation.h
-
- @abstract 会话类，包含会话中的各个属性
-
- @author Created by Bruce on 2019/6/27.
-
- @version 2.1.1 2019/12/25 Creation
-
-*/
+//
+//  PhotonIMConversation.h
+//  PhotonIMSDK
+//
+//  Created by Bruce on 2019/7/1.
+//  Copyright © 2019 Bruce. All rights reserved.
+//  会话类型
 
 #import <Foundation/Foundation.h>
 #import "PhotonIMEnum.h"
+#import "PhotonIMMessage.h"
 NS_ASSUME_NONNULL_BEGIN
-/*!
 
-@class PhotonIMConversation
 
-@abstract 会话类，包含会话中的各个属性
-
-*/
+/// 会话相关,管理会话的相关属性.
 @interface PhotonIMConversation : NSObject
-/*!
 
-@property chatWith
-
-@abstract 会话中对方id
-
-*/
+/**
+ 会话中对方id
+ */
 @property(nonatomic, copy, nullable) NSString *chatWith;
 
-/*!
 
-@property chatType
-
-@abstract 回话所属类型，单人 or 群组
-
-*/
+/**
+ 回话所属类型，单人 or 群组
+ */
 @property(nonatomic, assign) PhotonIMChatType chatType;
 
-/*!
- 
- property lastTimeStamp
- 
- @abstract 会话最近一次操作的时间戳
- 
+/**
+ 会话创建时的时间戳
+ */
+@property(nonatomic, assign) uint64_t createTimeStamp;
+
+/**
+ 会话最近一次操作的时间戳
  */
 @property(nonatomic, assign) uint64_t lastTimeStamp;
 
-/*!
-
-@property draft
-
-@abstract 会话中的草稿
-
+/**
+会话的草稿
 */
 @property(nonatomic, copy, nullable) NSString *draft;
 
-/*!
- @property lastMsgId
- 
- @abstract 会话中最近一条消息
- 
+/**
+会话中最新一条消息的对象
+*/
+@property(nonatomic,strong, nullable)PhotonIMMessage *lastMessage;
+
+/**
+ 会话中最近一条消息
  */
 @property(nonatomic, copy, nullable) NSString *lastMsgId;
-
-/*!
-@property lastMsgContent
-
-@abstract 会话中最近一条消息内容
+/**
+ 会话中最近一条消息
  */
 @property(nonatomic, copy, nullable) NSString *lastMsgContent;
 
 
-/*!
-@property unReadCount
-
-@abstract 消息的未读数
+/**
+ 消息的未读数
  */
 @property(nonatomic, assign) NSInteger unReadCount;
 
-/*!
-@property lastMsgType
-
-@abstract 消息类型(文本，语音 or 视频)
+/**
+ 消息类型(文本，语音 or 视频)
  */
 @property(nonatomic, assign) PhotonIMMessageType lastMsgType;
 
-/*!
-@property lastMsgFr
-
-@abstract 最近一条消息的发送方
+/**
+ 最近一条消息的发送方
  */
 @property(nonatomic, copy, nullable) NSString *lastMsgFr;
 
-/*!
-@property lastMsgTo
-
-@abstract 最近一条消息的接收方
+/**
+ 最近一条消息的接收方
  */
 @property(nonatomic, copy, nullable) NSString *lastMsgTo;
 
 
-/*!
-@property lastMsgStatus
-
-@abstract 最近一条消息的发送状态
+/**
+ 最近一条消息的发送状态
  */
 @property(nonatomic, assign) PhotonIMMessageStatus lastMsgStatus;
 
-/*!
- 
-@property FName
-
-@abstract 会话中好友名
- 
+/**
+ 会话中好友名
  */
 @property(nonatomic, copy, nullable) NSString *FName;
 
-/*!
- 
-@property FAvatarPath
-
-@abstract 会话中好头像
- 
+/**
+ 会话中好头像
  */
 @property(nonatomic, copy, nullable) NSString *FAvatarPath;
 
 
-/*!
- 
-@property extra
-
-@abstract 额外的信息
+/**
+ 额外的信息
  */
-@property(nonatomic, copy, nullable)NSDictionary<NSString *, NSString *> *extra;
+@property(nonatomic, nullable)NSMutableDictionary<NSString *, NSString *> *extra;
 
-/*!
- 
-@property lastMsgArg1
-
-@abstract session中最后一条消息自定义扩展字段参数
+/*
+ session中最后一条消息自定义扩展字段参数
  */
 @property (nonatomic, assign)int  lastMsgArg1;
-
-/*!
- 
-@property lastMsgArg2
-
-@abstract session中最后一条消息自定义扩展字段参数
- */
 @property (nonatomic, assign)int  lastMsgArg2;
 
-/*!
- 
-@property customArg1
-
-@abstract session中自定义扩展字段参数
+/**
+ session中自定义扩展字段参数
  */
 @property (nonatomic, assign)int  customArg1;
-
-/*!
- 
-@property customArg2
-
-@abstract session中自定义扩展字段参数
- */
 @property (nonatomic, assign)int  customArg2;
 
-/*!
- 
-@property lastMsgIsReceived
-
-@abstract 最后一天消息是否为接收的消息
+/**
+ 最后一天消息是否为接收的消息
  */
 @property(nonatomic,assign)BOOL lastMsgIsReceived;
 
 #pragma mark ----- 会话操作设置相关 ------
 
-/*!
- 
-@property ignoreAlert
-
-@abstract 会话是否设置免打扰 默认值为NO（不设置免打扰）
+/**
+ 会话是否设置免打扰 默认值为NO（不设置免打扰）
  */
 @property(nonatomic, assign) BOOL ignoreAlert;
-
-/*!
- 
-@property sticky
-
-@abstract 会话是否设置置顶 默认值为NO（不置顶）
- 
+/**
+ 会话是否设置置顶 默认值为NO（不指定）
  */
 @property(nonatomic, assign) BOOL sticky;
 
 
 
-/*!
- 
-@property atType
-
-@abstract 2.0及以上版本支持此功能
- 
+/**
+ 2.0及以上版本支持此功能
+PhotonIMConversationAtTypeNoAt,//会话不包含at
+PhotonIMConversationAtTypeAtMe,//会话处于at中，非全部，包含我
+PhotonIMConversationTypeAtAl,//会话处于at所有群成员
  */
 @property(nonatomic, assign)PhotonIMConversationAtType atType;
 
-/*!
 
- @abstract 初始化方法
+@property(nonatomic, assign)NSInteger   ftsResultCount;
+
+
+
+/**
+ 初始化方法
+
  @param chatType 会话类型
  @param chatWith 会话中对方的id
- @return 会话对象
- 
+ @return <#return value description#>
  */
 - (instancetype)initWithChatType:(PhotonIMChatType)chatType chatWith:(NSString *)chatWith;
+
+
+#pragma mark ------ Extra数据操作 用于扩展功能 ------
+/// 通过key获取extra对应的value
+/// @param key 业务方指定
+- (nullable NSString *)extraValueForKey:(NSString *)key;
+
+/// 设置extra中的value值。存在key则修改替换，不存在则追加
+/// @param value Extra中设置的value
+/// @param key Extra中设置的key
+- (void)setExtraValue:(NSString *)value forKey:(NSString *)key;
+
+/// 通过key删除extra对应的value
+/// @param key 业务方指定
+- (void)removeExtraValueForKey:(NSString *)key;
 @end
 
 NS_ASSUME_NONNULL_END
