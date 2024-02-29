@@ -9,6 +9,10 @@ PhotonIMClient+HandleReceiveMessge  im消息接收相关
 
 PhotonIMClient+HandleDB     im消息存储相关
 
+2.2.14.9
+
+暂时移除API请求的HTTPDNS
+
 2.2.14.8
 
 内部实现了httpdns
