@@ -40,6 +40,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, readonly ,nullable)NSString *currentUserId;
 
+
+/**
+关闭接受消息回调时的内存去重，建议不实现[chatWith]方法的关闭此去重，自行实现去重。因为若不传入chatWith，则没有清理内存缓存逻辑，若数据量极大，可能会导致OOM。
+ */
+@property (nonatomic, assign) BOOL closeReceiveMessageCallbackMemoryDeduplication;
+
 #pragma mark ---- 初始化相关 -----
 
 /**
@@ -123,7 +129,6 @@ NS_ASSUME_NONNULL_BEGIN
  @return YES为开启,NO为关闭
  */
 - (BOOL)assertEnable;
-
 
 /**
  IM 连接登录相关操作
