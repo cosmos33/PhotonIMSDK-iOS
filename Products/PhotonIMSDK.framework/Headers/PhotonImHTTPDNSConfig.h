@@ -6,11 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
-//#import <PhotonHTTPDNS/PhotonHTTPDNS.h>
+#import <PhotonHTTPDNS/PhotonHTTPDNS.h>
 
 NS_ASSUME_NONNULL_BEGIN
-@protocol PhotonHTTPDNSConfigProtocol <NSObject>
-@end
 @interface PhotonImHTTPDNSConfig : NSObject <PhotonHTTPDNSConfigProtocol>
 
 @end
