@@ -596,6 +596,10 @@ NS_ASSUME_NONNULL_BEGIN
                                                 matchQuery:(NSString *)matchQuery
                                                     anchor:(nullable NSString *)anchor
                                                   pageSize:(int)pageSize;
+
+
+//内部服务器下发JSON转模型的方法，外部谨慎使用。
+- (PhotonIMMessage *)warpperMessage:(NSDictionary *)msg;
 @end
 
 NS_ASSUME_NONNULL_END
