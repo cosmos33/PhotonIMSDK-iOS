@@ -166,7 +166,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)customHWAp:(NSString *)url api:(NSString *)api;
 
-//获取内部域名，提供给HTTPDNS，若自定义域名建议手动写域名不要通过此方法获取。
+//获取内部域名，提供给HTTPDNS，本方法不包含自定义域名
++ (NSArray *)getHTTPDNSDomain:(PhotonIMServerType)serverType;
+//获取内部域名，提供给HTTPDNS，若自定义域名建议手动写域名不要通过此方法获取。初始化后获取使用，推荐使用上方类方法
 - (NSArray *)getHTTPDNSDomain;
 
 @end

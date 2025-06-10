@@ -25,14 +25,14 @@
 - (NSString *)ipForAPFromHTTPDNS:(NSString *)domain;
 ///用于AP成功提供给HTTPDNS的回调
 ///eq:
-///- (void)apConnectSuccess:(NSString *)domain succeedDomain:(NSString *)succeedDomain port:(NSInteger)port;
+///- (void)apConnectNetworkSuccess:(NSString *)domain succeedDomain:(NSString *)succeedDomain port:(NSInteger)port {
 ///  [PhotonHTTPDNSClient requestSucceedForDomain:domain andSucceedDomain:succeedDomain andSuccessedPort:port];
 ///}
 
 - (void)apConnectNetworkSuccess:(NSString *)domain succeedDomain:(NSString *)succeedDomain port:(NSInteger)port;
 ///用于AP失败提供给HTTPDNS的回调
 ///eq:
-///- (void)apConnectTimeoutFail:(NSString *)domain failedDomain:(NSString *)failedDomain port:(NSInteger)port;
+///- (void)apConnectNetworkFail:(NSString *)domain failedDomain:(NSString *)failedDomain port:(NSInteger)por {
 ///  [PhotonHTTPDNSClient requestFailedForDomain:domain andFailedDomain:failDomain andFailedPort:port];
 ///}
 - (void)apConnectNetworkFail:(NSString *)domain failedDomain:(NSString *)failedDomain port:(NSInteger)port;
