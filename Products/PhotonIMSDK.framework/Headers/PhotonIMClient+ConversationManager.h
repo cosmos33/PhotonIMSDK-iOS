@@ -229,7 +229,12 @@ NS_ASSUME_NONNULL_BEGIN
                                                  pageSize:(int)pageSize
                                                  extraKey:(NSString *)key
                                                extraValue:(NSString *)value;
-
+- (NSArray<PhotonIMConversation *> *)findConversationList:(NSString *)anchor
+                                                 pageSize:(int)pageSize
+                                                 extraKey:(NSString *)key
+                                               extraValue:(NSString *)value
+                                                matchType:(int)matchType
+                                            matchNullType:(int)matchNullType;
 /**
 @brief 查找会话 符合Extra中key-value指定的会话
 @param anchor 为chatWith,开始查找的位置，查找小于此锚点对应的排序id的数据，查找结果按降序排列
