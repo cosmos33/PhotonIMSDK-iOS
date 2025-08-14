@@ -130,12 +130,16 @@ NS_ASSUME_NONNULL_BEGIN
  @param chatType 删除的消息所属的会话类型
  @param chatWith 删除的消息所属的会话id
  @param readMsgIDs 对方已读的消息idl列表
+ @param lt 队列
+ @param lv 游标
  @param userInfo 预留属性字段
  */
 - (void)imClient:(id)client
     didReceiveReadMesage:(PhotonIMChatType)chatType
                 chatWith:(NSString *)chatWith
                 readMsgIds:(NSArray<NSString *> *)readMsgIDs
+                lt:(NSString *)lt
+                lv:(int64_t)lv
                 userInfo:(nullable id)userInfo;
 /**
  收到消息的删除消息时回调
@@ -144,12 +148,16 @@ NS_ASSUME_NONNULL_BEGIN
  @param chatType 删除的消息所属的会话类型
  @param chatWith 删除的消息所属的会话id
  @param delMsgIds 对方删除消息的id列表
+ @param lt 队列
+ @param lv 游标
  @param userInfo 预留属性字段
  */
 - (void)imClient:(id)client
                 didReceiveDeleteMesage:(PhotonIMChatType)chatType
                 chatWith:(NSString *)chatWith
                 delMsgIds:(NSArray<NSString *> *)delMsgIds
+                lt:(NSString *)lt
+                lv:(int64_t)lv
                 userInfo:(nullable id)userInfo;
 
 #pragma mark ======== 其他 ===========
